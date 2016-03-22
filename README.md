@@ -1,5 +1,7 @@
 # FormatWith
 
+[![NuGet](https://img.shields.io/badge/nuget-1.0.0-green.svg)](https://www.nuget.org/packages/FormatWith/)
+
 A C# library for performing named parameterized string formatting.
 
 ## Quick Info
