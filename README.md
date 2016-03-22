@@ -58,7 +58,7 @@ output: "abc Replacement1 <DoesntExist>"
 
 ### GetFormatParameters
 
-In addition to performing the string formatting, `GetFormatParameters()` can be used to get a list of parameter names out of a format string.
+`GetFormatParameters()` can be used to get a list of parameter names out of a format string, which can be used for inspection before performing other actions on it.
 
 **Example:**
 
