@@ -91,7 +91,7 @@ namespace FormatWithTests {
             try {
                 string replacement = "abc{Replacement1}{DoesntExist}".FormatWith(new { Replacement1 = Replacement1, Replacement2 = Replacement2 });
             }
-            catch (FormatException e) {
+            catch (KeyNotFoundException e) {
                 if (e.Message == "The parameter \"DoesntExist\" was not present in the lookup dictionary") {
                     Assert.True(true);
                     return;

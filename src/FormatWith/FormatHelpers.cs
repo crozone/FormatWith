@@ -53,7 +53,7 @@ namespace FormatWith {
                             switch (missingKeyBehaviour) {
                                 case MissingKeyBehaviour.ThrowException:
                                     // the key was not found as a possible replacement, throw exception
-                                    throw new FormatException($"The parameter \"{parameterToken.ParameterKey}\" was not present in the lookup dictionary");
+                                    throw new KeyNotFoundException($"The parameter \"{parameterToken.ParameterKey}\" was not present in the lookup dictionary");
                                 case MissingKeyBehaviour.ReplaceWithFallback:
                                     resultBuilder.Append(fallbackReplacementValue);
                                     break;
