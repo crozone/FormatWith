@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace FormatWith {
+﻿namespace FormatWith {
     public class ParameterToken : FormatToken {
         public ParameterToken(string source, int startIndex, int length) : base(source, startIndex, length) {
             KeyStartIndex = startIndex + 1;

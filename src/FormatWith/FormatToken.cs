@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace FormatWith {
+﻿namespace FormatWith {
     public abstract class FormatToken {
         public FormatToken(string source, int startIndex, int length) {
             SourceString = source;

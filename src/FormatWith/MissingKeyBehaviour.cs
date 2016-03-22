@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace FormatWith
-{
+﻿namespace FormatWith {
     /// <summary>
     /// Behaviour to use when a parameter is given that has no key in the replacement dictionary
     /// </summary>
