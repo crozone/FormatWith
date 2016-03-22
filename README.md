@@ -36,7 +36,7 @@ Missing key behaviour is specified by the MissingKeyBehaviour enum, which can be
 
 `Ignore` ignores any parameters that did not have a corresponding key in the lookup dictionary, leaving them unmodified in the output string.
 
-Examples:
+**Examples:**
 
 `string output = "abc {Replacement1} {DoesntExist}".FormatWith(new { Replacement1 = Replacement1, Replacement2 = Replacement2 });
 
@@ -48,7 +48,7 @@ output: "abc Replacement1 FallbackValue"
 
 `string replacement = "abc {Replacement1} {DoesntExist}".FormatWith(new { Replacement1 = Replacement1, Replacement2 = Replacement2 }, MissingKeyBehaviour.Ignore);
 
-Using custom brace characters:
+**Using custom brace characters:**
 
 output: "abc Replacement1 {DoesntExist}"
 
@@ -56,10 +56,11 @@ output: "abc Replacement1 {DoesntExist}"
 
 output: "abc Replacement1 <DoesntExist>"
 
+### GetFormatParameters
 
 In addition to performing the string formatting, `GetFormatParameters()` can be used to get a list of parameter names out of a format string.
 
-Example:
+**Example:**
 
 `List<string> parameters = "{parameter1} {parameter2} {{not a parameter}}".GetFormatParameters();`
 
