@@ -125,6 +125,18 @@ namespace FormatWithTests {
         }
 
         [Fact]
+        public void TestCustomBraces() {
+            string replacement = "abc<Replacement1><DoesntExist>".FormatWith(new { Replacement1 = Replacement1, Replacement2 = Replacement2 }, MissingKeyBehaviour.Ignore, null,'<','>');
+
+            if (replacement == "abcReplacement1<DoesntExist>") {
+                Assert.True(true);
+                return;
+            }
+
+            Assert.True(false);
+        }
+
+        [Fact]
         public void TestGetFormatParameters() {
             List<string> parameters = testFormat3.GetFormatParameters();
             if (parameters.Count != 2) Assert.True(false);
