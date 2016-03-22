@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 
 namespace FormatWith {
     public abstract class FormatToken {
-
         public FormatToken(string source, int startIndex, int length) {
             SourceString = source;
             StartIndex = startIndex;

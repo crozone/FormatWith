@@ -38,5 +38,7 @@ namespace FormatWithTests {
             string replacement = testString3.FormatWith(new { param1 = "REPLACE1", param2 = "" });
             Assert.True(replacement == "abcREPLACE1def{escaped1}ghi{}jkl{{escaped2}}mno");
         }
+
+        
     }
 }

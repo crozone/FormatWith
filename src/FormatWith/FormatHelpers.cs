@@ -6,9 +6,19 @@ using System.Threading.Tasks;
 
 namespace FormatWith {
     public static class FormatHelpers {
+        /// <summary>
+        /// Processes a list of format tokens into a string
+        /// </summary>
+        /// <param name="tokens">List of tokens to turn into a string</param>
+        /// <param name="replacements">An <see cref="IDictionary"/> with keys and values to inject into the formatted result</param>
+        /// <param name="missingKeyBehaviour">The behaviour to use when the format string contains a parameter that is not present in the lookup dictionary</param>
+        /// <param name="fallbackReplacementValue">When the <see cref="MissingKeyBehaviour.ReplaceWithFallback"/> is specified, this string is used as a fallback replacement value when the parameter is present in the lookup dictionary.</param>
+        /// <returns>The processed result of joining the tokens with the replacement dictionary.</returns>
         public static string ProcessTokens(IEnumerable<FormatToken> tokens, IDictionary<string, object> replacements, MissingKeyBehaviour missingKeyBehaviour = MissingKeyBehaviour.ThrowException, string fallbackReplacementValue = null) {
 
-            // if there are no parameters, return the format string unmodified.
+            // if there are no parameters, return an empty string
+            // (this would happen anyway, but this is avoids creating an entire
+            //  string builder)
             if (!tokens.Any()) {
                 return string.Empty;
             }
@@ -18,7 +28,6 @@ namespace FormatWith {
             StringBuilder resultBuilder = new StringBuilder(tokens.First().Length);
 
             foreach (FormatToken thisToken in tokens) {
-
                 // handle text token
                 TextToken textToken = thisToken as TextToken;
                 if (textToken != null) {
@@ -68,14 +77,13 @@ namespace FormatWith {
             return resultBuilder.ToString();
         }
 
-        public static List<string> GetParameters(string formatString, char openBraceChar = '{', char closeBraceChar = '}') {
-            return Tokenize(formatString, openBraceChar, closeBraceChar)
-                .Select(t => t as ParameterToken)
-                .Where(pt => pt != null)
-                .Select(pt => pt.ParameterKey)
-                .ToList();
-        }
-
+        /// <summary>
+        /// Tokenizes a named format string into a list of text and parameter tokens for later processing.
+        /// </summary>
+        /// <param name="formatString">The format string, containing keys like {foo}</param>
+        /// <param name="openBraceChar">The character used to begin parameters</param>
+        /// <param name="closeBraceChar">The character used to end parameters</param>
+        /// <returns>A list of text and parameter tokens representing the input format string</returns>
         public static IReadOnlyCollection<FormatToken> Tokenize(string formatString, char openBraceChar = '{', char closeBraceChar = '}') {
 
             if (formatString == null) throw new ArgumentNullException($"{nameof(formatString)} cannot be null.");
