@@ -1,5 +1,5 @@
 ﻿{
-  "version": "1.0.0-*",
+  "version": "1.1.0-*",
   "description": "FormatWith, a library for performing named parameterized string formatting.",
   "authors": [ "Ryan Crosby" ],
   "tags": [ "" ],

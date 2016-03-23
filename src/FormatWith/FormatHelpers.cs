@@ -13,7 +13,46 @@ namespace FormatWith {
         /// <param name="missingKeyBehaviour">The behaviour to use when the format string contains a parameter that is not present in the lookup dictionary</param>
         /// <param name="fallbackReplacementValue">When the <see cref="MissingKeyBehaviour.ReplaceWithFallback"/> is specified, this string is used as a fallback replacement value when the parameter is present in the lookup dictionary.</param>
         /// <returns>The processed result of joining the tokens with the replacement dictionary.</returns>
-        public static string ProcessTokens(IEnumerable<FormatToken> tokens, IDictionary<string, object> replacements, MissingKeyBehaviour missingKeyBehaviour = MissingKeyBehaviour.ThrowException, string fallbackReplacementValue = null) {
+        public static string ProcessTokens(IEnumerable<FormatToken> tokens, IDictionary<string, object> replacements,
+            MissingKeyBehaviour missingKeyBehaviour = MissingKeyBehaviour.ThrowException, string fallbackReplacementValue = null) {
+
+            return ProcessTokens(tokens, (parameter, sb) => {
+                // the default handler for parameters supports the three basic scenarios
+                // for dictionary replacement - throw on not found, fallback, and ignore.
+
+                // append the replacement for this parameter
+                object replacementValue = null;
+                if (replacements.TryGetValue(parameter.ParameterKey, out replacementValue)) {
+                    // the key exists, add the replacement value
+                    // this does nothing if replacement value is null
+                    sb.Append(replacementValue);
+                }
+                else {
+                    // the key does not exist, handle this using the missing key behaviour specified.
+                    switch (missingKeyBehaviour) {
+                        case MissingKeyBehaviour.ThrowException:
+                            // the key was not found as a possible replacement, throw exception
+                            throw new KeyNotFoundException($"The parameter \"{parameter.ParameterKey}\" was not present in the lookup dictionary");
+                        case MissingKeyBehaviour.ReplaceWithFallback:
+                            sb.Append(fallbackReplacementValue);
+                            break;
+                        case MissingKeyBehaviour.Ignore:
+                            // the replacement value is the input key as a parameter.
+                            // use source string and start/length directly with append rather than
+                            // parameter.ParameterKey to avoid allocating an extra string
+                            sb.Append(parameter.SourceString, parameter.StartIndex, parameter.Length);
+                            break;
+                    }
+                }
+            });
+        }
+
+        /// <summary>
+        /// Processes a list of format tokens into a string
+        /// </summary>
+        /// <param name="tokens">List of tokens to turn into a string</param>
+        /// <param name="parameterHandler">The handler for parameters. The handler is fed all parameters sequentially, and modifies the StringBuilder accordingly.</param>
+        public static string ProcessTokens(IEnumerable<FormatToken> tokens, Action<ParameterToken, StringBuilder> parameterHandler) {
 
             // if there are no parameters, return an empty string
             // (this would happen anyway, but this is avoids creating an entire
@@ -39,31 +78,7 @@ namespace FormatWith {
                     if (parameterToken != null) {
                         // token is a parameter token
                         // perform parameter logic now.
-
-                        // append the replacement for this parameter
-                        object replacementValue = null;
-                        if (replacements.TryGetValue(parameterToken.ParameterKey, out replacementValue)) {
-                            // the key exists, add the replacement value
-                            // this does nothing if replacement value is null
-                            resultBuilder.Append(replacementValue);
-                        }
-                        else {
-                            // the key does not exist, handle this using the missing key behaviour specified.
-                            switch (missingKeyBehaviour) {
-                                case MissingKeyBehaviour.ThrowException:
-                                    // the key was not found as a possible replacement, throw exception
-                                    throw new KeyNotFoundException($"The parameter \"{parameterToken.ParameterKey}\" was not present in the lookup dictionary");
-                                case MissingKeyBehaviour.ReplaceWithFallback:
-                                    resultBuilder.Append(fallbackReplacementValue);
-                                    break;
-                                case MissingKeyBehaviour.Ignore:
-                                    // the replacement value is the input key as a parameter.
-                                    // use source string and start/length directly with append rather than
-                                    // parameter.ParameterKey to avoid allocating an extra string
-                                    resultBuilder.Append(parameterToken.SourceString, parameterToken.StartIndex, parameterToken.Length);
-                                    break;
-                            }
-                        }
+                        parameterHandler(parameterToken, resultBuilder);
                     }
                     else {
                         // parameter was null, throw null reference exception

@@ -4,11 +4,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 using FormatWith;
+using System.Diagnostics;
+using Xunit.Abstractions;
 
 namespace FormatWithTests {
     // This project can output the Class library as a NuGet Package.
     // To enable this option, right-click on the project and select the Properties menu item. In the Build tab select "Produce outputs on build".
     public class Tests {
+
         public static readonly string Replacement1 = "Replacement1";
         public static readonly string Replacement2 = "Replacement {} Two ";
 
@@ -126,7 +129,7 @@ namespace FormatWithTests {
 
         [Fact]
         public void TestCustomBraces() {
-            string replacement = "abc<Replacement1><DoesntExist>".FormatWith(new { Replacement1 = Replacement1, Replacement2 = Replacement2 }, MissingKeyBehaviour.Ignore, null,'<','>');
+            string replacement = "abc<Replacement1><DoesntExist>".FormatWith(new { Replacement1 = Replacement1, Replacement2 = Replacement2 }, MissingKeyBehaviour.Ignore, null, '<', '>');
 
             if (replacement == "abcReplacement1<DoesntExist>") {
                 Assert.True(true);
@@ -147,6 +150,19 @@ namespace FormatWithTests {
             if (parameters[1] != nameof(Replacement2)) {
                 Assert.True(false);
                 return;
+            }
+            Assert.True(true);
+        }
+
+        
+
+        [Fact]
+        public void SpeedTest() {
+            for (int i = 0; i < 500000; i++) {
+                string replacement = testFormat3.FormatWith(new { Replacement1 = Replacement1, Replacement2 = Replacement2 });
+                if (replacement != testFormat3Solution) {
+                    Assert.True(false);
+                }
             }
             Assert.True(true);
         }
