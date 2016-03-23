@@ -1,6 +1,6 @@
 # FormatWith
 
-[![NuGet](https://img.shields.io/badge/nuget-1.0.0-green.svg)](https://www.nuget.org/packages/FormatWith/)
+[![NuGet](https://img.shields.io/badge/nuget-1.1.0-green.svg)](https://www.nuget.org/packages/FormatWith/)
 
 A C# library for performing named parameterized string formatting.
 
@@ -26,9 +26,9 @@ A state machine parser quickly runs through the input format string, tokenizing 
 
 Two extention methods for `string` are defined in `FormatWith.FormatStringExtensions`, `FormatWith()` and `GetFormatParameters`.
 
-### FormatWith
+### FormatWith(1/2)
 
-FormatWith() takes a format string containing named parameters, along with a dictionary (or type) of replacement parameters. Optionally, missing key behaviour, a fallback value, and custom brace characters can be specified. Two adjacent opening or closing brace characters in the format string are treated as escaped, and will be reduced to a single brace in the output string.
+The first and second overload of FormatWith() takes a format string containing named parameters, along with an object (1) or dictionary (2) of replacement parameters. Optionally, missing key behaviour, a fallback value, and custom brace characters can be specified. Two adjacent opening or closing brace characters in the format string are treated as escaped, and will be reduced to a single brace in the output string.
 
 Missing key behaviour is specified by the MissingKeyBehaviour enum, which can be either `ThrowException`, `ReplaceWithFallback`, or `Ignore`.
 
@@ -57,6 +57,12 @@ output: "abc Replacement1 {DoesntExist}"
 `string replacement = "abc <Replacement1> <DoesntExist>".FormatWith(new { Replacement1 = Replacement1, Replacement2 = Replacement2 }, MissingKeyBehaviour.Ignore, null,'<','>');`
 
 output: "abc Replacement1 <DoesntExist>"
+
+### FormatWith(3)
+
+The second overload of `FormatWith()` takes a format string containing named parameters, along with an `Action<FormatToken, StringBuilder>`. The action is a handler that is called sequentially with each `FormatToken` parsed from the format string, and uses the information given by this `FormatToken` to mutate the `StringBuilder`. This allows full extensibility in controlling how parameters are handled, and also allows control over how they affect surrounding standard text.
+
+`FormatWith(1/2)` use this method internally by passing a simple dictionary replacement handler as the action.
 
 ### GetFormatParameters
 

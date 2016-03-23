@@ -16,32 +16,51 @@ namespace FormatWith {
         public static string ProcessTokens(IEnumerable<FormatToken> tokens, IDictionary<string, object> replacements,
             MissingKeyBehaviour missingKeyBehaviour = MissingKeyBehaviour.ThrowException, string fallbackReplacementValue = null) {
 
-            return ProcessTokens(tokens, (parameter, sb) => {
+            return ProcessTokens(tokens, (token, sb) => {
                 // the default handler for parameters supports the three basic scenarios
                 // for dictionary replacement - throw on not found, fallback, and ignore.
 
-                // append the replacement for this parameter
-                object replacementValue = null;
-                if (replacements.TryGetValue(parameter.ParameterKey, out replacementValue)) {
-                    // the key exists, add the replacement value
-                    // this does nothing if replacement value is null
-                    sb.Append(replacementValue);
+                // handle text token
+                TextToken textToken = token as TextToken;
+                if (textToken != null) {
+                    // token is a text token
+                    // add the token to the result string builder
+                    sb.Append(textToken.SourceString, textToken.StartIndex, textToken.Length);
                 }
                 else {
-                    // the key does not exist, handle this using the missing key behaviour specified.
-                    switch (missingKeyBehaviour) {
-                        case MissingKeyBehaviour.ThrowException:
-                            // the key was not found as a possible replacement, throw exception
-                            throw new KeyNotFoundException($"The parameter \"{parameter.ParameterKey}\" was not present in the lookup dictionary");
-                        case MissingKeyBehaviour.ReplaceWithFallback:
-                            sb.Append(fallbackReplacementValue);
-                            break;
-                        case MissingKeyBehaviour.Ignore:
-                            // the replacement value is the input key as a parameter.
-                            // use source string and start/length directly with append rather than
-                            // parameter.ParameterKey to avoid allocating an extra string
-                            sb.Append(parameter.SourceString, parameter.StartIndex, parameter.Length);
-                            break;
+                    ParameterToken parameterToken = token as ParameterToken;
+                    if (parameterToken != null) {
+                        // token is a parameter token
+                        // perform parameter logic now.
+
+                        // append the replacement for this parameter
+                        object replacementValue = null;
+                        if (replacements.TryGetValue(parameterToken.ParameterKey, out replacementValue)) {
+                            // the key exists, add the replacement value
+                            // this does nothing if replacement value is null
+                            sb.Append(replacementValue);
+                        }
+                        else {
+                            // the key does not exist, handle this using the missing key behaviour specified.
+                            switch (missingKeyBehaviour) {
+                                case MissingKeyBehaviour.ThrowException:
+                                    // the key was not found as a possible replacement, throw exception
+                                    throw new KeyNotFoundException($"The parameter \"{parameterToken.ParameterKey}\" was not present in the lookup dictionary");
+                                case MissingKeyBehaviour.ReplaceWithFallback:
+                                    sb.Append(fallbackReplacementValue);
+                                    break;
+                                case MissingKeyBehaviour.Ignore:
+                                    // the replacement value is the input key as a parameter.
+                                    // use source string and start/length directly with append rather than
+                                    // parameter.ParameterKey to avoid allocating an extra string
+                                    sb.Append(parameterToken.SourceString, parameterToken.StartIndex, parameterToken.Length);
+                                    break;
+                            }
+                        }
+                    }
+                    else {
+                        // parameter was null, throw null reference exception
+                        throw new NullReferenceException($"A format token in {nameof(tokens)} was null");
                     }
                 }
             });
@@ -52,7 +71,7 @@ namespace FormatWith {
         /// </summary>
         /// <param name="tokens">List of tokens to turn into a string</param>
         /// <param name="parameterHandler">The handler for parameters. The handler is fed all parameters sequentially, and modifies the StringBuilder accordingly.</param>
-        public static string ProcessTokens(IEnumerable<FormatToken> tokens, Action<ParameterToken, StringBuilder> parameterHandler) {
+        public static string ProcessTokens(IEnumerable<FormatToken> tokens, Action<FormatToken, StringBuilder> tokenHandler) {
 
             // if there are no parameters, return an empty string
             // (this would happen anyway, but this is avoids creating an entire
@@ -66,25 +85,7 @@ namespace FormatWith {
             StringBuilder resultBuilder = new StringBuilder(tokens.First().Length);
 
             foreach (FormatToken thisToken in tokens) {
-                // handle text token
-                TextToken textToken = thisToken as TextToken;
-                if (textToken != null) {
-                    // token is a text token
-                    // add the token to the result string builder
-                    resultBuilder.Append(textToken.SourceString, textToken.StartIndex, textToken.Length);
-                }
-                else {
-                    ParameterToken parameterToken = thisToken as ParameterToken;
-                    if (parameterToken != null) {
-                        // token is a parameter token
-                        // perform parameter logic now.
-                        parameterHandler(parameterToken, resultBuilder);
-                    }
-                    else {
-                        // parameter was null, throw null reference exception
-                        throw new NullReferenceException($"A format token in {nameof(tokens)} was null");
-                    }
-                }
+                tokenHandler(thisToken, resultBuilder);
             }
 
             // return the resultant string

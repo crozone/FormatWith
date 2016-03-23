@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using static FormatWith.FormatHelpers;
 using static FormatWith.ObjectHelpers;
 
@@ -34,6 +36,23 @@ namespace FormatWith {
             // get the parameters from the format string
             var tokens = Tokenize(formatString, openBraceChar, closeBraceChar);
             return ProcessTokens(tokens, replacements, missingKeyBehaviour, fallbackReplacementValue);
+        }
+
+        /// <summary>
+        /// Extension method formats a string based on the hanlder specified.
+        /// </summary>
+        /// <param name="formatString">The format string, containing keys like {foo}</param>
+        /// <param name="replacements">An <see cref="IDictionary"/> with keys and values to inject into the string</param>
+        /// <param name="missingKeyBehaviour">The behaviour to use when the format string contains a parameter that is not present in the lookup dictionary</param>
+        /// <param name="fallbackReplacementValue">When the <see cref="MissingKeyBehaviour.ReplaceWithFallback"/> is specified, this string is used as a fallback replacement value when the parameter is present in the lookup dictionary.</param>
+        /// <param name="openBraceChar">The character used to begin parameters</param>
+        /// <param name="closeBraceChar">The character used to end parameters</param>
+        /// <returns>The resultant string</returns>
+        public static string FormatWith(this string formatString, Action<FormatToken, StringBuilder> tokenHandler, char openBraceChar = '{', char closeBraceChar = '}') {
+
+            // get the parameters from the format string
+            var tokens = Tokenize(formatString, openBraceChar, closeBraceChar);
+            return ProcessTokens(tokens, tokenHandler);
         }
 
         /// <summary>
