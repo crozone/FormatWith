@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace FormatWith
 {
-    public class DictionaryObjectWrapper<T, U> : IDictionary<T, object> {
+    public class DictionaryStringToObjectWrapper<T, U> : IDictionary<T, object> {
             private readonly IDictionary<T, U> inner;
-            public DictionaryObjectWrapper(IDictionary<T, U> wrapped) {
+            public DictionaryStringToObjectWrapper(IDictionary<T, U> wrapped) {
                 this.inner = wrapped;
             }
 

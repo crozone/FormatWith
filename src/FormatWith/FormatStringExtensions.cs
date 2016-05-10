@@ -33,7 +33,7 @@ namespace FormatWith {
         /// <returns>A version of the formatString string with dictionary keys replaced by (formatted) key values</returns>
         public static string FormatWith(this string formatString, IDictionary<string, string> replacements, MissingKeyBehaviour missingKeyBehaviour = MissingKeyBehaviour.ThrowException, string fallbackReplacementValue = null, char openBraceChar = '{', char closeBraceChar = '}') {
             // wrap the IDictionary<string, string> in a wrapper Dictionary class that casts the values to objects as needed
-            return formatString.FormatWith(new DictionaryObjectWrapper<string, string>(replacements), missingKeyBehaviour, fallbackReplacementValue, openBraceChar, closeBraceChar);
+            return formatString.FormatWith(new DictionaryStringToObjectWrapper<string, string>(replacements), missingKeyBehaviour, fallbackReplacementValue, openBraceChar, closeBraceChar);
         }
 
         /// <summary>
