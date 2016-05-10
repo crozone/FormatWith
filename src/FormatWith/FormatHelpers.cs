@@ -99,11 +99,9 @@ namespace FormatWith {
         /// <param name="openBraceChar">The character used to begin parameters</param>
         /// <param name="closeBraceChar">The character used to end parameters</param>
         /// <returns>A list of text and parameter tokens representing the input format string</returns>
-        public static IReadOnlyCollection<FormatToken> Tokenize(string formatString, char openBraceChar = '{', char closeBraceChar = '}') {
+        public static IEnumerable<FormatToken> Tokenize(string formatString, char openBraceChar = '{', char closeBraceChar = '}') {
 
             if (formatString == null) throw new ArgumentNullException($"{nameof(formatString)} cannot be null.");
-
-            List<FormatToken> parameters = new List<FormatToken>();
 
             int currentTokenStart = 0;
 
@@ -120,9 +118,9 @@ namespace FormatWith {
                         if (index < formatString.Length - 1 && formatString[index + 1] == openBraceChar) {
                             // ESCAPED OPEN BRACE
                             // we have hit an escaped open brace
-                            // add the current normal text, as well as the first brace, to the
-                            // list of tokens as a text token.
-                            parameters.Add(new TextToken(formatString, currentTokenStart, (index - currentTokenStart) + 1));
+                            // return current normal text, as well as the first brace
+                            // implemented as yield return, this generates a IEnumerator state machine.
+                            yield return new TextToken(formatString, currentTokenStart, (index - currentTokenStart) + 1);
 
                             // skip over braces
                             index += 2;
@@ -141,7 +139,7 @@ namespace FormatWith {
                             // we are leaving standard text and entering into a parameter
                             // add the text traveresed so far as a text token
                             if (currentTokenStart < index) {
-                                parameters.Add(new TextToken(formatString, currentTokenStart, (index - currentTokenStart)));
+                                yield return new TextToken(formatString, currentTokenStart, (index - currentTokenStart));
                             }
 
                             // set the start index of the token to the start of this parameter
@@ -159,7 +157,7 @@ namespace FormatWith {
 
                             // add the current normal text, as well as the first brace, to the
                             // list of tokens as a text token.
-                            parameters.Add(new TextToken(formatString, currentTokenStart, (index - currentTokenStart) + 1));
+                            yield return new TextToken(formatString, currentTokenStart, (index - currentTokenStart) + 1);
 
                             // skip over braces
                             index += 2;
@@ -203,7 +201,7 @@ namespace FormatWith {
                         // since we cannot have escaped braces within parameters.
 
                         // Add the parameter information to the parameter list
-                        parameters.Add(new ParameterToken(formatString, currentTokenStart, (index - currentTokenStart) + 1));
+                        yield return new ParameterToken(formatString, currentTokenStart, (index - currentTokenStart) + 1);
 
                         // set the state to be outside of any braces
                         insideBraces = false;
@@ -234,11 +232,12 @@ namespace FormatWith {
             else {
                 // outside braces. Add on any remaining text at the end of the format string
                 if (currentTokenStart < index) {
-                    parameters.Add(new TextToken(formatString, currentTokenStart, (index - currentTokenStart)));
+                    yield return new TextToken(formatString, currentTokenStart, (index - currentTokenStart));
                 }
             }
 
-            return parameters.AsReadOnly();
+            // finished tokenizing, so yield break to make MoveNext return false on the IEnumerator
+            yield break;
         }
     }
 }
