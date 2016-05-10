@@ -1,12 +1,12 @@
 # FormatWith
 
-[![NuGet](https://img.shields.io/badge/nuget-1.1.0-green.svg)](https://www.nuget.org/packages/FormatWith/)
+[![NuGet](https://img.shields.io/badge/nuget-1.2.0-green.svg)](https://www.nuget.org/packages/FormatWith/)
 
 A C# library for performing named parameterized string formatting.
 
 ## Quick Info
 
-This library provides named string formatting via the string extension .FormatWith(). It is written as a DNX project, publishes to NuGet package, and is fully compatible with .NET Core.
+This library provides named string formatting via the string extension .FormatWith(). It is written as a DNX project, publishes to NuGet package, and is fully compatible with .NET Core. It is currently build against 1.0.0-rc1-update1.
 
 An example of what it can do:
 
@@ -24,7 +24,7 @@ A state machine parser quickly runs through the input format string, tokenizing 
 
 ## Extension methods:
 
-Two extention methods for `string` are defined in `FormatWith.FormatStringExtensions`, `FormatWith()` and `GetFormatParameters`.
+Two extension methods for `string` are defined in `FormatWith.FormatStringExtensions`, `FormatWith()` and `GetFormatParameters`.
 
 ### FormatWith(1/2)
 
@@ -62,14 +62,28 @@ output: "abc Replacement1 <DoesntExist>"
 
 The second overload of `FormatWith()` takes a format string containing named parameters, along with an `Action<FormatToken, StringBuilder>`. The action is a handler that is called sequentially with each `FormatToken` parsed from the format string, and uses the information given by this `FormatToken` to mutate the `StringBuilder`. This allows full extensibility in controlling how parameters are handled, and also allows control over how they affect surrounding standard text.
 
-`FormatWith(1/2)` use this method internally by passing a simple dictionary replacement handler as the action.
+`FormatWith(1/2)` uses this method internally by passing a simple dictionary replacement handler as the action.
 
-### GetFormatParameters
+### FormatParameters
 
-`GetFormatParameters()` can be used to get a list of parameter names out of a format string, which can be used for inspection before performing other actions on it.
+`FormatParameters()` can be used to get a list of parameter names out of a format string, which can be used for inspection before performing other actions on it.
 
 **Example:**
 
-`List<string> parameters = "{parameter1} {parameter2} {{not a parameter}}".GetFormatParameters();`
+`IEnumerable<string> parameters = "{parameter1} {parameter2} {{not a parameter}}".FormatParameters();`
 
-output: parameters now contains "parameter1","parameter2".
+output: parameters will return "parameter1","parameter2" during iteration.
+
+## Tests:
+
+A testing project is included that covers basic functionality.
+
+## Performance:
+
+On a low end 1.3Ghz mobile i7, the SpeedTest test function completes in around 1 second. The SpeedTest test performs 1,000,000 string formats, with a format string containing 1 parameter.
+
+The SpeedTestBigger test performs a more complex replacement on a longer string containing 2 parameters and several escaped brackets, again 1,000,000 times. On the same hardware, this test completed in around 2 seconds.
+
+The SpeedTestBiggerAnonymous test is the same as SpeedTestBigger, but uses the anonymous function overload of FormatWith. It completes in around 2 seconds, with no noticeable difference in speed to the non-anonymous overload. 
+
+So as a rough performance guide, FormatWith can perform about 1,000,000 parameter replacements per second on low end hardware.

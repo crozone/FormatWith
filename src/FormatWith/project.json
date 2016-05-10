@@ -1,9 +1,9 @@
 ﻿{
-  "version": "1.1.0-*",
+  "version": "1.2.0-*",
   "description": "FormatWith, a library for performing named parameterized string formatting.",
   "authors": [ "Ryan Crosby" ],
   "tags": [ "" ],
-  "projectUrl": "",
+  "projectUrl": "https://github.com/crozone/FormatWith",
   "licenseUrl": "",
 
   "frameworks": {
