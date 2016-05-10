@@ -19,9 +19,12 @@ namespace FormatWithTests {
 
         public static readonly string TestFormatNoParams = "Test string with no parameters";
 
-        public static readonly string testFormat3 = "abc{Replacement1}def{{escaped1}}ghi{{{Replacement2}}}jkl{{{{escaped2}}}}mno";
+        public static readonly string testFormat3 = "test{Replacement1}";
+        public static readonly string testFormat3Solution = $"testReplacement1";
 
-        public static readonly string testFormat3Solution = $"abc{Replacement1}def{{escaped1}}ghi{{{Replacement2}}}jkl{{{{escaped2}}}}mno";
+        public static readonly string testFormat4 = "abc{Replacement1}def{{escaped1}}ghi{{{Replacement2}}}jkl{{{{escaped2}}}}mno";
+
+        public static readonly string testFormat4Solution = $"abc{Replacement1}def{{escaped1}}ghi{{{Replacement2}}}jkl{{{{escaped2}}}}mno";
 
         [Fact]
         public void TrueTest() {
@@ -43,8 +46,8 @@ namespace FormatWithTests {
 
         [Fact]
         public void TestReplacement3() {
-            string replacement = testFormat3.FormatWith(new { Replacement1 = Replacement1, Replacement2 = Replacement2 });
-            Assert.True(replacement == testFormat3Solution);
+            string replacement = testFormat4.FormatWith(new { Replacement1 = Replacement1, Replacement2 = Replacement2 });
+            Assert.True(replacement == testFormat4Solution);
         }
 
         [Fact]
@@ -141,7 +144,7 @@ namespace FormatWithTests {
 
         [Fact]
         public void TestGetFormatParameters() {
-            List<string> parameters = testFormat3.GetFormatParameters();
+            List<string> parameters = testFormat4.FormatParameters().ToList();
             if (parameters.Count != 2) Assert.True(false);
             if (parameters[0] != nameof(Replacement1)) {
                 Assert.True(false);
@@ -154,13 +157,43 @@ namespace FormatWithTests {
             Assert.True(true);
         }
 
-        
-
         [Fact]
         public void SpeedTest() {
+            Dictionary<string, string> replacementDictionary = new Dictionary<string, string>() {
+                ["Replacement1"] = Replacement1,
+                ["Replacement2"] = Replacement2
+            };
+
             for (int i = 0; i < 1000000; i++) {
-                string replacement = testFormat3.FormatWith(new { Replacement1 = Replacement1, Replacement2 = Replacement2 });
+                string replacement = testFormat3.FormatWith(replacementDictionary);
                 if (replacement != testFormat3Solution) {
+                    Assert.True(false);
+                }
+            }
+            Assert.True(true);
+        }
+
+        [Fact]
+        public void SpeedTestBigger() {
+            Dictionary<string, string> replacementDictionary = new Dictionary<string, string>() {
+                ["Replacement1"] = Replacement1,
+                ["Replacement2"] = Replacement2
+            };
+
+            for (int i = 0; i < 1000000; i++) {
+                string replacement = testFormat4.FormatWith(replacementDictionary);
+                if (replacement != testFormat4Solution) {
+                    Assert.True(false);
+                }
+            }
+            Assert.True(true);
+        }
+
+        [Fact]
+        public void SpeedTestBiggerAnonymous() {
+            for (int i = 0; i < 1000000; i++) {
+                string replacement = testFormat4.FormatWith(new { Replacement1 = Replacement1, Replacement2 = Replacement2 });
+                if (replacement != testFormat4Solution) {
                     Assert.True(false);
                 }
             }

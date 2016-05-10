@@ -5,7 +5,7 @@ using System.Linq;
 using System.Reflection;
 
 namespace FormatWith {
-    public class ObjectPropertyDictionary : IDictionary<string, object> {
+    public class DictionaryTypeWrapper : IDictionary<string, object> {
         private object rootObject;
         private Type rootObjectType;
         private static BindingFlags propertyFlags = BindingFlags.Instance | BindingFlags.Public;
@@ -24,7 +24,7 @@ namespace FormatWith {
         }
 
 
-        public ObjectPropertyDictionary(object root) {
+        public DictionaryTypeWrapper(object root) {
             if (root == null) throw new ArgumentNullException(nameof(root));
             this.rootObject = root;
             rootObjectType = root.GetType();
