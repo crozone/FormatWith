@@ -33,7 +33,7 @@ namespace FormatWith {
         public static string FormatWith(this string formatString, IDictionary<string, object> replacements, MissingKeyBehaviour missingKeyBehaviour = MissingKeyBehaviour.ThrowException, string fallbackReplacementValue = null, char openBraceChar = '{', char closeBraceChar = '}') {
 
             // get the parameters from the format string
-            var tokens = Tokenize(formatString, openBraceChar, closeBraceChar);
+            IEnumerable<FormatToken> tokens = Tokenize(formatString, openBraceChar, closeBraceChar);
             return ProcessTokens(tokens, replacements, missingKeyBehaviour, fallbackReplacementValue);
         }
 

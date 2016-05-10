@@ -5,7 +5,7 @@ using System.Linq;
 using System.Reflection;
 
 namespace FormatWith {
-    public class ObjectPropertyDictionary : IReadOnlyDictionary<string, object> {
+    public class ObjectPropertyDictionary : IDictionary<string, object> {
         private object rootObject;
         private Type rootObjectType;
         private static BindingFlags propertyFlags = BindingFlags.Instance | BindingFlags.Public;
@@ -39,7 +39,7 @@ namespace FormatWith {
             if (!allProperties.TryGetValue(parameterName, out property)) {
                 return false;
             }
-            
+
             // get the object from the property
             parameterObject = property.GetValue(rootObject);
 
@@ -56,6 +56,10 @@ namespace FormatWith {
                 }
 
                 return returnObject;
+            }
+            set
+            {
+                throw new NotSupportedException();
             }
         }
 
@@ -75,7 +79,7 @@ namespace FormatWith {
             }
         }
 
-        public IEnumerable<string> Keys
+        public ICollection<string> Keys
         {
             get
             {
@@ -83,7 +87,7 @@ namespace FormatWith {
             }
         }
 
-        public IEnumerable<object> Values
+        public ICollection<object> Values
         {
             get
             {
@@ -91,20 +95,20 @@ namespace FormatWith {
                     object paramObject;
                     TryGetParameter(kvp.Key, out paramObject);
                     return paramObject;
-                });
+                }).ToList();
             }
         }
 
         public void Add(KeyValuePair<string, object> item) {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         public void Add(string key, object value) {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         public void Clear() {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         public bool Contains(KeyValuePair<string, object> item) {
@@ -127,11 +131,11 @@ namespace FormatWith {
         }
 
         public bool Remove(KeyValuePair<string, object> item) {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         public bool Remove(string key) {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         public bool TryGetValue(string key, out object value) {
@@ -140,6 +144,10 @@ namespace FormatWith {
 
         IEnumerator IEnumerable.GetEnumerator() {
             return this.GetEnumerator();
+        }
+
+        public void CopyTo(KeyValuePair<string, object>[] array, int arrayIndex) {
+            throw new NotImplementedException();
         }
     }
 }

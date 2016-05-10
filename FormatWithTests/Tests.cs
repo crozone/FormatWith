@@ -158,7 +158,7 @@ namespace FormatWithTests {
 
         [Fact]
         public void SpeedTest() {
-            for (int i = 0; i < 500000; i++) {
+            for (int i = 0; i < 1000000; i++) {
                 string replacement = testFormat3.FormatWith(new { Replacement1 = Replacement1, Replacement2 = Replacement2 });
                 if (replacement != testFormat3Solution) {
                     Assert.True(false);
