@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using static FormatWith.FormatHelpers;
-using static FormatWith.ObjectHelpers;
 
 namespace FormatWith {
     public static class FormatStringExtensions {
@@ -18,7 +17,7 @@ namespace FormatWith {
         /// <param name="closeBraceChar">The character used to end parameters</param>
         /// <returns>A version of the formatString string with dictionary keys replaced by (formatted) key values</returns>
         public static string FormatWith(this string formatString, object injectionObject, MissingKeyBehaviour missingKeyBehaviour = MissingKeyBehaviour.ThrowException, string fallbackReplacementValue = null, char openBraceChar = '{', char closeBraceChar = '}') {
-            return formatString.FormatWith(GetPropertiesDictionary(injectionObject), missingKeyBehaviour, fallbackReplacementValue, openBraceChar, closeBraceChar);
+            return formatString.FormatWith(new ObjectPropertyDictionary(injectionObject), missingKeyBehaviour, fallbackReplacementValue, openBraceChar, closeBraceChar);
         }
 
         /// <summary>
