@@ -1,8 +1,10 @@
 ﻿{
   "version": "1.2.0-*",
+  "title": "FormatWith",
   "description": "FormatWith, a library for performing named parameterized string formatting.",
+  "summary": "A library for named parameterized string formatting.",
   "authors": [ "Ryan Crosby" ],
-  "tags": [ "" ],
+  "tags": [ ".NET Core string formatting named parameter formatter" ],
   "projectUrl": "https://github.com/crozone/FormatWith",
   "licenseUrl": "",
 
