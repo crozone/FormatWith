@@ -141,7 +141,7 @@ namespace FormatWithTests {
 
         [Fact]
         public void TestGetFormatParameters() {
-            List<string> parameters = testFormat4.FormatParameters().ToList();
+            List<string> parameters = testFormat4.GetFormatParameters().ToList();
             if (parameters.Count != 2) Assert.True(false);
             if (parameters[0] != nameof(Replacement1)) {
                 Assert.True(false);

@@ -77,7 +77,7 @@ namespace FormatWith {
         /// <param name="openBraceChar">The character used to begin parameters</param>
         /// <param name="closeBraceChar">The character used to end parameters</param>
         /// <returns></returns>
-        public static IEnumerable<string> FormatParameters(this string formatString, char openBraceChar = '{', char closeBraceChar = '}') {
+        public static IEnumerable<string> GetFormatParameters(this string formatString, char openBraceChar = '{', char closeBraceChar = '}') {
             return Tokenize(formatString, openBraceChar, closeBraceChar)
                 .Select(t => t as ParameterToken)
                 .Where(pt => pt != null)
