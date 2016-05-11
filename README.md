@@ -16,7 +16,9 @@ Produces:
 
 > "Your name is John, and this is {escaped}, this {is good}, and this is {{doubleEscaped}}"
 
-It can also be fed parameters via an `IDictionary<string, object>` directly, rather than a type.
+It can also be fed parameters via an `IDictionary<string, string>` or an `IDictionary<string, object>`, rather than a type.
+
+The value of each replacement parameter is given by whatever the object's .ToString() method produces.
 
 ## How it works
 
@@ -24,11 +26,11 @@ A state machine parser quickly runs through the input format string, tokenizing 
 
 ## Extension methods:
 
-Two extension methods for `string` are defined in `FormatWith.FormatStringExtensions`, `FormatWith()` and `GetFormatParameters`.
+Two extension methods for `string` are defined in `FormatWith.FormatStringExtensions`, `FormatWith()` and `FormatParameters`.
 
-### FormatWith(1/2)
+### FormatWith(1, 2, 3)
 
-The first and second overload of FormatWith() takes a format string containing named parameters, along with an object (1) or dictionary (2) of replacement parameters. Optionally, missing key behaviour, a fallback value, and custom brace characters can be specified. Two adjacent opening or closing brace characters in the format string are treated as escaped, and will be reduced to a single brace in the output string.
+The first, second, and third overload of FormatWith() takes a format string containing named parameters, along with an object (1) or dictionary (2) of replacement parameters. Optionally, missing key behaviour, a fallback value, and custom brace characters can be specified. Two adjacent opening or closing brace characters in the format string are treated as escaped, and will be reduced to a single brace in the output string.
 
 Missing key behaviour is specified by the MissingKeyBehaviour enum, which can be either `ThrowException`, `ReplaceWithFallback`, or `Ignore`.
 
@@ -36,7 +38,7 @@ Missing key behaviour is specified by the MissingKeyBehaviour enum, which can be
 
 `ReplaceWithFallback` inserts the value specified by `fallbackReplacementValue` in place of any parameters that did not have a corresponding key in the lookup dictionary.
 
-`Ignore` ignores any parameters that did not have a corresponding key in the lookup dictionary, leaving them unmodified in the output string.
+`Ignore` ignores any parameters that did not have a corresponding key in the lookup dictionary, leaving the unmodified braced parameter in the output string.
 
 **Examples:**
 
@@ -58,11 +60,11 @@ output: "abc Replacement1 {DoesntExist}"
 
 output: "abc Replacement1 <DoesntExist>"
 
-### FormatWith(3)
+### FormatWith(4)
 
-The second overload of `FormatWith()` takes a format string containing named parameters, along with an `Action<FormatToken, StringBuilder>`. The action is a handler that is called sequentially with each `FormatToken` parsed from the format string, and uses the information given by this `FormatToken` to mutate the `StringBuilder`. This allows full extensibility in controlling how parameters are handled, and also allows control over how they affect surrounding standard text.
+The fourth overload of `FormatWith()` takes a format string containing named parameters, along with an `Action<FormatToken, StringBuilder>`. The action is a handler that is called sequentially with each `FormatToken` parsed from the format string, and uses the information given by this `FormatToken` to mutate the `StringBuilder`. This allows full extensibility in controlling how parameters are handled, and also allows control over how they affect surrounding standard text.
 
-`FormatWith(1/2)` uses this method internally by passing a simple dictionary replacement handler as the action.
+`FormatWith(1, 2, 3)` use this method internally by passing a simple dictionary replacement handler as the action.
 
 ### FormatParameters
 
@@ -80,10 +82,10 @@ A testing project is included that covers basic functionality.
 
 ## Performance:
 
-On a low end 1.3Ghz mobile i7, the SpeedTest test function completes in around 1 second. The SpeedTest test performs 1,000,000 string formats, with a format string containing 1 parameter.
+The SpeedTest test function performs 1,000,000 string formats, with a format string containing 1 parameter. On a low end 1.3Ghz mobile i7, this completes in around 700ms, giving ~1.4 million replacements per second.
 
-The SpeedTestBigger test performs a more complex replacement on a longer string containing 2 parameters and several escaped brackets, again 1,000,000 times. On the same hardware, this test completed in around 2 seconds.
+The SpeedTestBigger test performs a more complex replacement on a longer string containing 2 parameters and several escaped brackets, again 1,000,000 times. On the same hardware, this test completed in around 1 seconds.
 
-The SpeedTestBiggerAnonymous test is the same as SpeedTestBigger, but uses the anonymous function overload of FormatWith. It completes in around 2 seconds, with no noticeable difference in speed to the non-anonymous overload. 
+The SpeedTestBiggerAnonymous test is the same as SpeedTestBigger, but uses the anonymous function overload of FormatWith. It completes in just under 2 seconds. Using the anonymous overload of FormatWith is slightly slower due to reflection overhead, although this is minimised by caching.
 
-So as a rough performance guide, FormatWith can perform about 1,000,000 parameter replacements per second on low end hardware.
+So as a rough performance guide, FormatWith will usually manage about 1 million parameter replacements per second on low end hardware.
