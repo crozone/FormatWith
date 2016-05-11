@@ -1,6 +1,6 @@
 # FormatWith
 
-[![NuGet](https://img.shields.io/badge/nuget-1.2.0-green.svg)](https://www.nuget.org/packages/FormatWith/)
+[![NuGet](https://img.shields.io/badge/nuget-1.2.1-green.svg)](https://www.nuget.org/packages/FormatWith/)
 
 A C# library for performing named parameterized string formatting.
 
@@ -26,7 +26,7 @@ A state machine parser quickly runs through the input format string, tokenizing 
 
 ## Extension methods:
 
-Two extension methods for `string` are defined in `FormatWith.FormatStringExtensions`, `FormatWith()` and `FormatParameters`.
+Two extension methods for `string` are defined in `FormatWith.FormatStringExtensions`, `FormatWith()` and `GetFormatParameters`.
 
 ### FormatWith(1, 2, 3)
 
@@ -66,13 +66,13 @@ The fourth overload of `FormatWith()` takes a format string containing named par
 
 `FormatWith(1, 2, 3)` use this method internally by passing a simple dictionary replacement handler as the action.
 
-### FormatParameters
+### GetFormatParameters
 
-`FormatParameters()` can be used to get a list of parameter names out of a format string, which can be used for inspection before performing other actions on it.
+`GetFormatParameters()` can be used to get a list of parameter names out of a format string, which can be used for inspection before performing other actions on it.
 
 **Example:**
 
-`IEnumerable<string> parameters = "{parameter1} {parameter2} {{not a parameter}}".FormatParameters();`
+`IEnumerable<string> parameters = "{parameter1} {parameter2} {{not a parameter}}".GetFormatParameters();`
 
 output: parameters will return "parameter1","parameter2" during iteration.
 
