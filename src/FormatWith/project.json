@@ -1,5 +1,5 @@
 ﻿{
-  "version": "1.2.0-*",
+  "version": "1.2.1-*",
   "title": "FormatWith",
   "description": "FormatWith, a library for performing named parameterized string formatting.",
   "summary": "A library for named parameterized string formatting.",
