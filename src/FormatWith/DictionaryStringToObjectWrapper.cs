@@ -1,7 +1,7 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace FormatWith
 {
@@ -45,7 +45,7 @@ namespace FormatWith
                 }
             }
 
-            System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() {
+            IEnumerator IEnumerable.GetEnumerator() {
                 foreach (var item in inner) {
                     yield return new KeyValuePair<T, object>(item.Key, item.Value);
                 }
