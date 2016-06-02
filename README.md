@@ -1,12 +1,14 @@
 # FormatWith
 
-[![NuGet](https://img.shields.io/badge/nuget-1.2.0-green.svg)](https://www.nuget.org/packages/FormatWith/)
+[![NuGet](https://img.shields.io/badge/nuget-1.3.1-green.svg)](https://www.nuget.org/packages/FormatWith/)
 
-A C# library for performing named parameterized string formatting.
+A C# library for performing {named} {{parameterized}} string formatting.
 
 ## Quick Info
 
-This library provides named string formatting via the string extension .FormatWith(). It is written as a DNX project, publishes to NuGet package, and is fully compatible with .NET Core. It is currently build against 1.0.0-rc1-update1.
+This library provides named string formatting via the string extension .FormatWith(). It formats strings with named parameters based upon an input lookup dictionary or type.
+
+It is written as a PCL class library, publishes to NuGet package, and is fully compatible with .NET Core RC2. It is currently built against .NETStandard 1.3 and .NET Full Framework 4.5, which makes it compatible with .NET Core 1.0, .NET Full 4.5+, UWP/uap 10, and most mono/xamarin platforms.
 
 An example of what it can do:
 
@@ -22,7 +24,7 @@ The value of each replacement parameter is given by whatever the object's .ToStr
 
 ## How it works
 
-A state machine parser quickly runs through the input format string, tokenizing the input into tokens of either "normal" or "parameter" text. These tokens are simply an index and length which reference into the original format string - SubString is avoided to prevent unnecessary object allocations. These tokens are then fed sequentially into a StringBuilder, which produces the final output string.
+A state machine parser quickly runs through the input format string, tokenizing the input into tokens of either "normal" or "parameter" text. These tokens are simply an index and length which reference the original format string - SubString is avoided to prevent unnecessary object allocations. These tokens are provided by the tokenizer's enumerator which is given to a token processor, which in turn feeds each token into a StringBuilder. Since StringBuilder is only `.Append()`ed relatively large segments of string, it produces the final output string quickly and efficiently.
 
 ## Extension methods:
 
