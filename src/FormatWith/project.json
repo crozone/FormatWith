@@ -9,17 +9,19 @@
     "licenseUrl": "",
     "summary": "A library for named parameterized string formatting."
   },
-  "dependencies": {
-    "NETStandard.Library": "1.5.0-rc2-24027",
-    "System.Reflection.TypeExtensions": "4.1.0-rc2-24027",
-    "System.Reflection": "4.1.0-rc2-24027",
-    "System.Collections": "4.0.11-rc2-24027",
-    "System.Linq": "4.1.0-rc2-24027",
-    "System.Runtime": "4.1.0-rc2-24027"
-  },
+  "dependencies": { },
   "frameworks": {
+    "net451": { },
     "netstandard1.5": {
-      "imports": "dnxcore50"
+      "imports": "dnxcore50",
+      "dependencies": {
+        "NETStandard.Library": "1.5.0-rc2-24027",
+        "System.Reflection.TypeExtensions": "4.1.0-rc2-24027",
+        "System.Reflection": "4.1.0-rc2-24027",
+        "System.Collections": "4.0.11-rc2-24027",
+        "System.Linq": "4.1.0-rc2-24027",
+        "System.Runtime": "4.1.0-rc2-24027"
+      }
     }
   }
 }

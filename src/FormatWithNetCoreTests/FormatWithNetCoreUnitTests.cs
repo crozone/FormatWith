@@ -4,7 +4,7 @@ using System.Linq;
 using FormatWith;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace FormatWithNetCoreUnitTests {
+namespace FormatWith.NetCoreUnitTests {
     [TestClass]
     public class TestClass {
         public static readonly string Replacement1 = "Replacement1";
