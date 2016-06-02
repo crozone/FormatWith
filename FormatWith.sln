@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{B4638D33-4E45-4FB4-A119-91F90F876E8D}"
 EndProject
@@ -12,7 +12,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "FormatWith", "src\FormatWith\FormatWith.xproj", "{ADB5A137-ACCC-4DC2-BC7D-1BF95853FFC9}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "FormatWithTests", "FormatWithTests\FormatWithTests.xproj", "{650A5A85-5956-491E-9312-5E25A27D1108}"
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "FormatWithNetCoreTests", "src\FormatWithNetCoreTests\FormatWithNetCoreTests.xproj", "{9C1EEC39-38C1-43A5-AC21-69A1453421E9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -42,28 +42,28 @@ Global
 		{ADB5A137-ACCC-4DC2-BC7D-1BF95853FFC9}.Release|x64.Build.0 = Release|Any CPU
 		{ADB5A137-ACCC-4DC2-BC7D-1BF95853FFC9}.Release|x86.ActiveCfg = Release|Any CPU
 		{ADB5A137-ACCC-4DC2-BC7D-1BF95853FFC9}.Release|x86.Build.0 = Release|Any CPU
-		{650A5A85-5956-491E-9312-5E25A27D1108}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{650A5A85-5956-491E-9312-5E25A27D1108}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{650A5A85-5956-491E-9312-5E25A27D1108}.Debug|ARM.ActiveCfg = Debug|Any CPU
-		{650A5A85-5956-491E-9312-5E25A27D1108}.Debug|ARM.Build.0 = Debug|Any CPU
-		{650A5A85-5956-491E-9312-5E25A27D1108}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{650A5A85-5956-491E-9312-5E25A27D1108}.Debug|x64.Build.0 = Debug|Any CPU
-		{650A5A85-5956-491E-9312-5E25A27D1108}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{650A5A85-5956-491E-9312-5E25A27D1108}.Debug|x86.Build.0 = Debug|Any CPU
-		{650A5A85-5956-491E-9312-5E25A27D1108}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{650A5A85-5956-491E-9312-5E25A27D1108}.Release|Any CPU.Build.0 = Release|Any CPU
-		{650A5A85-5956-491E-9312-5E25A27D1108}.Release|ARM.ActiveCfg = Release|Any CPU
-		{650A5A85-5956-491E-9312-5E25A27D1108}.Release|ARM.Build.0 = Release|Any CPU
-		{650A5A85-5956-491E-9312-5E25A27D1108}.Release|x64.ActiveCfg = Release|Any CPU
-		{650A5A85-5956-491E-9312-5E25A27D1108}.Release|x64.Build.0 = Release|Any CPU
-		{650A5A85-5956-491E-9312-5E25A27D1108}.Release|x86.ActiveCfg = Release|Any CPU
-		{650A5A85-5956-491E-9312-5E25A27D1108}.Release|x86.Build.0 = Release|Any CPU
+		{9C1EEC39-38C1-43A5-AC21-69A1453421E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9C1EEC39-38C1-43A5-AC21-69A1453421E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9C1EEC39-38C1-43A5-AC21-69A1453421E9}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{9C1EEC39-38C1-43A5-AC21-69A1453421E9}.Debug|ARM.Build.0 = Debug|Any CPU
+		{9C1EEC39-38C1-43A5-AC21-69A1453421E9}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{9C1EEC39-38C1-43A5-AC21-69A1453421E9}.Debug|x64.Build.0 = Debug|Any CPU
+		{9C1EEC39-38C1-43A5-AC21-69A1453421E9}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{9C1EEC39-38C1-43A5-AC21-69A1453421E9}.Debug|x86.Build.0 = Debug|Any CPU
+		{9C1EEC39-38C1-43A5-AC21-69A1453421E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9C1EEC39-38C1-43A5-AC21-69A1453421E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9C1EEC39-38C1-43A5-AC21-69A1453421E9}.Release|ARM.ActiveCfg = Release|Any CPU
+		{9C1EEC39-38C1-43A5-AC21-69A1453421E9}.Release|ARM.Build.0 = Release|Any CPU
+		{9C1EEC39-38C1-43A5-AC21-69A1453421E9}.Release|x64.ActiveCfg = Release|Any CPU
+		{9C1EEC39-38C1-43A5-AC21-69A1453421E9}.Release|x64.Build.0 = Release|Any CPU
+		{9C1EEC39-38C1-43A5-AC21-69A1453421E9}.Release|x86.ActiveCfg = Release|Any CPU
+		{9C1EEC39-38C1-43A5-AC21-69A1453421E9}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{ADB5A137-ACCC-4DC2-BC7D-1BF95853FFC9} = {B4638D33-4E45-4FB4-A119-91F90F876E8D}
-		{650A5A85-5956-491E-9312-5E25A27D1108} = {B4638D33-4E45-4FB4-A119-91F90F876E8D}
+		{9C1EEC39-38C1-43A5-AC21-69A1453421E9} = {B4638D33-4E45-4FB4-A119-91F90F876E8D}
 	EndGlobalSection
 EndGlobal
