@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace FormatWith
+namespace FormatWith.Internal
 {
     public class DictionaryStringToObjectWrapper<T, U> : IDictionary<T, object> {
             private readonly IDictionary<T, U> inner;

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace FormatWith {
+namespace FormatWith.Internal {
     public static class FormatHelpers {
         /// <summary>
         /// Processes a list of format tokens into a string

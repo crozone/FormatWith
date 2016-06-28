@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using static FormatWith.FormatHelpers;
+using FormatWith.Internal;
 
 namespace FormatWith {
     public static class FormatStringExtensions {
@@ -49,8 +49,8 @@ namespace FormatWith {
         public static string FormatWith(this string formatString, IDictionary<string, object> replacements, MissingKeyBehaviour missingKeyBehaviour = MissingKeyBehaviour.ThrowException, string fallbackReplacementValue = null, char openBraceChar = '{', char closeBraceChar = '}') {
 
             // get the parameters from the format string
-            IEnumerable<FormatToken> tokens = Tokenize(formatString, openBraceChar, closeBraceChar);
-            return ProcessTokens(tokens, replacements, missingKeyBehaviour, fallbackReplacementValue);
+            IEnumerable<FormatToken> tokens = FormatHelpers.Tokenize(formatString, openBraceChar, closeBraceChar);
+            return FormatHelpers.ProcessTokens(tokens, replacements, missingKeyBehaviour, fallbackReplacementValue);
         }
 
         /// <summary>
@@ -66,8 +66,8 @@ namespace FormatWith {
         public static string FormatWith(this string formatString, Action<FormatToken, StringBuilder> tokenHandler, char openBraceChar = '{', char closeBraceChar = '}') {
 
             // get the parameters from the format string
-            var tokens = Tokenize(formatString, openBraceChar, closeBraceChar);
-            return ProcessTokens(tokens, tokenHandler);
+            var tokens = FormatHelpers.Tokenize(formatString, openBraceChar, closeBraceChar);
+            return FormatHelpers.ProcessTokens(tokens, tokenHandler);
         }
 
         /// <summary>
@@ -78,7 +78,7 @@ namespace FormatWith {
         /// <param name="closeBraceChar">The character used to end parameters</param>
         /// <returns></returns>
         public static IEnumerable<string> GetFormatParameters(this string formatString, char openBraceChar = '{', char closeBraceChar = '}') {
-            return Tokenize(formatString, openBraceChar, closeBraceChar)
+            return FormatHelpers.Tokenize(formatString, openBraceChar, closeBraceChar)
                 .Select(t => t as ParameterToken)
                 .Where(pt => pt != null)
                 .Select(pt => pt.ParameterKey);

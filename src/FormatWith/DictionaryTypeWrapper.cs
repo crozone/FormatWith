@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace FormatWith {
+namespace FormatWith.Internal {
     public class DictionaryTypeWrapper : IDictionary<string, object> {
         private object rootObject;
         private Type rootObjectType;

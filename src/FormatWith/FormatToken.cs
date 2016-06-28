@@ -1,4 +1,4 @@
-﻿namespace FormatWith {
+﻿namespace FormatWith.Internal {
     public abstract class FormatToken {
         public FormatToken(string source, int startIndex, int length) {
             SourceString = source;
