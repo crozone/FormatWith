@@ -10,11 +10,13 @@
     "summary": "A PCL for {named} {{parameterized}} string formatting."
   },
   "dependencies": {
-    "System.Reflection.TypeExtensions": "4.1.0"
+    
   },
   "frameworks": {
+    "net45": {},
     "netstandard1.3": {
       "dependencies": {
+        "System.Reflection.TypeExtensions": "4.1.0",
         "NETStandard.Library": "1.6.0"
       }
     }
