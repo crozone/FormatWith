@@ -1,6 +1,7 @@
 # FormatWith
 
 [![NuGet](https://img.shields.io/badge/nuget-1.4.0-green.svg)](https://www.nuget.org/packages/FormatWith/)
+[![license](https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000)]()
 
 A C# library for performing {named} {{parameterized}} string formatting.
 
