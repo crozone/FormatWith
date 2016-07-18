@@ -5,6 +5,11 @@ using System.Linq;
 
 namespace FormatWith.Internal
 {
+    /// <summary>
+    /// A dictionary wraps any generic dictionary as an <typeparamref name="IDictionary<T, object>"/>
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <typeparam name="U"></typeparam>
     public class DictionaryStringToObjectWrapper<T, U> : IDictionary<T, object> {
             private readonly IDictionary<T, U> inner;
             public DictionaryStringToObjectWrapper(IDictionary<T, U> wrapped) {

@@ -1,4 +1,7 @@
 ﻿namespace FormatWith.Internal {
+    /// <summary>
+    /// Represents a section of text that represents a parameter within a parent string.
+    /// </summary>
     public class ParameterToken : FormatToken {
         public ParameterToken(string source, int startIndex, int length) : base(source, startIndex, length) {
             KeyStartIndex = startIndex + 1;
@@ -19,7 +22,7 @@
         private string parameterKey = null;
 
         /// <summary>
-        /// Gets the parameter key (without the surrounding braces), as a string. Note that this performs a substring operation and allocates a new string object. The string object is cached for all subsiquent requests.
+        /// Gets the parameter key (without the surrounding braces), as a string. Note that this performs a substring operation and allocates a new string object. The string object is cached for all subsequent requests.
         /// </summary>
         public string ParameterKey
         {

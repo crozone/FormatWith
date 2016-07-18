@@ -5,6 +5,9 @@ using System.Linq;
 using System.Reflection;
 
 namespace FormatWith.Internal {
+    /// <summary>
+    /// A dictionary that wraps any type to provide indexed access to the values of its properties.
+    /// </summary>
     public class DictionaryTypeWrapper : IDictionary<string, object> {
         private object rootObject;
         private Type rootObjectType;

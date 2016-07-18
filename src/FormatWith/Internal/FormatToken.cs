@@ -1,4 +1,7 @@
 ﻿namespace FormatWith.Internal {
+    /// <summary>
+    /// Represents a section of text within a parent string.
+    /// </summary>
     public abstract class FormatToken {
         public FormatToken(string source, int startIndex, int length) {
             SourceString = source;
@@ -24,7 +27,7 @@
         private string text = null;
 
         /// <summary>
-        /// Gets the complete token text. Note that this performs a substring operation and allocates a new string object. The string object is cached for all subsiquent requests.
+        /// Gets the complete token text. Note that this performs a substring operation and allocates a new string object. The string object is cached for all subsequent requests.
         /// </summary>
         public string Text
         {

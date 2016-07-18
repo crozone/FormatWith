@@ -4,6 +4,9 @@ using System.Linq;
 using System.Text;
 
 namespace FormatWith.Internal {
+    /// <summary>
+    /// Contains all string processing and tokenizing methods for FormatWith
+    /// </summary>
     public static class FormatHelpers {
         /// <summary>
         /// Processes a list of format tokens into a string
@@ -80,7 +83,7 @@ namespace FormatWith.Internal {
                 return string.Empty;
             }
 
-            // create a stringbuilder to hold the resultant output string
+            // create a StringBuilder to hold the resultant output string
             // use the input format string length as a ballpark starting figure for the buffer size
             StringBuilder resultBuilder = new StringBuilder(tokens.First().Length);
 
@@ -137,7 +140,7 @@ namespace FormatWith.Internal {
                             // START OF PARAMETER
 
                             // we are leaving standard text and entering into a parameter
-                            // add the text traveresed so far as a text token
+                            // add the text traversed so far as a text token
                             if (currentTokenStart < index) {
                                 yield return new TextToken(formatString, currentTokenStart, (index - currentTokenStart));
                             }
