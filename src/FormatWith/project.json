@@ -1,12 +1,13 @@
 ﻿{
-  "version": "1.4.0",
+  "version": "1.4.1",
   "title": "FormatWith",
   "description": "FormatWith, a portable class library for performing {named} {{parameterized}} string formatting. Works with both Dictionaries and Types as a replacement source.",
   "authors": [ "Ryan Crosby" ],
   "packOptions": {
     "tags": [ "PCL string formatting named parameter formatter" ],
     "projectUrl": "https://github.com/crozone/FormatWith",
-    "licenseUrl": "",
+    "licenseUrl": "https://opensource.org/licenses/MIT",
+    "requireLicenseAcceptance": true,
     "summary": "A PCL for {named} {{parameterized}} string formatting."
   },
   "dependencies": {
