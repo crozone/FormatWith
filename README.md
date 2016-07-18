@@ -8,7 +8,7 @@ A C# library for performing {named} {{parameterized}} string formatting.
 
 This library provides named string formatting via the string extension .FormatWith(). It formats strings with named parameters based upon an input lookup dictionary or type.
 
-It is written as a PCL class library, publishes to NuGet package, and is fully compatible with .NET Core RC2. It is currently built against .NETStandard 1.3 and .NET Full Framework 4.5, which makes it compatible with .NET Core 1.0, .NET Full 4.5+, UWP/uap 10, and most mono/xamarin platforms.
+It is written as a PCL class library, publishes to NuGet package, and is fully compatible with .NET Core. It is currently built against .NETStandard 1.3 and .NET Full Framework 4.5, which makes it compatible with .NET Core 1.0, .NET Full 4.5+, UWP/uap 10, and most mono/xamarin platforms.
 
 An example of what it can do:
 
@@ -20,7 +20,7 @@ Produces:
 
 It can also be fed parameters via an `IDictionary<string, string>` or an `IDictionary<string, object>`, rather than a type.
 
-The value of each replacement parameter is given by whatever the object's .ToString() method produces.
+The value of each replacement parameter is given by whatever the object's .ToString() method produces. This value is not cached, so you can get creative with the implementation (the object is fed directly into a StringBuilder).
 
 ## How it works
 
@@ -28,11 +28,11 @@ A state machine parser quickly runs through the input format string, tokenizing 
 
 ## Extension methods:
 
-Two extension methods for `string` are defined in `FormatWith.FormatStringExtensions`, `FormatWith()` and `GetFormatParameters`.
+Two extension methods for `string` are defined in `FormatWith.FormatStringExtensions`, `FormatWith()` and `GetFormatParameters()`.
 
-### FormatWith(1, 2, 3)
+### FormatWith(1,2,3)
 
-The first, second, and third overload of FormatWith() takes a format string containing named parameters, along with an object (1) or dictionary (2) of replacement parameters. Optionally, missing key behaviour, a fallback value, and custom brace characters can be specified. Two adjacent opening or closing brace characters in the format string are treated as escaped, and will be reduced to a single brace in the output string.
+The first, second, and third overload of FormatWith() take a format string containing named parameters, along with an object (1) or dictionary (2) of replacement parameters. Optionally, missing key behaviour, a fallback value, and custom brace characters can be specified. Two adjacent opening or closing brace characters in the format string are treated as escaped, and will be reduced to a single brace in the output string.
 
 Missing key behaviour is specified by the MissingKeyBehaviour enum, which can be either `ThrowException`, `ReplaceWithFallback`, or `Ignore`.
 
@@ -54,9 +54,11 @@ output: "abc Replacement1 FallbackValue"
 
 `string replacement = "abc {Replacement1} {DoesntExist}".FormatWith(new { Replacement1 = Replacement1, Replacement2 = Replacement2 }, MissingKeyBehaviour.Ignore);
 
+output: "abc Replacement1 {DoesntExist}"
+
 **Using custom brace characters:**
 
-output: "abc Replacement1 {DoesntExist}"
+Custom brace characters can be specified for both opening and closing parameters, if required.
 
 `string replacement = "abc <Replacement1> <DoesntExist>".FormatWith(new { Replacement1 = Replacement1, Replacement2 = Replacement2 }, MissingKeyBehaviour.Ignore, null,'<','>');`
 
@@ -70,7 +72,7 @@ The fourth overload of `FormatWith()` takes a format string containing named par
 
 ### GetFormatParameters
 
-`GetFormatParameters()` can be used to get a list of parameter names out of a format string, which can be used for inspection before performing other actions on it.
+`GetFormatParameters()` can be used to get a list of parameter names out of a format string, which can be used for inspecting a format string before performing other actions on it.
 
 **Example:**
 
