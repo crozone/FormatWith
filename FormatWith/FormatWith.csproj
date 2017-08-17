@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Description>FormatWith, a portable class library for performing {named} {{parameterized}} string formatting.</Description>
+    <AssemblyName>FormatWith</AssemblyName>
+    <AssemblyTitle>FormatWith</AssemblyTitle>
+    <PackageId>FormatWith</PackageId>
+    <VersionPrefix>1.4.1</VersionPrefix>
+    <Authors>Ryan Crosby</Authors>
+    <PackageTags>NetStandard 2.0 named parameter string formatter</PackageTags>
+    <PackageProjectUrl>https://github.com/crozone/FormatWith</PackageProjectUrl>
+    <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
+    <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+    <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
+  </PropertyGroup>
+</Project>
