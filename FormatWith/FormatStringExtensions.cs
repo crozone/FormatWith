@@ -62,9 +62,8 @@ namespace FormatWith {
         /// <returns></returns>
         public static IEnumerable<string> GetFormatParameters(this string formatString, char openBraceChar = '{', char closeBraceChar = '}') {
             return FormatHelpers.Tokenize(formatString, openBraceChar, closeBraceChar)
-                .Select(t => t as ParameterToken)
-                .Where(pt => pt != null)
-                .Select(pt => pt.ParameterKey);
+                .Where(t => t.TokenType == TokenType.Parameter)
+                .Select(pt => pt.Text);
         }
     }
 }

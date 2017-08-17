@@ -1,13 +1,20 @@
-﻿namespace FormatWith.Internal {
-    /// <summary>
-    /// Represents a section of text within a parent string.
-    /// </summary>
-    public abstract class FormatToken {
-        public FormatToken(string source, int startIndex, int length) {
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace FormatWith.Internal
+{
+    internal struct FormatToken
+    {
+        public FormatToken(TokenType tokenType, string source, int startIndex, int length)
+        {
+            TokenType = tokenType;
             SourceString = source;
             StartIndex = startIndex;
             Length = length;
         }
+
+        public TokenType TokenType { get; }
 
         /// <summary>
         /// The source format string that the token exists within
@@ -24,21 +31,37 @@
         /// </summary>
         public int Length { get; }
 
-        private string text = null;
-
         /// <summary>
-        /// Gets the complete token text. Note that this performs a substring operation and allocates a new string object. The string object is cached for all subsequent requests.
+        /// Gets the complete value.
+        /// This performs a substring operation and allocates a new string object.
         /// </summary>
-        public string Text
-        {
-            get
-            {
-                if (text == null) {
-                    text = SourceString.Substring(StartIndex, Length);
-                }
-
-                return text;
+        public string Value {
+            get {
+                return SourceString.Substring(StartIndex, Length);
             }
         }
+
+        /// <summary>
+        /// Gets the token text.
+        /// This performs a substring operation and allocates a new string object.
+        /// </summary>
+        public string Text {
+            get {
+                if (TokenType == TokenType.Parameter)
+                {
+                    return SourceString.Substring(StartIndex + 1, Length - 2);
+                }
+                else
+                {
+                    return SourceString.Substring(StartIndex, Length);
+                }
+            }
+        }
+    }
+
+    internal enum TokenType
+    {
+        Parameter,
+        Text
     }
 }

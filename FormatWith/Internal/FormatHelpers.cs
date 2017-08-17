@@ -18,7 +18,7 @@ namespace FormatWith.Internal
         /// <param name="missingKeyBehaviour">The behaviour to use when the format string contains a parameter that is not present in the lookup dictionary</param>
         /// <param name="fallbackReplacementValue">When the <see cref="MissingKeyBehaviour.ReplaceWithFallback"/> is specified, this string is used as a fallback replacement value when the parameter is present in the lookup dictionary.</param>
         /// <returns>The processed result of joining the tokens with the replacement dictionary.</returns>
-        public static string ProcessTokens(
+        internal static string ProcessTokens(
             IEnumerable<FormatToken> tokens,
             IDictionary<string, object> replacements,
             MissingKeyBehaviour missingKeyBehaviour = MissingKeyBehaviour.ThrowException,
@@ -38,24 +38,19 @@ namespace FormatWith.Internal
 
             foreach (FormatToken thisToken in tokens)
             {
-                // handle text token
-                if (thisToken == null)
-                {
-                    throw new NullReferenceException($"A format token in {nameof(tokens)} was null");
-                }
-                else if (thisToken is TextToken textToken)
+                if (thisToken.TokenType == TokenType.Text)
                 {
                     // token is a text token
                     // add the token to the result string builder
-                    resultBuilder.Append(textToken.SourceString, textToken.StartIndex, textToken.Length);
+                    resultBuilder.Append(thisToken.SourceString, thisToken.StartIndex, thisToken.Length);
                 }
-                else if (thisToken is ParameterToken parameterToken)
+                else if (thisToken.TokenType == TokenType.Parameter)
                 {
                     // token is a parameter token
                     // perform parameter logic now.
 
                     // append the replacement for this parameter
-                    if (replacements.TryGetValue(parameterToken.ParameterKey, out object replacementValue))
+                    if (replacements.TryGetValue(thisToken.Text, out object replacementValue))
                     {
                         // the key exists, add the replacement value
                         // this does nothing if replacement value is null
@@ -68,7 +63,7 @@ namespace FormatWith.Internal
                         {
                             case MissingKeyBehaviour.ThrowException:
                                 // the key was not found as a possible replacement, throw exception
-                                throw new KeyNotFoundException($"The parameter \"{parameterToken.ParameterKey}\" was not present in the lookup dictionary");
+                                throw new KeyNotFoundException($"The parameter \"{thisToken.Text}\" was not present in the lookup dictionary");
                             case MissingKeyBehaviour.ReplaceWithFallback:
                                 resultBuilder.Append(fallbackReplacementValue);
                                 break;
@@ -76,7 +71,7 @@ namespace FormatWith.Internal
                                 // the replacement value is the input key as a parameter.
                                 // use source string and start/length directly with append rather than
                                 // parameter.ParameterKey to avoid allocating an extra string
-                                resultBuilder.Append(parameterToken.SourceString, parameterToken.StartIndex, parameterToken.Length);
+                                resultBuilder.Append(thisToken.SourceString, thisToken.StartIndex, thisToken.Length);
                                 break;
                         }
                     }
@@ -94,7 +89,7 @@ namespace FormatWith.Internal
         /// <param name="openBraceChar">The character used to begin parameters</param>
         /// <param name="closeBraceChar">The character used to end parameters</param>
         /// <returns>A list of text and parameter tokens representing the input format string</returns>
-        public static IEnumerable<FormatToken> Tokenize(string formatString, char openBraceChar = '{', char closeBraceChar = '}')
+        internal static IEnumerable<FormatToken> Tokenize(string formatString, char openBraceChar = '{', char closeBraceChar = '}')
         {
 
             if (formatString == null) throw new ArgumentNullException($"{nameof(formatString)} cannot be null.");
@@ -120,7 +115,7 @@ namespace FormatWith.Internal
                             // we have hit an escaped open brace
                             // return current normal text, as well as the first brace
                             // implemented as yield return, this generates a IEnumerator state machine.
-                            yield return new TextToken(formatString, currentTokenStart, (index - currentTokenStart) + 1);
+                            yield return new FormatToken(TokenType.Text, formatString, currentTokenStart, (index - currentTokenStart) + 1);
 
                             // skip over braces
                             index += 2;
@@ -141,7 +136,7 @@ namespace FormatWith.Internal
                             // add the text traversed so far as a text token
                             if (currentTokenStart < index)
                             {
-                                yield return new TextToken(formatString, currentTokenStart, (index - currentTokenStart));
+                                yield return new FormatToken(TokenType.Text, formatString, currentTokenStart, (index - currentTokenStart));
                             }
 
                             // set the start index of the token to the start of this parameter
@@ -161,7 +156,7 @@ namespace FormatWith.Internal
 
                             // add the current normal text, as well as the first brace, to the
                             // list of tokens as a text token.
-                            yield return new TextToken(formatString, currentTokenStart, (index - currentTokenStart) + 1);
+                            yield return new FormatToken(TokenType.Text, formatString, currentTokenStart, (index - currentTokenStart) + 1);
 
                             // skip over braces
                             index += 2;
@@ -212,7 +207,7 @@ namespace FormatWith.Internal
                         // since we cannot have escaped braces within parameters.
 
                         // Add the parameter information to the parameter list
-                        yield return new ParameterToken(formatString, currentTokenStart, (index - currentTokenStart) + 1);
+                        yield return new FormatToken(TokenType.Parameter, formatString, currentTokenStart, (index - currentTokenStart) + 1);
 
                         // set the state to be outside of any braces
                         insideBraces = false;
@@ -247,7 +242,7 @@ namespace FormatWith.Internal
                 // outside braces. Add on any remaining text at the end of the format string
                 if (currentTokenStart < index)
                 {
-                    yield return new TextToken(formatString, currentTokenStart, (index - currentTokenStart));
+                    yield return new FormatToken(TokenType.Text, formatString, currentTokenStart, index - currentTokenStart);
                 }
             }
 
