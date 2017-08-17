@@ -54,23 +54,6 @@ namespace FormatWith {
         }
 
         /// <summary>
-        /// Extension method formats a string based on the hanlder specified.
-        /// </summary>
-        /// <param name="formatString">The format string, containing keys like {foo}</param>
-        /// <param name="replacements">An <see cref="IDictionary"/> with keys and values to inject into the string</param>
-        /// <param name="missingKeyBehaviour">The behaviour to use when the format string contains a parameter that is not present in the lookup dictionary</param>
-        /// <param name="fallbackReplacementValue">When the <see cref="MissingKeyBehaviour.ReplaceWithFallback"/> is specified, this string is used as a fallback replacement value when the parameter is present in the lookup dictionary.</param>
-        /// <param name="openBraceChar">The character used to begin parameters</param>
-        /// <param name="closeBraceChar">The character used to end parameters</param>
-        /// <returns>The resultant string</returns>
-        public static string FormatWith(this string formatString, Action<FormatToken, StringBuilder> tokenHandler, char openBraceChar = '{', char closeBraceChar = '}') {
-
-            // get the parameters from the format string
-            var tokens = FormatHelpers.Tokenize(formatString, openBraceChar, closeBraceChar);
-            return FormatHelpers.ProcessTokens(tokens, tokenHandler);
-        }
-
-        /// <summary>
         /// Gets an <see cref="IEnumerable{string}"/> that will return all format parameters used within the format string.
         /// </summary>
         /// <param name="formatString">The format string to be parsed</param>
