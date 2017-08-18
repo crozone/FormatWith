@@ -65,6 +65,10 @@ Custom brace characters can be specified for both opening and closing parameters
 
 output: "abc Replacement1 <DoesntExist>"
 
+### FormattableWith(1,2,3)
+
+The first, second, and third overload of FormattableWith() function much the same way that the FormatWith() overloads do. However, FormattableWith returns a `FormattableString` instead of a `string`. This allows parameters and composite format string to be inspected, and allows a custom formatter to be used if desired.
+
 ### GetFormatParameters
 
 `GetFormatParameters()` can be used to get a list of parameter names out of a format string, which can be used for inspecting a format string before performing other actions on it.
