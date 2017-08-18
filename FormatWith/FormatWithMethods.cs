@@ -17,7 +17,7 @@ namespace FormatWith
         public static FormattableString FormattableWith(string formatString, IDictionary<string, object> replacements, MissingKeyBehaviour missingKeyBehaviour = MissingKeyBehaviour.ThrowException, string fallbackReplacementValue = null, char openBraceChar = '{', char closeBraceChar = '}')
         {
             // get the parameters from the format string
-            IEnumerable<FormatToken> tokens = FormatHelpers.Tokenize(formatString, openBraceChar, closeBraceChar);
+            IEnumerable<FormatToken> tokens = FormatHelpers.Tokenize(formatString, openBraceChar, closeBraceChar, true);
             return FormatHelpers.ProcessTokensIntoFormattableString(tokens, replacements, missingKeyBehaviour, fallbackReplacementValue, formatString.Length * 2);
         }
     }

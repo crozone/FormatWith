@@ -168,7 +168,7 @@ namespace FormatWith.Internal
             }
 
             // return the resultant string
-            return FormattableStringFactory.Create(resultBuilder.ToString(), replacementParams);
+            return FormattableStringFactory.Create(resultBuilder.ToString(), replacementParams.ToArray());
         }
 
         /// <summary>
@@ -178,7 +178,7 @@ namespace FormatWith.Internal
         /// <param name="openBraceChar">The character used to begin parameters</param>
         /// <param name="closeBraceChar">The character used to end parameters</param>
         /// <returns>A list of text and parameter tokens representing the input format string</returns>
-        public static IEnumerable<FormatToken> Tokenize(string formatString, char openBraceChar = '{', char closeBraceChar = '}')
+        public static IEnumerable<FormatToken> Tokenize(string formatString, char openBraceChar = '{', char closeBraceChar = '}', bool preserveTextBraces = false)
         {
             if (formatString == null) throw new ArgumentNullException($"{nameof(formatString)} cannot be null.");
 
@@ -200,6 +200,17 @@ namespace FormatWith.Internal
                         if (index < formatString.Length - 1 && formatString[index + 1] == openBraceChar)
                         {
                             // ESCAPED OPEN BRACE
+
+                            if (preserveTextBraces)
+                            {
+                                // if preserveTextBraces is true, we don't want to return the unescaped
+                                // version of this text string.
+                                // continue on as if this is a standard text string
+                                index += 2;
+                                continue;
+                            }
+
+
                             // we have hit an escaped open brace
                             // return current normal text, as well as the first brace
                             // implemented as yield return, this generates a IEnumerator state machine.
@@ -215,10 +226,10 @@ namespace FormatWith.Internal
                         }
                         else
                         {
+                            // START OF PARAMETER
+                            
                             // not an escaped brace, set state to inside brace
                             insideBraces = true;
-
-                            // START OF PARAMETER
 
                             // we are leaving standard text and entering into a parameter
                             // add the text traversed so far as a text token
@@ -241,6 +252,15 @@ namespace FormatWith.Internal
                         if (index < formatString.Length - 1 && formatString[index + 1] == closeBraceChar)
                         {
                             // this is an escaped closing brace, this is okay
+
+                            if (preserveTextBraces)
+                            {
+                                // if preserveTextBraces is true, we don't want to return the unescaped
+                                // version of this text string.
+                                // continue on as if this is a standard text string
+                                index += 2;
+                                continue;
+                            }
 
                             // add the current normal text, as well as the first brace, to the
                             // list of tokens as a text token.
