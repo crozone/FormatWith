@@ -13,7 +13,7 @@ namespace FormatWith.Internal {
         private Type rootObjectType;
         private static BindingFlags propertyFlags = BindingFlags.Instance | BindingFlags.Public;
         private Dictionary<string, PropertyInfo> _allProperties = null;
-        private Dictionary<string, PropertyInfo> allProperties
+        private Dictionary<string, PropertyInfo> AllProperties
         {
             get
             {
@@ -28,8 +28,7 @@ namespace FormatWith.Internal {
 
 
         public DictionaryTypeWrapper(object root) {
-            if (root == null) throw new ArgumentNullException(nameof(root));
-            this.rootObject = root;
+            rootObject = root ?? throw new ArgumentNullException(nameof(root));
             rootObjectType = root.GetType();
         }
 
@@ -37,9 +36,9 @@ namespace FormatWith.Internal {
             if (parameterName == null) throw new ArgumentNullException(nameof(parameterName));
             parameterObject = null;
 
-            PropertyInfo property;
             // accessing allProperties triggers lazy initialisation of the dictionary
-            if (!allProperties.TryGetValue(parameterName, out property)) {
+            if (!AllProperties.TryGetValue(parameterName, out PropertyInfo property))
+            {
                 return false;
             }
 
@@ -53,8 +52,8 @@ namespace FormatWith.Internal {
         {
             get
             {
-                object returnObject;
-                if (!TryGetParameter(key, out returnObject)) {
+                if (!TryGetParameter(key, out object returnObject))
+                {
                     throw new KeyNotFoundException($"A parameter with the name {key} was not found");
                 }
 
@@ -70,7 +69,7 @@ namespace FormatWith.Internal {
         {
             get
             {
-                return allProperties.Count;
+                return AllProperties.Count;
             }
         }
 
@@ -86,7 +85,7 @@ namespace FormatWith.Internal {
         {
             get
             {
-                return allProperties.Keys;
+                return AllProperties.Keys;
             }
         }
 
@@ -94,9 +93,8 @@ namespace FormatWith.Internal {
         {
             get
             {
-                return allProperties.Select(kvp => {
-                    object paramObject;
-                    TryGetParameter(kvp.Key, out paramObject);
+                return AllProperties.Select(kvp => {
+                    TryGetParameter(kvp.Key, out object paramObject);
                     return paramObject;
                 }).ToList();
             }
@@ -115,18 +113,16 @@ namespace FormatWith.Internal {
         }
 
         public bool Contains(KeyValuePair<string, object> item) {
-            object paramObject;
-            return (TryGetParameter(item.Key, out paramObject) && paramObject == item.Value);
+            return (TryGetParameter(item.Key, out object paramObject) && paramObject == item.Value);
         }
 
         public bool ContainsKey(string key) {
-            return allProperties.ContainsKey(key);
+            return AllProperties.ContainsKey(key);
         }
 
         public IEnumerator<KeyValuePair<string, object>> GetEnumerator() {
             foreach (string key in this.Keys) {
-                object paramObject;
-                this.TryGetParameter(key, out paramObject);
+                TryGetParameter(key, out object paramObject);
                 yield return new KeyValuePair<string, object>(key, paramObject);
             }
 
@@ -146,7 +142,7 @@ namespace FormatWith.Internal {
         }
 
         IEnumerator IEnumerable.GetEnumerator() {
-            return this.GetEnumerator();
+            return GetEnumerator();
         }
 
         public void CopyTo(KeyValuePair<string, object>[] array, int arrayIndex) {

@@ -22,8 +22,7 @@ namespace FormatWith.Internal
             public bool Remove(T key) { return inner.Remove(key); }
 
             public bool TryGetValue(T key, out object value) {
-                U temp;
-                bool result = inner.TryGetValue(key, out temp);
+                bool result = inner.TryGetValue(key, out U temp);
                 value = temp;
                 return result;
             }
