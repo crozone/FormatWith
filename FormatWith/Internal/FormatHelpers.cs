@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace FormatWith.Internal
@@ -21,8 +22,9 @@ namespace FormatWith.Internal
         public static string ProcessTokens(
             IEnumerable<FormatToken> tokens,
             IDictionary<string, object> replacements,
-            MissingKeyBehaviour missingKeyBehaviour = MissingKeyBehaviour.ThrowException,
-            string fallbackReplacementValue = null) {
+            MissingKeyBehaviour missingKeyBehaviour,
+            string fallbackReplacementValue,
+            int outputLengthHint) {
 
             // if there are no parameters, return an empty string
             // (this would happen anyway, but this is avoids creating an entire
@@ -33,8 +35,8 @@ namespace FormatWith.Internal
             }
 
             // create a StringBuilder to hold the resultant output string
-            // use the input format string length as a ballpark starting figure for the buffer size
-            StringBuilder resultBuilder = new StringBuilder(tokens.First().Length);
+            // use the input hint as the initial size
+            StringBuilder resultBuilder = new StringBuilder(outputLengthHint);
 
             foreach (FormatToken thisToken in tokens)
             {
@@ -83,6 +85,93 @@ namespace FormatWith.Internal
         }
 
         /// <summary>
+        /// Processes a list of format tokens into a string
+        /// </summary>
+        /// <param name="tokens">List of tokens to turn into a string</param>
+        /// <param name="replacements">An <see cref="IDictionary"/> with keys and values to inject into the formatted result</param>
+        /// <param name="missingKeyBehaviour">The behaviour to use when the format string contains a parameter that is not present in the lookup dictionary</param>
+        /// <param name="fallbackReplacementValue">When the <see cref="MissingKeyBehaviour.ReplaceWithFallback"/> is specified, this string is used as a fallback replacement value when the parameter is present in the lookup dictionary.</param>
+        /// <returns>The processed result of joining the tokens with the replacement dictionary.</returns>
+        public static FormattableString ProcessTokensIntoFormattableString(
+            IEnumerable<FormatToken> tokens,
+            IDictionary<string, object> replacements,
+            MissingKeyBehaviour missingKeyBehaviour,
+            string fallbackReplacementValue,
+            int outputLengthHint)
+        {
+
+            List<object> replacementParams = new List<object>();
+
+            // if there are no parameters, return an empty string
+            // (this would happen anyway, but this is avoids creating an entire
+            //  string builder)
+            if (!tokens.Any())
+            {
+                return FormattableStringFactory.Create(string.Empty);
+            }
+
+            // create a StringBuilder to hold the resultant output string
+            // use the input hint as the initial size
+            StringBuilder resultBuilder = new StringBuilder(outputLengthHint);
+
+            // this is the index of the current placeholder in the composite format string
+            int placeholderIndex = 0;
+
+            foreach (FormatToken thisToken in tokens)
+            {
+                if (thisToken.TokenType == TokenType.Text)
+                {
+                    // token is a text token
+                    // add the token to the result string builder
+                    resultBuilder.Append(thisToken.SourceString, thisToken.StartIndex, thisToken.Length);
+                }
+                else if (thisToken.TokenType == TokenType.Parameter)
+                {
+                    // token is a parameter token
+                    // perform parameter logic now.
+
+                    // append the replacement for this parameter
+                    if (replacements.TryGetValue(thisToken.Text, out object replacementValue))
+                    {
+                        // Instead of appending the replacement value directly as before,
+                        // append the next placeholder with the current placeholder index.
+                        // Add the actual replacement format item into the replacement values.
+                        resultBuilder.Append("{" + placeholderIndex.ToString() + "}");
+                        placeholderIndex++;
+                        replacementParams.Add(replacementValue);
+                    }
+                    else
+                    {
+                        // the key does not exist, handle this using the missing key behaviour specified.
+                        switch (missingKeyBehaviour)
+                        {
+                            case MissingKeyBehaviour.ThrowException:
+                                // the key was not found as a possible replacement, throw exception
+                                throw new KeyNotFoundException($"The parameter \"{thisToken.Text}\" was not present in the lookup dictionary");
+                            case MissingKeyBehaviour.ReplaceWithFallback:
+                                // Instead of appending the replacement value directly as before,
+                                // append the next placeholder with the current placeholder index.
+                                // Add the actual replacement format item into the replacement values.
+                                resultBuilder.Append("{" + placeholderIndex.ToString() + "}");
+                                placeholderIndex++;
+                                replacementParams.Add(fallbackReplacementValue);
+                                break;
+                            case MissingKeyBehaviour.Ignore:
+                                // the replacement value is the input key as a parameter.
+                                // use source string and start/length directly with append rather than
+                                // parameter.ParameterKey to avoid allocating an extra string
+                                resultBuilder.Append(thisToken.SourceString, thisToken.StartIndex, thisToken.Length);
+                                break;
+                        }
+                    }
+                }
+            }
+
+            // return the resultant string
+            return FormattableStringFactory.Create(resultBuilder.ToString(), replacementParams);
+        }
+
+        /// <summary>
         /// Tokenizes a named format string into a list of text and parameter tokens for later processing.
         /// </summary>
         /// <param name="formatString">The format string, containing keys like {foo}</param>
@@ -91,7 +180,6 @@ namespace FormatWith.Internal
         /// <returns>A list of text and parameter tokens representing the input format string</returns>
         public static IEnumerable<FormatToken> Tokenize(string formatString, char openBraceChar = '{', char closeBraceChar = '}')
         {
-
             if (formatString == null) throw new ArgumentNullException($"{nameof(formatString)} cannot be null.");
 
             int currentTokenStart = 0;
