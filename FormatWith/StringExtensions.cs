@@ -5,20 +5,20 @@ using System.Text;
 using FormatWith.Internal;
 
 namespace FormatWith {
-    public static class FormatStringExtensions {
+    public static class StringExtensions {
         /// <summary>
         /// Extension method that replaces keys in a string with the values of matching object properties.
         /// </summary>
         /// <param name="formatString">The format string, containing keys like {foo}</param>
-        /// <param name="injectionObject">The object whose properties should be injected in the string</param>
+        /// <param name="replacementObject">The object whose properties should be injected in the string</param>
         /// <param name="missingKeyBehaviour">The behaviour to use when the format string contains a parameter that is not present in the lookup dictionary</param>
         /// <param name="fallbackReplacementValue">When the <see cref="MissingKeyBehaviour.ReplaceWithFallback"/> is specified, this string is used as a fallback replacement value when the parameter is present in the lookup dictionary.</param>
         /// <param name="openBraceChar">The character used to begin parameters</param>
         /// <param name="closeBraceChar">The character used to end parameters</param>
         /// <returns>A version of the formatString string with dictionary keys replaced by (formatted) key values</returns>
-        public static string FormatWith(this string formatString, object injectionObject, MissingKeyBehaviour missingKeyBehaviour = MissingKeyBehaviour.ThrowException, string fallbackReplacementValue = null, char openBraceChar = '{', char closeBraceChar = '}') {
+        public static string FormatWith(this string formatString, object replacementObject, MissingKeyBehaviour missingKeyBehaviour = MissingKeyBehaviour.ThrowException, string fallbackReplacementValue = null, char openBraceChar = '{', char closeBraceChar = '}') {
             // wrap the type object in a wrapper Dictionary class that exposes the properties as dictionary keys via reflection
-            return formatString.FormatWith(new DictionaryTypeWrapper(injectionObject), missingKeyBehaviour, fallbackReplacementValue, openBraceChar, closeBraceChar);
+            return formatString.FormatWith(new DictionaryTypeWrapper(replacementObject), missingKeyBehaviour, fallbackReplacementValue, openBraceChar, closeBraceChar);
         }
 
         /// <summary>
