@@ -44,7 +44,7 @@ namespace FormatWith.Internal
                     // perform parameter logic now.
 
                     // append the replacement for this parameter
-                    if (replacements.TryGetValue(thisToken.Text, out object replacementValue))
+                    if (replacements.TryGetValue(thisToken.Value, out object replacementValue))
                     {
                         // the key exists, add the replacement value
                         // this does nothing if replacement value is null
@@ -57,7 +57,7 @@ namespace FormatWith.Internal
                         {
                             case MissingKeyBehaviour.ThrowException:
                                 // the key was not found as a possible replacement, throw exception
-                                throw new KeyNotFoundException($"The parameter \"{thisToken.Text}\" was not present in the lookup dictionary");
+                                throw new KeyNotFoundException($"The parameter \"{thisToken.Value}\" was not present in the lookup dictionary");
                             case MissingKeyBehaviour.ReplaceWithFallback:
                                 resultBuilder.Append(fallbackReplacementValue);
                                 break;
@@ -116,7 +116,7 @@ namespace FormatWith.Internal
                     // perform parameter logic now.
 
                     // append the replacement for this parameter
-                    if (replacements.TryGetValue(thisToken.Text, out object replacementValue))
+                    if (replacements.TryGetValue(thisToken.Value, out object replacementValue))
                     {
                         // Instead of appending the replacement value directly as before,
                         // append the next placeholder with the current placeholder index.
@@ -132,7 +132,7 @@ namespace FormatWith.Internal
                         {
                             case MissingKeyBehaviour.ThrowException:
                                 // the key was not found as a possible replacement, throw exception
-                                throw new KeyNotFoundException($"The parameter \"{thisToken.Text}\" was not present in the lookup dictionary");
+                                throw new KeyNotFoundException($"The parameter \"{thisToken.Value}\" was not present in the lookup dictionary");
                             case MissingKeyBehaviour.ReplaceWithFallback:
                                 // Instead of appending the replacement value directly as before,
                                 // append the next placeholder with the current placeholder index.

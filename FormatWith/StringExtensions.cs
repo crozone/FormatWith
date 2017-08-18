@@ -275,7 +275,7 @@ namespace FormatWith
         {
             return FormatHelpers.Tokenize(formatString, openBraceChar, closeBraceChar)
                 .Where(t => t.TokenType == TokenType.Parameter)
-                .Select(pt => pt.Text);
+                .Select(pt => pt.Value);
         }
     }
 }

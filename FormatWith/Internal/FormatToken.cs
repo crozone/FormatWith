@@ -35,17 +35,17 @@ namespace FormatWith.Internal
         /// Gets the complete value.
         /// This performs a substring operation and allocates a new string object.
         /// </summary>
-        public string Value {
+        public string Raw {
             get {
                 return SourceString.Substring(StartIndex, Length);
             }
         }
 
         /// <summary>
-        /// Gets the token text.
+        /// Gets the token intter text.
         /// This performs a substring operation and allocates a new string object.
         /// </summary>
-        public string Text {
+        public string Value {
             get {
                 if (TokenType == TokenType.Parameter)
                 {
