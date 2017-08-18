@@ -30,7 +30,7 @@ namespace FormatWithTests
         [Fact]
         public void TestReplacement3()
         {
-            FormattableString formattableString = TestFormat3.FormattableWith(new { Replacement1 = Replacement1});
+            FormattableString formattableString = TestFormat3.FormattableWith(new { Replacement1 = Replacement1 });
             Assert.Equal(TestFormat3Composite, formattableString.Format);
             Assert.Equal(1, formattableString.ArgumentCount);
             Assert.Equal(Replacement1, formattableString.GetArgument(0));
