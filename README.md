@@ -9,7 +9,7 @@ A C# library for performing {named} {{parameterized}} string formatting.
 
 This library provides named string formatting via the string extension .FormatWith(). It formats strings with named parameters based upon an input lookup dictionary or type.
 
-It is written as a PCL class library, publishes to NuGet package, and is fully compatible with .NET Core. It is currently built against .NETStandard 1.3 and .NET Full Framework 4.5, which makes it compatible with .NET Core 1.0, .NET Full 4.5+, UWP/uap 10, and most mono/xamarin platforms.
+It is written as a Net Standard 2.0 class library, published as a NuGet package, and is fully compatible with any .NET platform that implement NetStandard 2.0. This makes it compatible with .NET Core 2.0, .NET Full Framework 4.6.1, UWP/UAP 10, and most mono/xamarin platforms.
 
 An example of what it can do:
 
@@ -29,7 +29,7 @@ A state machine parser quickly runs through the input format string, tokenizing 
 
 ## Extension methods:
 
-Two extension methods for `string` are defined in `FormatWith.FormatStringExtensions`, `FormatWith()` and `GetFormatParameters()`.
+Three extension methods for `string` are defined in `FormatWith.FormatStringExtensions`: `FormatWith()`, `FormattableWith()`, and `GetFormatParameters()`.
 
 ### FormatWith(1,2,3)
 
@@ -81,7 +81,7 @@ output: parameters will return "parameter1","parameter2" during iteration.
 
 ## Tests:
 
-A testing project is included that covers basic functionality.
+A testing project is included that has coverage of most scenarios involving the three extension methods. The testing framework in use is xUnit.
 
 ## Performance:
 
