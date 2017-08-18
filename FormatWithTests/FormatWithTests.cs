@@ -3,24 +3,13 @@ using Xunit;
 using FormatWith;
 using System.Collections.Generic;
 using System.Linq;
+using static FormatWithTests.TestStrings;
 
 namespace FormatWithTests
 {
-    public class UnitTest
+    public class FormatWithTests
     {
-        public static readonly string Replacement1 = "Replacement1";
-        public static readonly string Replacement2 = "Replacement {} Two ";
-
-        public static readonly string TestFormatEmpty = "";
-
-        public static readonly string TestFormatNoParams = "Test string with no parameters";
-
-        public static readonly string testFormat3 = "test{Replacement1}";
-        public static readonly string testFormat3Solution = $"testReplacement1";
-
-        public static readonly string testFormat4 = "abc{Replacement1}def{{escaped1}}ghi{{{Replacement2}}}jkl{{{{escaped2}}}}mno";
-
-        public static readonly string testFormat4Solution = $"abc{Replacement1}def{{escaped1}}ghi{{{Replacement2}}}jkl{{{{escaped2}}}}mno";
+        
 
         [Fact]
         public void TestMethodPassing()
@@ -30,14 +19,14 @@ namespace FormatWithTests
         }
 
         [Fact]
-        public void TestReplacementEmpty()
+        public void TestEmpty()
         {
             string replacement = TestFormatEmpty.FormatWith(new { Replacement1 = Replacement1, Replacement2 = Replacement2 });
             Assert.Equal(TestFormatEmpty, replacement);
         }
 
         [Fact]
-        public void TestReplacementNoParams()
+        public void TestNoParams()
         {
             string replacement = TestFormatNoParams.FormatWith(new { Replacement1 = Replacement1, Replacement2 = Replacement2 });
             Assert.Equal(TestFormatNoParams, replacement);
@@ -46,8 +35,8 @@ namespace FormatWithTests
         [Fact]
         public void TestReplacement3()
         {
-            string replacement = testFormat4.FormatWith(new { Replacement1 = Replacement1, Replacement2 = Replacement2 });
-            Assert.Equal(testFormat4Solution, replacement);
+            string replacement = TestFormat4.FormatWith(new { Replacement1 = Replacement1, Replacement2 = Replacement2 });
+            Assert.Equal(TestFormat4Solution, replacement);
         }
 
         [Fact]
@@ -135,7 +124,7 @@ namespace FormatWithTests
         [Fact]
         public void TestGetFormatParameters()
         {
-            List<string> parameters = testFormat4.GetFormatParameters().ToList();
+            List<string> parameters = TestFormat4.GetFormatParameters().ToList();
             Assert.Equal(parameters.Count, 2);
             Assert.Equal(nameof(Replacement1), parameters[0]);
             Assert.Equal(nameof(Replacement2), parameters[1]);
@@ -152,7 +141,7 @@ namespace FormatWithTests
 
             for (int i = 0; i < 1000000; i++)
             {
-                string replacement = testFormat3.FormatWith(replacementDictionary);
+                string replacement = TestFormat3.FormatWith(replacementDictionary);
             }
         }
 
@@ -167,7 +156,7 @@ namespace FormatWithTests
 
             for (int i = 0; i < 1000000; i++)
             {
-                string replacement = testFormat4.FormatWith(replacementDictionary);
+                string replacement = TestFormat4.FormatWith(replacementDictionary);
             }
         }
 
@@ -176,7 +165,7 @@ namespace FormatWithTests
         {
             for (int i = 0; i < 1000000; i++)
             {
-                string replacement = testFormat4.FormatWith(new { Replacement1 = Replacement1, Replacement2 = Replacement2 });
+                string replacement = TestFormat4.FormatWith(new { Replacement1 = Replacement1, Replacement2 = Replacement2 });
             }
         }
     }
