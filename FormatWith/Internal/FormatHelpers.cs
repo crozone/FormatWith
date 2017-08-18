@@ -24,16 +24,8 @@ namespace FormatWith.Internal
             IDictionary<string, object> replacements,
             MissingKeyBehaviour missingKeyBehaviour,
             string fallbackReplacementValue,
-            int outputLengthHint) {
-
-            // if there are no parameters, return an empty string
-            // (this would happen anyway, but this is avoids creating an entire
-            //  string builder)
-            if (!tokens.Any())
-            {
-                return string.Empty;
-            }
-
+            int outputLengthHint)
+        {
             // create a StringBuilder to hold the resultant output string
             // use the input hint as the initial size
             StringBuilder resultBuilder = new StringBuilder(outputLengthHint);
@@ -99,16 +91,7 @@ namespace FormatWith.Internal
             string fallbackReplacementValue,
             int outputLengthHint)
         {
-
             List<object> replacementParams = new List<object>();
-
-            // if there are no parameters, return an empty string
-            // (this would happen anyway, but this is avoids creating an entire
-            //  string builder)
-            if (!tokens.Any())
-            {
-                return FormattableStringFactory.Create(string.Empty);
-            }
 
             // create a StringBuilder to hold the resultant output string
             // use the input hint as the initial size
@@ -123,7 +106,9 @@ namespace FormatWith.Internal
                 {
                     // token is a text token
                     // add the token to the result string builder
-                    resultBuilder.Append(thisToken.SourceString, thisToken.StartIndex, thisToken.Length);
+                    // because this text is going into a standard composite format string,
+                    // any instaces of { or } must be escaped with {{ and }}
+                    resultBuilder.AppendWithEscapedBrackets(thisToken.SourceString, thisToken.StartIndex, thisToken.Length);
                 }
                 else if (thisToken.TokenType == TokenType.Parameter)
                 {
@@ -157,10 +142,7 @@ namespace FormatWith.Internal
                                 replacementParams.Add(fallbackReplacementValue);
                                 break;
                             case MissingKeyBehaviour.Ignore:
-                                // the replacement value is the input key as a parameter.
-                                // use source string and start/length directly with append rather than
-                                // parameter.ParameterKey to avoid allocating an extra string
-                                resultBuilder.Append(thisToken.SourceString, thisToken.StartIndex, thisToken.Length);
+                                resultBuilder.AppendWithEscapedBrackets(thisToken.SourceString, thisToken.StartIndex, thisToken.Length);
                                 break;
                         }
                     }
@@ -178,7 +160,7 @@ namespace FormatWith.Internal
         /// <param name="openBraceChar">The character used to begin parameters</param>
         /// <param name="closeBraceChar">The character used to end parameters</param>
         /// <returns>A list of text and parameter tokens representing the input format string</returns>
-        public static IEnumerable<FormatToken> Tokenize(string formatString, char openBraceChar = '{', char closeBraceChar = '}', bool preserveTextBraces = false)
+        public static IEnumerable<FormatToken> Tokenize(string formatString, char openBraceChar = '{', char closeBraceChar = '}')
         {
             if (formatString == null) throw new ArgumentNullException($"{nameof(formatString)} cannot be null.");
 
@@ -201,16 +183,6 @@ namespace FormatWith.Internal
                         {
                             // ESCAPED OPEN BRACE
 
-                            if (preserveTextBraces)
-                            {
-                                // if preserveTextBraces is true, we don't want to return the unescaped
-                                // version of this text string.
-                                // continue on as if this is a standard text string
-                                index += 2;
-                                continue;
-                            }
-
-
                             // we have hit an escaped open brace
                             // return current normal text, as well as the first brace
                             // implemented as yield return, this generates a IEnumerator state machine.
@@ -227,7 +199,7 @@ namespace FormatWith.Internal
                         else
                         {
                             // START OF PARAMETER
-                            
+
                             // not an escaped brace, set state to inside brace
                             insideBraces = true;
 
@@ -252,15 +224,6 @@ namespace FormatWith.Internal
                         if (index < formatString.Length - 1 && formatString[index + 1] == closeBraceChar)
                         {
                             // this is an escaped closing brace, this is okay
-
-                            if (preserveTextBraces)
-                            {
-                                // if preserveTextBraces is true, we don't want to return the unescaped
-                                // version of this text string.
-                                // continue on as if this is a standard text string
-                                index += 2;
-                                continue;
-                            }
 
                             // add the current normal text, as well as the first brace, to the
                             // list of tokens as a text token.
@@ -290,7 +253,7 @@ namespace FormatWith.Internal
                 }
                 else
                 {
-                    // currently inside a pair of braces in the format string                   
+                    // currently inside a pair of braces in the format string
                     if (formatString[index] == openBraceChar)
                     {
                         // found an opening brace

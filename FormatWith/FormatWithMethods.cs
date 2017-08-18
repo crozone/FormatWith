@@ -9,6 +9,7 @@ namespace FormatWith
     {
         public static string FormatWith(string formatString, IDictionary<string, object> replacements, MissingKeyBehaviour missingKeyBehaviour = MissingKeyBehaviour.ThrowException, string fallbackReplacementValue = null, char openBraceChar = '{', char closeBraceChar = '}')
         {
+            if (formatString.Length == 0) return string.Empty;
             // get the parameters from the format string
             IEnumerable<FormatToken> tokens = FormatHelpers.Tokenize(formatString, openBraceChar, closeBraceChar);
             return FormatHelpers.ProcessTokens(tokens, replacements, missingKeyBehaviour, fallbackReplacementValue, formatString.Length * 2);
@@ -17,7 +18,7 @@ namespace FormatWith
         public static FormattableString FormattableWith(string formatString, IDictionary<string, object> replacements, MissingKeyBehaviour missingKeyBehaviour = MissingKeyBehaviour.ThrowException, string fallbackReplacementValue = null, char openBraceChar = '{', char closeBraceChar = '}')
         {
             // get the parameters from the format string
-            IEnumerable<FormatToken> tokens = FormatHelpers.Tokenize(formatString, openBraceChar, closeBraceChar, true);
+            IEnumerable<FormatToken> tokens = FormatHelpers.Tokenize(formatString, openBraceChar, closeBraceChar);
             return FormatHelpers.ProcessTokensIntoFormattableString(tokens, replacements, missingKeyBehaviour, fallbackReplacementValue, formatString.Length * 2);
         }
     }
