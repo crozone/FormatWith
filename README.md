@@ -65,12 +65,6 @@ Custom brace characters can be specified for both opening and closing parameters
 
 output: "abc Replacement1 <DoesntExist>"
 
-### FormatWith(4)
-
-The fourth overload of `FormatWith()` takes a format string containing named parameters, along with an `Action<FormatToken, StringBuilder>`. The action is a handler that is called sequentially with each `FormatToken` parsed from the format string, and uses the information given by this `FormatToken` to mutate the `StringBuilder`. This allows full extensibility in controlling how parameters are handled, and also allows control over how they affect surrounding standard text.
-
-`FormatWith(1, 2, 3)` use this method internally by passing a simple dictionary replacement handler as the action.
-
 ### GetFormatParameters
 
 `GetFormatParameters()` can be used to get a list of parameter names out of a format string, which can be used for inspecting a format string before performing other actions on it.
