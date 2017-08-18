@@ -9,15 +9,6 @@ namespace FormatWithTests
 {
     public class FormatWithTests
     {
-        
-
-        [Fact]
-        public void TestMethodPassing()
-        {
-            // test to make sure testing framework is working (!)
-            Assert.True(true);
-        }
-
         [Fact]
         public void TestEmpty()
         {
@@ -122,12 +113,10 @@ namespace FormatWithTests
         }
 
         [Fact]
-        public void TestGetFormatParameters()
+        public void TestAsymmetricCustomBraces()
         {
-            List<string> parameters = TestFormat4.GetFormatParameters().ToList();
-            Assert.Equal(parameters.Count, 2);
-            Assert.Equal(nameof(Replacement1), parameters[0]);
-            Assert.Equal(nameof(Replacement2), parameters[1]);
+            string replacement = "abc{Replacement1>{DoesntExist>".FormatWith(new { Replacement1 = Replacement1, Replacement2 = Replacement2 }, MissingKeyBehaviour.Ignore, null, '{', '>');
+            Assert.Equal("abcReplacement1{DoesntExist>", replacement);
         }
 
         [Fact]
