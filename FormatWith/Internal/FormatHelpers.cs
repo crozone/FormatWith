@@ -8,7 +8,7 @@ namespace FormatWith.Internal
     /// <summary>
     /// Contains all string processing and tokenizing methods for FormatWith
     /// </summary>
-    public static class FormatHelpers
+    internal static class FormatHelpers
     {
         /// <summary>
         /// Processes a list of format tokens into a string
@@ -18,7 +18,7 @@ namespace FormatWith.Internal
         /// <param name="missingKeyBehaviour">The behaviour to use when the format string contains a parameter that is not present in the lookup dictionary</param>
         /// <param name="fallbackReplacementValue">When the <see cref="MissingKeyBehaviour.ReplaceWithFallback"/> is specified, this string is used as a fallback replacement value when the parameter is present in the lookup dictionary.</param>
         /// <returns>The processed result of joining the tokens with the replacement dictionary.</returns>
-        internal static string ProcessTokens(
+        public static string ProcessTokens(
             IEnumerable<FormatToken> tokens,
             IDictionary<string, object> replacements,
             MissingKeyBehaviour missingKeyBehaviour = MissingKeyBehaviour.ThrowException,
@@ -89,7 +89,7 @@ namespace FormatWith.Internal
         /// <param name="openBraceChar">The character used to begin parameters</param>
         /// <param name="closeBraceChar">The character used to end parameters</param>
         /// <returns>A list of text and parameter tokens representing the input format string</returns>
-        internal static IEnumerable<FormatToken> Tokenize(string formatString, char openBraceChar = '{', char closeBraceChar = '}')
+        public static IEnumerable<FormatToken> Tokenize(string formatString, char openBraceChar = '{', char closeBraceChar = '}')
         {
 
             if (formatString == null) throw new ArgumentNullException($"{nameof(formatString)} cannot be null.");

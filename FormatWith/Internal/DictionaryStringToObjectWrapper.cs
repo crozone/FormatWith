@@ -10,7 +10,7 @@ namespace FormatWith.Internal
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <typeparam name="U"></typeparam>
-    public class DictionaryStringToObjectWrapper<T, U> : IDictionary<T, object> {
+    internal class DictionaryStringToObjectWrapper<T, U> : IDictionary<T, object> {
             private readonly IDictionary<T, U> inner;
             public DictionaryStringToObjectWrapper(IDictionary<T, U> wrapped) {
                 this.inner = wrapped;
