@@ -23,7 +23,7 @@ namespace FormatWith.Internal
             IEnumerable<FormatToken> tokens,
             IDictionary<string, object> replacements,
             MissingKeyBehaviour missingKeyBehaviour,
-            string fallbackReplacementValue,
+            object fallbackReplacementValue,
             int outputLengthHint)
         {
             // create a StringBuilder to hold the resultant output string
@@ -88,7 +88,7 @@ namespace FormatWith.Internal
             IEnumerable<FormatToken> tokens,
             IDictionary<string, object> replacements,
             MissingKeyBehaviour missingKeyBehaviour,
-            string fallbackReplacementValue,
+            object fallbackReplacementValue,
             int outputLengthHint)
         {
             List<object> replacementParams = new List<object>();

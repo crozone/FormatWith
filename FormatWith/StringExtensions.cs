@@ -38,7 +38,7 @@ namespace FormatWith
             this string formatString,
             object replacementObject,
             MissingKeyBehaviour missingKeyBehaviour = MissingKeyBehaviour.ThrowException,
-            string fallbackReplacementValue = null,
+            object fallbackReplacementValue = null,
             char openBraceChar = '{',
             char closeBraceChar = '}')
         {
@@ -125,7 +125,7 @@ namespace FormatWith
             this string formatString,
             IDictionary<string, object> replacements,
             MissingKeyBehaviour missingKeyBehaviour = MissingKeyBehaviour.ThrowException,
-            string fallbackReplacementValue = null,
+            object fallbackReplacementValue = null,
             char openBraceChar = '{',
             char closeBraceChar = '}')
         {
@@ -167,7 +167,7 @@ namespace FormatWith
             this string formatString,
             object replacementObject,
             MissingKeyBehaviour missingKeyBehaviour = MissingKeyBehaviour.ThrowException,
-            string fallbackReplacementValue = null,
+            object fallbackReplacementValue = null,
             char openBraceChar = '{',
             char closeBraceChar = '}')
         {
@@ -246,7 +246,7 @@ namespace FormatWith
             this string formatString,
             IDictionary<string, object> replacements,
             MissingKeyBehaviour missingKeyBehaviour = MissingKeyBehaviour.ThrowException,
-            string fallbackReplacementValue = null,
+            object fallbackReplacementValue = null,
             char openBraceChar = '{',
             char closeBraceChar = '}')
         {
