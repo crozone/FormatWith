@@ -6,7 +6,7 @@
     <AssemblyName>FormatWith</AssemblyName>
     <AssemblyTitle>FormatWith</AssemblyTitle>
     <PackageId>FormatWith</PackageId>
-    <VersionPrefix>2.0.1</VersionPrefix>
+    <VersionPrefix>2.0.2</VersionPrefix>
     <Authors>Ryan Crosby</Authors>
     <PackageTags>NetStandard 2.0 named parameter string formatter</PackageTags>
     <PackageProjectUrl>https://github.com/crozone/FormatWith</PackageProjectUrl>
@@ -18,5 +18,15 @@
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <RepositoryUrl>https://github.com/crozone/FormatWith</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageReleaseNotes>
+- Project now targets .NET Standard 2.0 (available on .NET Core 2.0, .NET Framework 4.6.1, and others)
+- Removed seldom used custom formatter API, simplified internal code.
+- Increased performance with simpler code, tokenizing text as structs
+- Added an extra set of short overloads to the main extension methods, to make them easier to use from languages that don't support default parameters. (Previously, all optional method parameters would be required for the long overload).
+- Added support for FormattableString. Using the FormattableWith() method, the format string can be parsed into a FormattableString for custom formatting later.
+    </PackageReleaseNotes>
   </PropertyGroup>
 </Project>
