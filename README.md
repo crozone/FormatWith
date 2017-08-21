@@ -1,6 +1,6 @@
 # FormatWith
 
-[![NuGet](https://img.shields.io/badge/nuget-1.4.1-green.svg)](https://www.nuget.org/packages/FormatWith/)
+[![NuGet](https://img.shields.io/badge/nuget-2.0.0-green.svg)](https://www.nuget.org/packages/FormatWith/)
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000)]()
 
 A C# library for performing {named} {{parameterized}} string formatting.
@@ -9,7 +9,7 @@ A C# library for performing {named} {{parameterized}} string formatting.
 
 This library provides named string formatting via the string extension .FormatWith(). It formats strings with named parameters based upon an input lookup dictionary or type.
 
-It is written as a PCL class library, publishes to NuGet package, and is fully compatible with .NET Core. It is currently built against .NETStandard 1.3 and .NET Full Framework 4.5, which makes it compatible with .NET Core 1.0, .NET Full 4.5+, UWP/uap 10, and most mono/xamarin platforms.
+It is written as a Net Standard 2.0 class library, published as a NuGet package, and is fully compatible with any .NET platform that implement NetStandard 2.0. This makes it compatible with .NET Core 2.0, .NET Full Framework 4.6.1, UWP/UAP 10, and most mono/xamarin platforms.
 
 An example of what it can do:
 
@@ -29,7 +29,7 @@ A state machine parser quickly runs through the input format string, tokenizing 
 
 ## Extension methods:
 
-Two extension methods for `string` are defined in `FormatWith.FormatStringExtensions`, `FormatWith()` and `GetFormatParameters()`.
+Three extension methods for `string` are defined in `FormatWith.FormatStringExtensions`: `FormatWith()`, `FormattableWith()`, and `GetFormatParameters()`.
 
 ### FormatWith(1,2,3)
 
@@ -39,7 +39,7 @@ Missing key behaviour is specified by the MissingKeyBehaviour enum, which can be
 
 `ThrowException` throws a `KeyNotFoundException` if a parameter in the format string did not have a corresponding key in the lookup dictionary.
 
-`ReplaceWithFallback` inserts the value specified by `fallbackReplacementValue` in place of any parameters that did not have a corresponding key in the lookup dictionary.
+`ReplaceWithFallback` inserts the value specified by `fallbackReplacementValue` in place of any parameters that did not have a corresponding key in the lookup dictionary. If an object-based overload is used, `fallbackReplacementValue` is an `object`, and the string representation of the object will be resolved as the value.
 
 `Ignore` ignores any parameters that did not have a corresponding key in the lookup dictionary, leaving the unmodified braced parameter in the output string.
 
@@ -65,11 +65,9 @@ Custom brace characters can be specified for both opening and closing parameters
 
 output: "abc Replacement1 <DoesntExist>"
 
-### FormatWith(4)
+### FormattableWith(1,2,3)
 
-The fourth overload of `FormatWith()` takes a format string containing named parameters, along with an `Action<FormatToken, StringBuilder>`. The action is a handler that is called sequentially with each `FormatToken` parsed from the format string, and uses the information given by this `FormatToken` to mutate the `StringBuilder`. This allows full extensibility in controlling how parameters are handled, and also allows control over how they affect surrounding standard text.
-
-`FormatWith(1, 2, 3)` use this method internally by passing a simple dictionary replacement handler as the action.
+The first, second, and third overload of FormattableWith() function much the same way that the FormatWith() overloads do. However, FormattableWith returns a `FormattableString` instead of a `string`. This allows parameters and composite format string to be inspected, and allows a custom formatter to be used if desired.
 
 ### GetFormatParameters
 
@@ -83,7 +81,7 @@ output: parameters will return "parameter1","parameter2" during iteration.
 
 ## Tests:
 
-A testing project is included that covers basic functionality.
+A testing project is included that has coverage of most scenarios involving the three extension methods. The testing framework in use is xUnit.
 
 ## Performance:
 

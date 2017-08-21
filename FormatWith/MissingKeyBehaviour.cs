@@ -1,8 +1,10 @@
-﻿namespace FormatWith {
+﻿namespace FormatWith
+{
     /// <summary>
     /// Behaviour to use when a parameter is given that has no key in the replacement dictionary
     /// </summary>
-    public enum MissingKeyBehaviour {
+    public enum MissingKeyBehaviour
+    {
         /// <summary>
         /// Throws a FormatException 
         /// </summary>
