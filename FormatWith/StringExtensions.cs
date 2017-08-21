@@ -273,9 +273,7 @@ namespace FormatWith
             char openBraceChar = '{',
             char closeBraceChar = '}')
         {
-            return FormatHelpers.Tokenize(formatString, openBraceChar, closeBraceChar)
-                .Where(t => t.TokenType == TokenType.Parameter)
-                .Select(pt => pt.Value);
+            return FormatWithMethods.GetFormatParameters(formatString, openBraceChar, closeBraceChar);
         }
     }
 }
