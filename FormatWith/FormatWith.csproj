@@ -7,7 +7,6 @@
     <AssemblyTitle>FormatWith</AssemblyTitle>
     <PackageId>FormatWith</PackageId>
     <VersionPrefix>2.0.1</VersionPrefix>
-    <VersionSuffix>alpha</VersionSuffix>
     <Authors>Ryan Crosby</Authors>
     <PackageTags>NetStandard 2.0 named parameter string formatter</PackageTags>
     <PackageProjectUrl>https://github.com/crozone/FormatWith</PackageProjectUrl>
