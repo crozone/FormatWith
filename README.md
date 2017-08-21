@@ -39,7 +39,7 @@ Missing key behaviour is specified by the MissingKeyBehaviour enum, which can be
 
 `ThrowException` throws a `KeyNotFoundException` if a parameter in the format string did not have a corresponding key in the lookup dictionary.
 
-`ReplaceWithFallback` inserts the value specified by `fallbackReplacementValue` in place of any parameters that did not have a corresponding key in the lookup dictionary.
+`ReplaceWithFallback` inserts the value specified by `fallbackReplacementValue` in place of any parameters that did not have a corresponding key in the lookup dictionary. If an object-based overload is used, `fallbackReplacementValue` is an `object`, and the string representation of the object will be resolved as the value.
 
 `Ignore` ignores any parameters that did not have a corresponding key in the lookup dictionary, leaving the unmodified braced parameter in the output string.
 
