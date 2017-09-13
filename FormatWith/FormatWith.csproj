@@ -29,5 +29,6 @@
 - Increased performance with simpler code, tokenizing text as structs
 - Added an extra set of short overloads to the main extension methods, to make them easier to use from languages that don't support default parameters. (Previously, all optional method parameters would be required for the long overload).
 - Added support for FormattableString. Using the FormattableWith() method, the format string can be parsed into a FormattableString for custom formatting later.</PackageReleaseNotes>
+    <Version>2.1.0</Version>
   </PropertyGroup>
 </Project>
