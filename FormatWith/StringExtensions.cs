@@ -21,7 +21,7 @@ namespace FormatWith
             object replacementObject)
         {
             // wrap the type object in a wrapper Dictionary class that exposes the properties as dictionary keys via reflection
-            return FormatWithMethods.FormatWith(formatString, new DictionaryTypeWrapper(replacementObject));
+            return FormatWithMethods.FormatWith(formatString, replacementObject);
         }
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace FormatWith
             // wrap the type object in a wrapper Dictionary class that exposes the properties as dictionary keys via reflection
             return FormatWithMethods.FormatWith(
                 formatString,
-                new DictionaryTypeWrapper(replacementObject),
+                replacementObject,
                 missingKeyBehaviour,
                 fallbackReplacementValue,
                 openBraceChar,
@@ -63,7 +63,7 @@ namespace FormatWith
             IDictionary<string, string> replacements)
         {
             // wrap the IDictionary<string, string> in a wrapper Dictionary class that casts the values to objects as needed
-            return FormatWithMethods.FormatWith(formatString, new DictionaryStringToObjectWrapper<string, string>(replacements));
+            return FormatWithMethods.FormatWith(formatString, replacements);
         }
 
         /// <summary>
@@ -87,7 +87,7 @@ namespace FormatWith
             // wrap the IDictionary<string, string> in a wrapper Dictionary class that casts the values to objects as needed
             return FormatWithMethods.FormatWith(
                 formatString,
-                new DictionaryStringToObjectWrapper<string, string>(replacements),
+                replacements,
                 missingKeyBehaviour,
                 fallbackReplacementValue,
                 openBraceChar,
@@ -150,7 +150,7 @@ namespace FormatWith
         public static FormattableString FormattableWith(this string formatString, object replacementObject)
         {
             // wrap the type object in a wrapper Dictionary class that exposes the properties as dictionary keys via reflection
-            return FormatWithMethods.FormattableWith(formatString, new DictionaryTypeWrapper(replacementObject));
+            return FormatWithMethods.FormattableWith(formatString, replacementObject);
         }
 
         /// <summary>
@@ -171,10 +171,9 @@ namespace FormatWith
             char openBraceChar = '{',
             char closeBraceChar = '}')
         {
-            // wrap the type object in a wrapper Dictionary class that exposes the properties as dictionary keys via reflection
             return FormatWithMethods.FormattableWith(
                 formatString,
-                new DictionaryTypeWrapper(replacementObject),
+                replacementObject,
                 missingKeyBehaviour,
                 fallbackReplacementValue,
                 openBraceChar,
@@ -190,7 +189,7 @@ namespace FormatWith
         public static FormattableString FormattableWith(this string formatString, IDictionary<string, string> replacements)
         {
             // wrap the IDictionary<string, string> in a wrapper Dictionary class that casts the values to objects as needed
-            return FormatWithMethods.FormattableWith(formatString, new DictionaryStringToObjectWrapper<string, string>(replacements));
+            return FormatWithMethods.FormattableWith(formatString, replacements);
         }
 
         /// <summary>
@@ -214,7 +213,7 @@ namespace FormatWith
             // wrap the IDictionary<string, string> in a wrapper Dictionary class that casts the values to objects as needed
             return FormatWithMethods.FormattableWith(
                 formatString,
-                new DictionaryStringToObjectWrapper<string, string>(replacements),
+                replacements,
                 missingKeyBehaviour,
                 fallbackReplacementValue,
                 openBraceChar,

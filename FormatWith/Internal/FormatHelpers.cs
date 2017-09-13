@@ -11,17 +11,17 @@ namespace FormatWith.Internal
     /// </summary>
     internal static class FormatHelpers
     {
-        /// <summary>
-        /// Processes a list of format tokens into a string
-        /// </summary>
-        /// <param name="tokens">List of tokens to turn into a string</param>
-        /// <param name="replacements">An <see cref="IDictionary"/> with keys and values to inject into the formatted result</param>
-        /// <param name="missingKeyBehaviour">The behaviour to use when the format string contains a parameter that is not present in the lookup dictionary</param>
-        /// <param name="fallbackReplacementValue">When the <see cref="MissingKeyBehaviour.ReplaceWithFallback"/> is specified, this string is used as a fallback replacement value when the parameter is present in the lookup dictionary.</param>
-        /// <returns>The processed result of joining the tokens with the replacement dictionary.</returns>
-        public static string ProcessTokens(
+            /// <summary>
+            /// Processes a list of format tokens into a string
+            /// </summary>
+            /// <param name="tokens">List of tokens to turn into a string</param>
+            /// <param name="replacements">An <see cref="IDictionary"/> with keys and values to inject into the formatted result</param>
+            /// <param name="missingKeyBehaviour">The behaviour to use when the format string contains a parameter that is not present in the lookup dictionary</param>
+            /// <param name="fallbackReplacementValue">When the <see cref="MissingKeyBehaviour.ReplaceWithFallback"/> is specified, this string is used as a fallback replacement value when the parameter is present in the lookup dictionary.</param>
+            /// <returns>The processed result of joining the tokens with the replacement dictionary.</returns>
+            public static string ProcessTokens(
             IEnumerable<FormatToken> tokens,
-            IDictionary<string, object> replacements,
+            Func<string, ReplacementResult> handler,
             MissingKeyBehaviour missingKeyBehaviour,
             object fallbackReplacementValue,
             int outputLengthHint)
@@ -44,11 +44,13 @@ namespace FormatWith.Internal
                     // perform parameter logic now.
 
                     // append the replacement for this parameter
-                    if (replacements.TryGetValue(thisToken.Value, out object replacementValue))
+                    ReplacementResult replacementResult = handler(thisToken.Value);
+                
+                    if (replacementResult.Success)
                     {
                         // the key exists, add the replacement value
                         // this does nothing if replacement value is null
-                        resultBuilder.Append(replacementValue);
+                        resultBuilder.Append(replacementResult.Value);
                     }
                     else
                     {
@@ -86,7 +88,7 @@ namespace FormatWith.Internal
         /// <returns>The processed result of joining the tokens with the replacement dictionary.</returns>
         public static FormattableString ProcessTokensIntoFormattableString(
             IEnumerable<FormatToken> tokens,
-            IDictionary<string, object> replacements,
+            Func<string, ReplacementResult> handler,
             MissingKeyBehaviour missingKeyBehaviour,
             object fallbackReplacementValue,
             int outputLengthHint)
@@ -104,8 +106,8 @@ namespace FormatWith.Internal
             {
                 if (thisToken.TokenType == TokenType.Text)
                 {
-                    // token is a text token
-                    // add the token to the result string builder
+                    // token is a text token.
+                    // add the token to the result string builder.
                     // because this text is going into a standard composite format string,
                     // any instaces of { or } must be escaped with {{ and }}
                     resultBuilder.AppendWithEscapedBrackets(thisToken.SourceString, thisToken.StartIndex, thisToken.Length);
@@ -116,14 +118,17 @@ namespace FormatWith.Internal
                     // perform parameter logic now.
 
                     // append the replacement for this parameter
-                    if (replacements.TryGetValue(thisToken.Value, out object replacementValue))
+                    ReplacementResult replacementResult = handler(thisToken.Value);
+
+                    // append the replacement for this parameter
+                    if (replacementResult.Success)
                     {
                         // Instead of appending the replacement value directly as before,
                         // append the next placeholder with the current placeholder index.
                         // Add the actual replacement format item into the replacement values.
                         resultBuilder.Append("{" + placeholderIndex.ToString() + "}");
                         placeholderIndex++;
-                        replacementParams.Add(replacementValue);
+                        replacementParams.Add(replacementResult.Value);
                     }
                     else
                     {

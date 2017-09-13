@@ -2,23 +2,35 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 
 namespace FormatWith
 {
     internal static class FormatWithMethods
     {
-        /// <summary>
-        /// Formats a string with the values of the dictionary.
-        /// The string representation of each object value in the dictionary is used as the format parameter.
-        /// </summary>
-        /// <param name="formatString">The format string, containing keys like {foo}</param>
-        /// <param name="replacements">An <see cref="IDictionary"/> with keys and values to inject into the string</param>
-        /// <param name="missingKeyBehaviour">The behaviour to use when the format string contains a parameter that is not present in the lookup dictionary</param>
-        /// <param name="fallbackReplacementValue">When the <see cref="MissingKeyBehaviour.ReplaceWithFallback"/> is specified, this string is used as a fallback replacement value when the parameter is present in the lookup dictionary.</param>
-        /// <param name="openBraceChar">The character used to begin parameters</param>
-        /// <param name="closeBraceChar">The character used to end parameters</param>
-        /// <returns>The formatted string</returns>
+        public static string FormatWith(
+            string formatString,
+            IDictionary<string, string> replacements,
+            MissingKeyBehaviour missingKeyBehaviour = MissingKeyBehaviour.ThrowException,
+            string fallbackReplacementValue = null,
+            char openBraceChar = '{',
+            char closeBraceChar = '}')
+        {
+            return FormatWith(formatString, key =>
+            {
+                return new ReplacementResult
+                {
+                    Success = replacements.TryGetValue(key, out string value),
+                    Value = value
+                };
+            },
+            missingKeyBehaviour,
+            fallbackReplacementValue,
+            openBraceChar,
+            closeBraceChar);
+        }
+
         public static string FormatWith(
             string formatString,
             IDictionary<string, object> replacements,
@@ -27,22 +39,77 @@ namespace FormatWith
             char openBraceChar = '{',
             char closeBraceChar = '}')
         {
-            if (formatString.Length == 0) return string.Empty;
-            // get the parameters from the format string
-            IEnumerable<FormatToken> tokens = FormatHelpers.Tokenize(formatString, openBraceChar, closeBraceChar);
-            return FormatHelpers.ProcessTokens(tokens, replacements, missingKeyBehaviour, fallbackReplacementValue, formatString.Length * 2);
+            return FormatWith(formatString, key =>
+            {
+                return new ReplacementResult
+                {
+                    Success = replacements.TryGetValue(key, out object value),
+                    Value = value
+                };
+            },
+            missingKeyBehaviour,
+            fallbackReplacementValue,
+            openBraceChar,
+            closeBraceChar);
         }
 
-        /// <summary>
-        /// Produces a <see cref="FormattableString"/> representing the input format string.
-        /// </summary>
-        /// <param name="formatString">The format string, containing keys like {foo}</param>
-        /// <param name="replacements">An <see cref="IDictionary"/> with keys and values to inject into the string</param>
-        /// <param name="missingKeyBehaviour">The behaviour to use when the format string contains a parameter that is not present in the lookup dictionary</param>
-        /// <param name="fallbackReplacementValue">When the <see cref="MissingKeyBehaviour.ReplaceWithFallback"/> is specified, this string is used as a fallback replacement value when the parameter is present in the lookup dictionary.</param>
-        /// <param name="openBraceChar">The character used to begin parameters</param>
-        /// <param name="closeBraceChar">The character used to end parameters</param>
-        /// <returns>A version of the formatString string with dictionary keys replaced by (formatted) key values</returns>
+        private static BindingFlags propertyBindingFlags = BindingFlags.Instance | BindingFlags.Public;
+
+        public static string FormatWith(
+            string formatString,
+            object replacementObject,
+            MissingKeyBehaviour missingKeyBehaviour = MissingKeyBehaviour.ThrowException,
+            object fallbackReplacementValue = null,
+            char openBraceChar = '{',
+            char closeBraceChar = '}')
+        {
+            if (replacementObject == null) throw new ArgumentNullException(nameof(replacementObject));
+
+            return FormatWith(formatString,
+                key => FromReplacementObject(key, replacementObject),
+                missingKeyBehaviour,
+                fallbackReplacementValue,
+                openBraceChar,
+                closeBraceChar);
+        }
+
+        public static string FormatWith(
+            string formatString,
+            Func<string, ReplacementResult> handler,
+            MissingKeyBehaviour missingKeyBehaviour = MissingKeyBehaviour.ThrowException,
+            object fallbackReplacementValue = null,
+            char openBraceChar = '{',
+            char closeBraceChar = '}')
+        {
+            if (formatString.Length == 0) return string.Empty;
+
+            // get the parameters from the format string
+            IEnumerable<FormatToken> tokens = FormatHelpers.Tokenize(formatString, openBraceChar, closeBraceChar);
+            return FormatHelpers.ProcessTokens(tokens, handler, missingKeyBehaviour, fallbackReplacementValue, formatString.Length * 2);
+        }
+
+        public static FormattableString FormattableWith(
+            string formatString,
+            IDictionary<string, string> replacements,
+            MissingKeyBehaviour missingKeyBehaviour = MissingKeyBehaviour.ThrowException,
+            string fallbackReplacementValue = null,
+            char openBraceChar = '{',
+            char closeBraceChar = '}')
+        {
+            return FormattableWith(formatString, key =>
+            {
+                return new ReplacementResult
+                {
+                    Success = replacements.TryGetValue(key, out string value),
+                    Value = value
+                };
+            },
+            missingKeyBehaviour,
+            fallbackReplacementValue,
+            openBraceChar,
+            closeBraceChar);
+        }
+
         public static FormattableString FormattableWith(
             string formatString,
             IDictionary<string, object> replacements,
@@ -51,9 +118,47 @@ namespace FormatWith
             char openBraceChar = '{',
             char closeBraceChar = '}')
         {
+            return FormattableWith(formatString, key =>
+            {
+                return new ReplacementResult
+                {
+                    Success = replacements.TryGetValue(key, out object value),
+                    Value = value
+                };
+            },
+            missingKeyBehaviour,
+            fallbackReplacementValue,
+            openBraceChar,
+            closeBraceChar);
+        }
+
+        public static FormattableString FormattableWith(
+            string formatString,
+            object replacementObject,
+            MissingKeyBehaviour missingKeyBehaviour = MissingKeyBehaviour.ThrowException,
+            object fallbackReplacementValue = null,
+            char openBraceChar = '{',
+            char closeBraceChar = '}')
+        {
+            return FormattableWith(formatString,
+                key => FromReplacementObject(key, replacementObject),
+                missingKeyBehaviour,
+                fallbackReplacementValue,
+                openBraceChar,
+                closeBraceChar);
+        }
+
+        public static FormattableString FormattableWith(
+            string formatString,
+            Func<string, ReplacementResult> handler,
+            MissingKeyBehaviour missingKeyBehaviour = MissingKeyBehaviour.ThrowException,
+            object fallbackReplacementValue = null,
+            char openBraceChar = '{',
+            char closeBraceChar = '}')
+        {
             // get the parameters from the format string
             IEnumerable<FormatToken> tokens = FormatHelpers.Tokenize(formatString, openBraceChar, closeBraceChar);
-            return FormatHelpers.ProcessTokensIntoFormattableString(tokens, replacements, missingKeyBehaviour, fallbackReplacementValue, formatString.Length * 2);
+            return FormatHelpers.ProcessTokensIntoFormattableString(tokens, handler, missingKeyBehaviour, fallbackReplacementValue, formatString.Length * 2);
         }
 
         /// <summary>
@@ -71,6 +176,27 @@ namespace FormatWith
             return FormatHelpers.Tokenize(formatString, openBraceChar, closeBraceChar)
                 .Where(t => t.TokenType == TokenType.Parameter)
                 .Select(pt => pt.Value);
+        }
+
+        private static ReplacementResult FromReplacementObject(string key, object replacementObject)
+        {
+            PropertyInfo propertyInfo = replacementObject.GetType().GetProperty(key, propertyBindingFlags);
+            if (propertyInfo == null)
+            {
+                return new ReplacementResult()
+                {
+                    Success = false,
+                    Value = null
+                };
+            }
+            else
+            {
+                return new ReplacementResult
+                {
+                    Success = true,
+                    Value = propertyInfo.GetValue(replacementObject)
+                };
+            }
         }
     }
 }

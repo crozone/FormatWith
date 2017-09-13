@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.3
+VisualStudioVersion = 15.0.26730.12
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{B4638D33-4E45-4FB4-A119-91F90F876E8D}"
 EndProject
@@ -11,7 +11,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FormatWith", "FormatWith\Fo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FormatWithTests", "FormatWithTests\FormatWithTests.csproj", "{3F2936F4-0E9D-43B5-A7CE-1A22DF9F9A8A}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PerformanceProfileTest", "PerformanceProfileTest\PerformanceProfileTest.csproj", "{06B0DD6E-D6C3-4F67-BFCA-C7E6660C2D04}"
+EndProject
 Global
+	GlobalSection(Performance) = preSolution
+		HasPerformanceSessions = true
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|ARM = Debug|ARM
@@ -55,6 +60,22 @@ Global
 		{3F2936F4-0E9D-43B5-A7CE-1A22DF9F9A8A}.Release|x64.Build.0 = Release|Any CPU
 		{3F2936F4-0E9D-43B5-A7CE-1A22DF9F9A8A}.Release|x86.ActiveCfg = Release|Any CPU
 		{3F2936F4-0E9D-43B5-A7CE-1A22DF9F9A8A}.Release|x86.Build.0 = Release|Any CPU
+		{06B0DD6E-D6C3-4F67-BFCA-C7E6660C2D04}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{06B0DD6E-D6C3-4F67-BFCA-C7E6660C2D04}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{06B0DD6E-D6C3-4F67-BFCA-C7E6660C2D04}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{06B0DD6E-D6C3-4F67-BFCA-C7E6660C2D04}.Debug|ARM.Build.0 = Debug|Any CPU
+		{06B0DD6E-D6C3-4F67-BFCA-C7E6660C2D04}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{06B0DD6E-D6C3-4F67-BFCA-C7E6660C2D04}.Debug|x64.Build.0 = Debug|Any CPU
+		{06B0DD6E-D6C3-4F67-BFCA-C7E6660C2D04}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{06B0DD6E-D6C3-4F67-BFCA-C7E6660C2D04}.Debug|x86.Build.0 = Debug|Any CPU
+		{06B0DD6E-D6C3-4F67-BFCA-C7E6660C2D04}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{06B0DD6E-D6C3-4F67-BFCA-C7E6660C2D04}.Release|Any CPU.Build.0 = Release|Any CPU
+		{06B0DD6E-D6C3-4F67-BFCA-C7E6660C2D04}.Release|ARM.ActiveCfg = Release|Any CPU
+		{06B0DD6E-D6C3-4F67-BFCA-C7E6660C2D04}.Release|ARM.Build.0 = Release|Any CPU
+		{06B0DD6E-D6C3-4F67-BFCA-C7E6660C2D04}.Release|x64.ActiveCfg = Release|Any CPU
+		{06B0DD6E-D6C3-4F67-BFCA-C7E6660C2D04}.Release|x64.Build.0 = Release|Any CPU
+		{06B0DD6E-D6C3-4F67-BFCA-C7E6660C2D04}.Release|x86.ActiveCfg = Release|Any CPU
+		{06B0DD6E-D6C3-4F67-BFCA-C7E6660C2D04}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -65,5 +86,8 @@ Global
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {CAB2E4E0-1D18-4C27-9022-229AAB03C637}
+	EndGlobalSection
+	GlobalSection(Performance) = preSolution
+		HasPerformanceSessions = true
 	EndGlobalSection
 EndGlobal
