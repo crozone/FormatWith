@@ -11,8 +11,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FormatWith", "FormatWith\Fo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FormatWithTests", "FormatWithTests\FormatWithTests.csproj", "{3F2936F4-0E9D-43B5-A7CE-1A22DF9F9A8A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PerformanceProfileTest", "PerformanceProfileTest\PerformanceProfileTest.csproj", "{06B0DD6E-D6C3-4F67-BFCA-C7E6660C2D04}"
-EndProject
 Global
 	GlobalSection(Performance) = preSolution
 		HasPerformanceSessions = true
