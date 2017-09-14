@@ -5,7 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 
-namespace FormatWith
+namespace FormatWith.Internal
 {
     internal static class FormatWithMethods
     {
