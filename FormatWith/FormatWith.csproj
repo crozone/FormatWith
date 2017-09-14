@@ -3,15 +3,14 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <Title>FormatWith</Title>
     <Product>FormatWith</Product>
-    <Description>FormatWith, a portable .Net Standard library for performing {named} {{parameterized}} string formatting.</Description>
+    <Description>String extension methods for performing {named} {{parameterized}} string formatting, written for NetStandard 2.0</Description>
     <AssemblyName>FormatWith</AssemblyName>
     <AssemblyTitle>FormatWith</AssemblyTitle>
     <PackageId>FormatWith</PackageId>
-    <VersionPrefix>2.0.3</VersionPrefix>
+    <VersionPrefix>2.1.0</VersionPrefix>
     <Authors>Ryan Crosby</Authors>
     <Copyright>Copyright © Ryan Crosby 2017</Copyright>
-    <Description>Provides named string formatting via the string extension .FormatWith(). It formats strings with named parameters based upon an input lookup dictionary or object.</Description>
-    <PackageTags>NetStandard 2.0 named parameter string formatter</PackageTags>
+    <PackageTags>named string formatter extension NetStandard 2.0</PackageTags>
     <PackageProjectUrl>https://github.com/crozone/FormatWith</PackageProjectUrl>
     <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
@@ -24,11 +23,8 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <RepositoryUrl>https://github.com/crozone/FormatWith</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <PackageReleaseNotes>- Project now targets .NET Standard 2.0 (available on .NET Core 2.0, .NET Framework 4.6.1, and others)
-- Removed seldom used custom formatter API, simplified internal code.
-- Increased performance with simpler code, tokenizing text as structs
-- Added an extra set of short overloads to the main extension methods, to make them easier to use from languages that don't support default parameters. (Previously, all optional method parameters would be required for the long overload).
-- Added support for FormattableString. Using the FormattableWith() method, the format string can be parsed into a FormattableString for custom formatting later.</PackageReleaseNotes>
-    <Version>2.1.0</Version>
+    <PackageReleaseNotes>- Added a Func parameter handler overload to FormatWith and FormattableWith.
+- Improved performance for the object based/anonymous class overloads.
+- Internal code cleanup</PackageReleaseNotes>
   </PropertyGroup>
 </Project>
