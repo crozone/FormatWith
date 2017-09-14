@@ -1,13 +1,13 @@
 # FormatWith
 
-[![NuGet](https://img.shields.io/badge/nuget-2.0.3-green.svg)](https://www.nuget.org/packages/FormatWith/)
+[![NuGet](https://img.shields.io/badge/nuget-2.1.0-green.svg)](https://www.nuget.org/packages/FormatWith/)
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000)]()
 
-A .NET Standard 2.0 library for performing {named} {{parameterized}} string formatting.
+A set of string extension methods for performing {named} {{parameterized}} string formatting, written for NetStandard 2.0.
 
 ## Quick Info
 
-This library provides named string formatting via the string extension .FormatWith(). It formats strings with named parameters based upon an input lookup dictionary or object.
+This library provides named string formatting via the string extension .FormatWith(). It formats strings against a lookup dictionary, anonymous type, or handler.
 
 It is written as a Net Standard 2.0 class library, published as a NuGet package, and is fully compatible with any .NET platform that implements NetStandard 2.0. This makes it compatible with .NET Core 2.0, .NET Full Framework 4.6.1, UWP/UAP 10, and most mono/xamarin platforms.
 
@@ -42,15 +42,15 @@ Three extension methods for `string` are defined in `FormatWith.StringExtensions
 
 ### FormatWith
 
-The first, second, and third overload of `FormatWith()` take a format string containing named parameters, along with an object or dictionary of replacement parameters. Optionally, missing key behaviour, a fallback value, and custom brace characters can be specified. Two adjacent opening or closing brace characters in the format string are treated as escaped, and will be reduced to a single brace in the output string.
+The first, second, and third overload of `FormatWith()` take a format string containing named parameters, along with an object, dictionary, or function for providing replacement parameters. Optionally, missing key behaviour, a fallback value, and custom brace characters can be specified. Two adjacent opening or closing brace characters in the format string are treated as escaped, and will be reduced to a single brace in the output string.
 
-Missing key behaviour is specified by the `MissingKeyBehaviour` enum, which can be either `ThrowException`, `ReplaceWithFallback`, or `Ignore`.
+Missing key behaviour is specified by the `MissingKeyBehaviour` enum, which can be `ThrowException`, `ReplaceWithFallback`, or `Ignore`.
 
-`ThrowException` throws a `KeyNotFoundException` if a parameter in the format string did not have a corresponding key in the lookup dictionary.
+`ThrowException` throws a `KeyNotFoundException` if a replacement value for a parameter in the format string could not be found.
 
-`ReplaceWithFallback` inserts the value specified by `fallbackReplacementValue` in place of any parameters that did not have a corresponding key in the lookup dictionary. If an object-based overload is used, `fallbackReplacementValue` is an `object`, and the string representation of the object will be resolved as the value.
+`ReplaceWithFallback` inserts the value specified by `fallbackReplacementValue` in place of any parameters that could not be replaced. If an object-based overload is used, `fallbackReplacementValue` is an `object`, and the string representation of the object will be resolved as the value.
 
-`Ignore` ignores any parameters that did not have a corresponding key in the lookup dictionary, leaving the unmodified braced parameter in the output string.
+`Ignore` ignores any parameters that did not have a corresponding key in the lookup dictionary, leaving the unmodified braced parameter in the output string. This is useful for tiered formatting.
 
 **Examples:**
 
