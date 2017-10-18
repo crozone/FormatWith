@@ -1,6 +1,6 @@
 # FormatWith
 
-[![NuGet](https://img.shields.io/badge/nuget-2.1.0-green.svg)](https://www.nuget.org/packages/FormatWith/)
+[![NuGet](https://img.shields.io/badge/nuget-2.2.0-green.svg)](https://www.nuget.org/packages/FormatWith/)
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000)]()
 
 A set of string extension methods for performing {named} {{parameterized}} string formatting, written for NetStandard 2.0.
@@ -77,6 +77,46 @@ output: "abc Replacement1 <DoesntExist>"
 ### FormattableWith
 
 The first, second, and third overload of FormattableWith() function much the same way that the FormatWith() overloads do. However, FormattableWith returns a `FormattableString` instead of a `string`. This allows parameters and composite format string to be inspected, and allows a custom formatter to be used if desired.
+
+### Handler overloads
+
+A custom handler can be passed to both FormatWith() and FormattableWith(). The handler is passed the value of each parameter key, and is responsible for providing a `ReplacementResult` in response. The `ReplacementResult` contains the `Value` which will be substituted, as well as a boolean `Success` parameter indicating whether the replacement was successful. If `Success` is false, the `MissingKeyBehaviour` is followed, as per the other overloads of FormatWith.
+
+This can allow for some neat tricks, and even complex behaviours.
+
+Example:
+
+    "{abcDEF123:reverse}, {abcDEF123:uppercase}, {abcDEF123:lowercase}.".FormatWith(
+                (parameter) =>
+                {
+                    int splitIndex = parameter.LastIndexOf(':');
+                    if (splitIndex < 0)
+                    {
+                        return new ReplacementResult(true, parameter);
+                    }
+                    else
+                    {
+                        string value = parameter.Substring(0, splitIndex);
+                        string modifier = parameter.Length > splitIndex + 1 ? parameter.Substring(splitIndex + 1) : string.Empty;
+
+                        switch (modifier)
+                        {
+                            case "uppercase":
+                                return new ReplacementResult(true, value.ToUpper());
+                            case "lowercase":
+                                return new ReplacementResult(true, value.ToLower());
+                            case "reverse":
+                                return new ReplacementResult(true, new string(value.Reverse().ToArray()));
+                            default:
+                                return new ReplacementResult(false, null);
+                        }
+                    }
+
+                });
+
+Produces:
+
+"321FEDcba, ABCDEF123, abcdef123."
 
 ### GetFormatParameters
 
