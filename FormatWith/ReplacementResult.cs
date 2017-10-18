@@ -6,7 +6,13 @@ namespace FormatWith
 {
     public struct ReplacementResult
     {
-        public bool Success { get; set; }
-        public object Value { get; set; }
+        public ReplacementResult(bool success, object value)
+        {
+            Success = success;
+            Value = value;
+        }
+
+        public bool Success { get; }
+        public object Value { get; }
     }
 }
