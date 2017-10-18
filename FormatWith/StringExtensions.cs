@@ -138,6 +138,48 @@ namespace FormatWith
                 closeBraceChar);
         }
 
+        /// <summary>
+        /// Formats a string, using a handler function to provide the value
+        /// of each parameter.
+        /// </summary>
+        /// <param name="formatString">The format string, containing keys like {foo}</param>
+        /// <param name="handler">A handler function that transforms each parameter into a <see cref="ReplacementResult"/></param>
+        /// <returns>The formatted string</returns>
+        public static string FormatWith(
+            this string formatString,
+            Func<string, ReplacementResult> handler)
+        {
+            return FormatWithMethods.FormatWith(formatString, handler);
+        }
+
+        /// <summary>
+        /// Formats a string, using a handler function to provide the value
+        /// of each parameter.
+        /// </summary>
+        /// <param name="formatString">The format string, containing keys like {foo}</param>
+        /// <param name="handler">A handler function that transforms each parameter into a <see cref="ReplacementResult"/></param>
+        /// <param name="missingKeyBehaviour">The behaviour to use when the format string contains a parameter that cannot be replaced by the handler</param>
+        /// <param name="fallbackReplacementValue">When the <see cref="MissingKeyBehaviour.ReplaceWithFallback"/> is specified, this object is used as a fallback replacement value.</param>
+        /// <param name="openBraceChar">The character used to begin parameters</param>
+        /// <param name="closeBraceChar">The character used to end parameters</param>
+        /// <returns>The formatted string</returns>
+        public static string FormatWith(
+            this string formatString,
+            Func<string, ReplacementResult> handler,
+            MissingKeyBehaviour missingKeyBehaviour = MissingKeyBehaviour.ThrowException,
+            object fallbackReplacementValue = null,
+            char openBraceChar = '{',
+            char closeBraceChar = '}')
+        {
+            return FormatWithMethods.FormatWith(
+                formatString,
+                handler,
+                missingKeyBehaviour,
+                fallbackReplacementValue,
+                openBraceChar,
+                closeBraceChar);
+        }
+
         #endregion
 
         #region FormattableWith Overloads
@@ -146,7 +188,7 @@ namespace FormatWith
         /// </summary>
         /// <param name="formatString">The format string, containing keys like {foo}</param>
         /// <param name="replacementObject">The object whose properties should be injected in the string</param>
-        /// <returns>A FormattableString representing the  string with dictionary keys replaced by (formatted) key values</returns>
+        /// <returns>The resultant <see cref="FormattableString"/></returns>
         public static FormattableString FormattableWith(this string formatString, object replacementObject)
         {
             // wrap the type object in a wrapper Dictionary class that exposes the properties as dictionary keys via reflection
@@ -162,7 +204,7 @@ namespace FormatWith
         /// <param name="fallbackReplacementValue">When the <see cref="MissingKeyBehaviour.ReplaceWithFallback"/> is specified, this string is used as a fallback replacement value when the parameter is present in the lookup dictionary.</param>
         /// <param name="openBraceChar">The character used to begin parameters</param>
         /// <param name="closeBraceChar">The character used to end parameters</param>
-        /// <returns>A FormattableString representing the  string with dictionary keys replaced by (formatted) key values</returns>
+        /// <returns>The resultant <see cref="FormattableString"/></returns>
         public static FormattableString FormattableWith(
             this string formatString,
             object replacementObject,
@@ -185,7 +227,7 @@ namespace FormatWith
         /// </summary>
         /// <param name="formatString">The format string, containing keys like {foo}</param>
         /// <param name="replacements">An <see cref="IDictionary"/> with keys and values to inject into the string</param>
-        /// <returns>A version of the formatString string with dictionary keys replaced by (formatted) key values</returns>
+        /// <returns>The resultant <see cref="FormattableString"/></returns>
         public static FormattableString FormattableWith(this string formatString, IDictionary<string, string> replacements)
         {
             // wrap the IDictionary<string, string> in a wrapper Dictionary class that casts the values to objects as needed
@@ -201,7 +243,7 @@ namespace FormatWith
         /// <param name="fallbackReplacementValue">When the <see cref="MissingKeyBehaviour.ReplaceWithFallback"/> is specified, this string is used as a fallback replacement value when the parameter is present in the lookup dictionary.</param>
         /// <param name="openBraceChar">The character used to begin parameters</param>
         /// <param name="closeBraceChar">The character used to end parameters</param>
-        /// <returns>A version of the formatString string with dictionary keys replaced by (formatted) key values</returns>
+        /// <returns>The resultant <see cref="FormattableString"/></returns>
         public static FormattableString FormattableWith(
             this string formatString,
             IDictionary<string, string> replacements,
@@ -225,7 +267,7 @@ namespace FormatWith
         /// </summary>
         /// <param name="formatString">The format string, containing keys like {foo}</param>
         /// <param name="replacements">An <see cref="IDictionary"/> with keys and values to inject into the string</param>
-        /// <returns>A version of the formatString string with dictionary keys replaced by (formatted) key values</returns>
+        /// <returns>The resultant <see cref="FormattableString"/></returns>
         public static FormattableString FormattableWith(this string formatString, IDictionary<string, object> replacements)
         {
             return FormatWithMethods.FormattableWith(formatString, replacements);
@@ -240,7 +282,7 @@ namespace FormatWith
         /// <param name="fallbackReplacementValue">When the <see cref="MissingKeyBehaviour.ReplaceWithFallback"/> is specified, this string is used as a fallback replacement value when the parameter is present in the lookup dictionary.</param>
         /// <param name="openBraceChar">The character used to begin parameters</param>
         /// <param name="closeBraceChar">The character used to end parameters</param>
-        /// <returns>A version of the formatString string with dictionary keys replaced by (formatted) key values</returns>
+        /// <returns>The resultant <see cref="FormattableString"/></returns>
         public static FormattableString FormattableWith(
             this string formatString,
             IDictionary<string, object> replacements,
@@ -252,6 +294,46 @@ namespace FormatWith
             return FormatWithMethods.FormattableWith(
                 formatString,
                 replacements,
+                missingKeyBehaviour,
+                fallbackReplacementValue,
+                openBraceChar,
+                closeBraceChar);
+        }
+
+        /// <summary>
+        /// Produces a <see cref="FormattableString"/> representing the input format string.
+        /// </summary>
+        /// <param name="formatString">The format string, containing keys like {foo}</param>
+        /// <param name="handler">A handler function that transforms each parameter into a <see cref="ReplacementResult"/></param>
+        /// <returns>The resultant <see cref="FormattableString"/></returns>
+        public static FormattableString FormattableWith(
+            this string formatString,
+            Func<string, ReplacementResult> handler)
+        {
+            return FormatWithMethods.FormattableWith(formatString, handler);
+        }
+
+        /// <summary>
+        /// Produces a <see cref="FormattableString"/> representing the input format string.
+        /// </summary>
+        /// <param name="formatString">The format string, containing keys like {foo}</param>
+        /// <param name="handler">A handler function that transforms each parameter into a <see cref="ReplacementResult"/></param>
+        /// <param name="missingKeyBehaviour">The behaviour to use when the format string contains a parameter that cannot be replaced by the handler</param>
+        /// <param name="fallbackReplacementValue">When the <see cref="MissingKeyBehaviour.ReplaceWithFallback"/> is specified, this object is used as a fallback replacement value.</param>
+        /// <param name="openBraceChar">The character used to begin parameters</param>
+        /// <param name="closeBraceChar">The character used to end parameters</param>
+        /// <returns>The resultant <see cref="FormattableString"/></returns>
+        public static FormattableString FormattableWith(
+            this string formatString,
+            Func<string, ReplacementResult> handler,
+            MissingKeyBehaviour missingKeyBehaviour = MissingKeyBehaviour.ThrowException,
+            object fallbackReplacementValue = null,
+            char openBraceChar = '{',
+            char closeBraceChar = '}')
+        {
+            return FormatWithMethods.FormattableWith(
+                formatString,
+                handler,
                 missingKeyBehaviour,
                 fallbackReplacementValue,
                 openBraceChar,

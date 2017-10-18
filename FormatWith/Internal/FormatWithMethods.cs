@@ -17,18 +17,13 @@ namespace FormatWith.Internal
             char openBraceChar = '{',
             char closeBraceChar = '}')
         {
-            return FormatWith(formatString, key =>
-            {
-                return new ReplacementResult
-                {
-                    Success = replacements.TryGetValue(key, out string value),
-                    Value = value
-                };
-            },
-            missingKeyBehaviour,
-            fallbackReplacementValue,
-            openBraceChar,
-            closeBraceChar);
+            return FormatWith(
+                formatString,
+                key => new ReplacementResult(replacements.TryGetValue(key, out string value), value),
+                missingKeyBehaviour,
+                fallbackReplacementValue,
+                openBraceChar,
+                closeBraceChar);
         }
 
         public static string FormatWith(
@@ -39,18 +34,13 @@ namespace FormatWith.Internal
             char openBraceChar = '{',
             char closeBraceChar = '}')
         {
-            return FormatWith(formatString, key =>
-            {
-                return new ReplacementResult
-                {
-                    Success = replacements.TryGetValue(key, out object value),
-                    Value = value
-                };
-            },
-            missingKeyBehaviour,
-            fallbackReplacementValue,
-            openBraceChar,
-            closeBraceChar);
+            return FormatWith(
+                formatString,
+                key => new ReplacementResult(replacements.TryGetValue(key, out object value), value),
+                missingKeyBehaviour,
+                fallbackReplacementValue,
+                openBraceChar,
+                closeBraceChar);
         }
 
         private static BindingFlags propertyBindingFlags = BindingFlags.Instance | BindingFlags.Public;
@@ -96,18 +86,13 @@ namespace FormatWith.Internal
             char openBraceChar = '{',
             char closeBraceChar = '}')
         {
-            return FormattableWith(formatString, key =>
-            {
-                return new ReplacementResult
-                {
-                    Success = replacements.TryGetValue(key, out string value),
-                    Value = value
-                };
-            },
-            missingKeyBehaviour,
-            fallbackReplacementValue,
-            openBraceChar,
-            closeBraceChar);
+            return FormattableWith(
+                formatString,
+                key => new ReplacementResult(replacements.TryGetValue(key, out string value), value),
+                missingKeyBehaviour,
+                fallbackReplacementValue,
+                openBraceChar,
+                closeBraceChar);
         }
 
         public static FormattableString FormattableWith(
@@ -118,18 +103,13 @@ namespace FormatWith.Internal
             char openBraceChar = '{',
             char closeBraceChar = '}')
         {
-            return FormattableWith(formatString, key =>
-            {
-                return new ReplacementResult
-                {
-                    Success = replacements.TryGetValue(key, out object value),
-                    Value = value
-                };
-            },
-            missingKeyBehaviour,
-            fallbackReplacementValue,
-            openBraceChar,
-            closeBraceChar);
+            return FormattableWith(
+                formatString,
+                key => new ReplacementResult(replacements.TryGetValue(key, out object value), value),
+                missingKeyBehaviour,
+                fallbackReplacementValue,
+                openBraceChar,
+                closeBraceChar);
         }
 
         public static FormattableString FormattableWith(
@@ -183,19 +163,11 @@ namespace FormatWith.Internal
             PropertyInfo propertyInfo = replacementObject.GetType().GetProperty(key, propertyBindingFlags);
             if (propertyInfo == null)
             {
-                return new ReplacementResult()
-                {
-                    Success = false,
-                    Value = null
-                };
+                return new ReplacementResult(false, null);
             }
             else
             {
-                return new ReplacementResult
-                {
-                    Success = true,
-                    Value = propertyInfo.GetValue(replacementObject)
-                };
+                return new ReplacementResult(true, propertyInfo.GetValue(replacementObject));
             }
         }
     }

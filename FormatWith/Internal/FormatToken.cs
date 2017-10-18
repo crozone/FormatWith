@@ -42,7 +42,7 @@ namespace FormatWith.Internal
         }
 
         /// <summary>
-        /// Gets the token intter text.
+        /// Gets the token inner text.
         /// This performs a substring operation and allocates a new string object.
         /// </summary>
         public string Value {

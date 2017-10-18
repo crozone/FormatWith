@@ -7,7 +7,7 @@
     <AssemblyName>FormatWith</AssemblyName>
     <AssemblyTitle>FormatWith</AssemblyTitle>
     <PackageId>FormatWith</PackageId>
-    <VersionPrefix>2.1.0</VersionPrefix>
+    <VersionPrefix>2.2.0</VersionPrefix>
     <Authors>Ryan Crosby</Authors>
     <Copyright>Copyright © Ryan Crosby 2017</Copyright>
     <PackageTags>named string formatter extension NetStandard 2.0</PackageTags>
@@ -23,8 +23,6 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <RepositoryUrl>https://github.com/crozone/FormatWith</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <PackageReleaseNotes>- Added a Func parameter handler overload to FormatWith and FormattableWith.
-- Improved performance for the object based/anonymous class overloads.
-- Internal code cleanup</PackageReleaseNotes>
+    <PackageReleaseNotes>Added handler overload to FormatWith and FormattableWith.</PackageReleaseNotes>
   </PropertyGroup>
 </Project>
