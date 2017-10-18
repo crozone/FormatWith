@@ -120,6 +120,55 @@ namespace FormatWithTests
         }
 
         [Fact]
+        public void TestCustomHandler1()
+        {
+            string replacement = "Hey, {make this uppercase!} Thanks.".FormatWith(
+                (parameter) => new ReplacementResult(true, parameter.ToUpper())
+                );
+
+            Assert.Equal("Hey, MAKE THIS UPPERCASE! Thanks.", replacement);
+        }
+
+        [Fact]
+        public void TestCustomHandler2()
+        {
+            string replacement = "<abcDEF123:reverse>, <abcDEF123:uppercase>, <abcDEF123:lowercase>.".FormatWith(
+                (parameter) =>
+                {
+                    int splitIndex = parameter.LastIndexOf(':');
+                    if (splitIndex < 0)
+                    {
+                        return new ReplacementResult(true, parameter);
+                    }
+                    else
+                    {
+                        string value = parameter.Substring(0, splitIndex);
+                        string modifier = parameter.Length > splitIndex + 1 ? parameter.Substring(splitIndex + 1) : string.Empty;
+
+                        switch (modifier)
+                        {
+                            case "uppercase":
+                                return new ReplacementResult(true, value.ToUpper());
+                            case "lowercase":
+                                return new ReplacementResult(true, value.ToLower());
+                            case "reverse":
+                                return new ReplacementResult(true, new string(value.Reverse().ToArray()));
+                            default:
+                                return new ReplacementResult(false, null);
+                        }
+                    }
+
+                },
+                MissingKeyBehaviour.ReplaceWithFallback,
+                "Fallback",
+                '<',
+                '>'
+                );
+
+            Assert.Equal("321FEDcba, ABCDEF123, abcdef123.", replacement);
+        }
+
+        [Fact]
         public void SpeedTest()
         {
             Dictionary<string, string> replacementDictionary = new Dictionary<string, string>()
