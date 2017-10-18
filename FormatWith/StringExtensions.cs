@@ -146,7 +146,7 @@ namespace FormatWith
         /// <param name="handler">A handler function that transforms each parameter into a <see cref="ReplacementResult"/></param>
         /// <returns>The formatted string</returns>
         public static string FormatWith(
-            string formatString,
+            this string formatString,
             Func<string, ReplacementResult> handler)
         {
             return FormatWithMethods.FormatWith(formatString, handler);
@@ -164,7 +164,7 @@ namespace FormatWith
         /// <param name="closeBraceChar">The character used to end parameters</param>
         /// <returns>The formatted string</returns>
         public static string FormatWith(
-            string formatString,
+            this string formatString,
             Func<string, ReplacementResult> handler,
             MissingKeyBehaviour missingKeyBehaviour = MissingKeyBehaviour.ThrowException,
             object fallbackReplacementValue = null,
@@ -307,7 +307,7 @@ namespace FormatWith
         /// <param name="handler">A handler function that transforms each parameter into a <see cref="ReplacementResult"/></param>
         /// <returns>The resultant <see cref="FormattableString"/></returns>
         public static FormattableString FormattableWith(
-            string formatString,
+            this string formatString,
             Func<string, ReplacementResult> handler)
         {
             return FormatWithMethods.FormattableWith(formatString, handler);
@@ -324,7 +324,7 @@ namespace FormatWith
         /// <param name="closeBraceChar">The character used to end parameters</param>
         /// <returns>The resultant <see cref="FormattableString"/></returns>
         public static FormattableString FormattableWith(
-            string formatString,
+            this string formatString,
             Func<string, ReplacementResult> handler,
             MissingKeyBehaviour missingKeyBehaviour = MissingKeyBehaviour.ThrowException,
             object fallbackReplacementValue = null,
