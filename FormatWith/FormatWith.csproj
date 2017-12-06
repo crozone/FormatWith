@@ -1,4 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <Title>FormatWith</Title>
@@ -7,7 +8,7 @@
     <AssemblyName>FormatWith</AssemblyName>
     <AssemblyTitle>FormatWith</AssemblyTitle>
     <PackageId>FormatWith</PackageId>
-    <VersionPrefix>2.2.0</VersionPrefix>
+    <VersionPrefix>2.2.1</VersionPrefix>
     <Authors>Ryan Crosby</Authors>
     <Copyright>Copyright © Ryan Crosby 2017</Copyright>
     <PackageTags>named string formatter extension NetStandard 2.0</PackageTags>
@@ -23,6 +24,15 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <RepositoryUrl>https://github.com/crozone/FormatWith</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <PackageReleaseNotes>Added handler overload to FormatWith and FormattableWith.</PackageReleaseNotes>
+    <PackageReleaseNotes>Include XML documentation in package.</PackageReleaseNotes>
   </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>bin\Debug\netstandard2.0\FormatWith.xml</DocumentationFile>
+  </PropertyGroup>
+  
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>bin\Release\netstandard2.0\FormatWith.xml</DocumentationFile>
+  </PropertyGroup>
+
 </Project>
