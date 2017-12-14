@@ -19,7 +19,7 @@ An example of what it can do:
     
     // format the format string using the FormatWith() string extension.
     // We can parse in replacement parameters as an anonymous type
-    string output = formatString.FormatWith({name = "John", works = "is good");
+    string output = formatString.FormatWith({name = "John", works = "is good"});
     
     // output now contains the formatted text.
     Console.WriteLine(output);
@@ -30,7 +30,7 @@ Produces:
 
 It can also be fed parameters via an `IDictionary<string, string>` or an `IDictionary<string, object>`, rather than a type.
 
-The value of each replacement parameter is given by whatever the object's `.ToString()` method produces. This value is not cached, so you can get creative with the implementation (the object is fed directly into a StringBuilder).
+The value of each replacement parameter is given by whatever the objects `.ToString()` method produces. This value is not cached, so you can get creative with the implementation (the object is fed directly into a StringBuilder).
 
 ## How it works
 
