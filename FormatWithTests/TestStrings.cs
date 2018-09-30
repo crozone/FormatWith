@@ -20,5 +20,9 @@ namespace FormatWithTests
         public static readonly string TestFormat4 = "abc{Replacement1}def{{escaped1}}ghi{{{Replacement2}}}jkl{{{{escaped2}}}}mno";
         public static readonly string TestFormat4Composite = "abc{0}def{{escaped1}}ghi{{{1}}}jkl{{{{escaped2}}}}mno";
         public static readonly string TestFormat4Solution = $"abc{Replacement1}def{{escaped1}}ghi{{{Replacement2}}}jkl{{{{escaped2}}}}mno";
+
+        public static readonly string TestFormat5 = "abc{Foo.Replacement1}";
+        public static readonly string TestFormat5Composite = "abc{0}";
+        public static readonly string TestFormat5Solution = $"abc{Replacement1}";
     }
 }

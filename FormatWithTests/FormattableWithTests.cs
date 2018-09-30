@@ -49,6 +49,16 @@ namespace FormatWithTests
         }
 
         [Fact]
+        public void TestNestedProperties()
+        {
+            FormattableString formattableString = TestFormat5.FormattableWith(new { Foo = new { Replacement1 = Replacement1 } });
+            Assert.Equal(TestFormat5Composite, formattableString.Format);
+            Assert.Equal(1, formattableString.ArgumentCount);
+            Assert.Equal(Replacement1, formattableString.GetArgument(0));
+            Assert.Equal(TestFormat5Solution, formattableString.ToString());
+        }
+
+        [Fact]
         public void TestCustomBraces()
         {
             string format = "abc{{Replacement1}<Replacement2>";

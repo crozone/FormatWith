@@ -31,6 +31,13 @@ namespace FormatWithTests
         }
 
         [Fact]
+        public void TestNestedPropertiesReplacements()
+        {
+            string replacement = TestFormat5.FormatWith(new { Foo = new { Replacement1 = Replacement1 } });
+            Assert.Equal(TestFormat5Solution, replacement);
+        }
+
+        [Fact]
         public void TestUnexpectedOpenBracketError()
         {
             try
