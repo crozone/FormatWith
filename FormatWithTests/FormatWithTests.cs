@@ -31,6 +31,13 @@ namespace FormatWithTests
         }
 
         [Fact]
+        public void TestParameterFormat()
+        {
+            string replacement = TestFormat7.FormatWith(new { Today = TestFormat7Date });
+            Assert.Equal(TestFormat7Solution, replacement);
+        }
+
+        [Fact]
         public void TestNestedPropertiesReplacements()
         {
             string replacement = TestFormat5.FormatWith(new { Foo = new { Replacement1 = Replacement1 } });
@@ -130,7 +137,7 @@ namespace FormatWithTests
         public void TestCustomHandler1()
         {
             string replacement = "Hey, {make this uppercase!} Thanks.".FormatWith(
-                (parameter) => new ReplacementResult(true, parameter.ToUpper())
+                (parameter, format) => new ReplacementResult(true, parameter.ToUpper())
                 );
 
             Assert.Equal("Hey, MAKE THIS UPPERCASE! Thanks.", replacement);
@@ -140,31 +147,19 @@ namespace FormatWithTests
         public void TestCustomHandler2()
         {
             string replacement = "<abcDEF123:reverse>, <abcDEF123:uppercase>, <abcDEF123:lowercase>.".FormatWith(
-                (parameter) =>
+                (parameter, format) =>
                 {
-                    int splitIndex = parameter.LastIndexOf(':');
-                    if (splitIndex < 0)
+                    switch (format)
                     {
-                        return new ReplacementResult(true, parameter);
+                        case "uppercase":
+                            return new ReplacementResult(true, parameter.ToUpper());
+                        case "lowercase":
+                            return new ReplacementResult(true, parameter.ToLower());
+                        case "reverse":
+                            return new ReplacementResult(true, new string(parameter.Reverse().ToArray()));
+                        default:
+                            return new ReplacementResult(false, parameter);
                     }
-                    else
-                    {
-                        string value = parameter.Substring(0, splitIndex);
-                        string modifier = parameter.Length > splitIndex + 1 ? parameter.Substring(splitIndex + 1) : string.Empty;
-
-                        switch (modifier)
-                        {
-                            case "uppercase":
-                                return new ReplacementResult(true, value.ToUpper());
-                            case "lowercase":
-                                return new ReplacementResult(true, value.ToLower());
-                            case "reverse":
-                                return new ReplacementResult(true, new string(value.Reverse().ToArray()));
-                            default:
-                                return new ReplacementResult(false, null);
-                        }
-                    }
-
                 },
                 MissingKeyBehaviour.ReplaceWithFallback,
                 "Fallback",

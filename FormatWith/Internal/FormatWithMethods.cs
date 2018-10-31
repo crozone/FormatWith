@@ -19,7 +19,7 @@ namespace FormatWith.Internal
         {
             return FormatWith(
                 formatString,
-                key => new ReplacementResult(replacements.TryGetValue(key, out string value), value),
+                (key, format) => new ReplacementResult(replacements.TryGetValue(key, out string value), value),
                 missingKeyBehaviour,
                 fallbackReplacementValue,
                 openBraceChar,
@@ -36,7 +36,7 @@ namespace FormatWith.Internal
         {
             return FormatWith(
                 formatString,
-                key => new ReplacementResult(replacements.TryGetValue(key, out object value), value),
+                (key, format) => new ReplacementResult(replacements.TryGetValue(key, out object value), value),
                 missingKeyBehaviour,
                 fallbackReplacementValue,
                 openBraceChar,
@@ -56,7 +56,7 @@ namespace FormatWith.Internal
             if (replacementObject == null) throw new ArgumentNullException(nameof(replacementObject));
 
             return FormatWith(formatString,
-                key => FromReplacementObject(key, replacementObject),
+                (key, format) => FromReplacementObject(key, replacementObject),
                 missingKeyBehaviour,
                 fallbackReplacementValue,
                 openBraceChar,
@@ -65,7 +65,7 @@ namespace FormatWith.Internal
 
         public static string FormatWith(
             string formatString,
-            Func<string, ReplacementResult> handler,
+            Func<string, string, ReplacementResult> handler,
             MissingKeyBehaviour missingKeyBehaviour = MissingKeyBehaviour.ThrowException,
             object fallbackReplacementValue = null,
             char openBraceChar = '{',

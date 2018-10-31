@@ -21,7 +21,7 @@ namespace FormatWith.Internal
             /// <returns>The processed result of joining the tokens with the replacement dictionary.</returns>
             public static string ProcessTokens(
             IEnumerable<FormatToken> tokens,
-            Func<string, ReplacementResult> handler,
+            Func<string, string, ReplacementResult> handler,
             MissingKeyBehaviour missingKeyBehaviour,
             object fallbackReplacementValue,
             int outputLengthHint)
@@ -42,15 +42,30 @@ namespace FormatWith.Internal
                 {
                     // token is a parameter token
                     // perform parameter logic now.
+                    var tokenKey = thisToken.Value;
+                    string format = null;
+                    var separatorIdx = tokenKey.IndexOf(":", StringComparison.Ordinal);
+                    if (separatorIdx > -1)
+                    {
+                        tokenKey = thisToken.Value.Substring(0, separatorIdx);
+                        format = thisToken.Value.Substring(separatorIdx + 1);
+                    }
 
                     // append the replacement for this parameter
-                    ReplacementResult replacementResult = handler(thisToken.Value);
+                    ReplacementResult replacementResult = handler(tokenKey, format);
                 
                     if (replacementResult.Success)
                     {
                         // the key exists, add the replacement value
                         // this does nothing if replacement value is null
-                        resultBuilder.Append(replacementResult.Value);
+                        if (string.IsNullOrWhiteSpace(format))
+                        {
+                            resultBuilder.Append(replacementResult.Value);
+                        }
+                        else
+                        {
+                            resultBuilder.AppendFormat("{0:" + format + "}", replacementResult.Value);
+                        }
                     }
                     else
                     {
@@ -116,9 +131,27 @@ namespace FormatWith.Internal
                 {
                     // token is a parameter token
                     // perform parameter logic now.
+                    var tokenKey = thisToken.Value;
+                    string format = null;
+                    var separatorIdx = tokenKey.IndexOf(":", StringComparison.Ordinal);
+                    if (separatorIdx > -1)
+                    {
+                        tokenKey = thisToken.Value.Substring(0, separatorIdx);
+                        format = thisToken.Value.Substring(separatorIdx + 1);
+                    }
 
                     // append the replacement for this parameter
-                    ReplacementResult replacementResult = handler(thisToken.Value);
+                    ReplacementResult replacementResult = handler(tokenKey);
+
+                    string IndexAndFormat()
+                    {
+                        if (string.IsNullOrWhiteSpace(format))
+                        {
+                            return "{" + placeholderIndex + "}";
+                        }
+
+                        return "{" + placeholderIndex + ":" + format + "}";
+                    }
 
                     // append the replacement for this parameter
                     if (replacementResult.Success)
@@ -126,7 +159,7 @@ namespace FormatWith.Internal
                         // Instead of appending the replacement value directly as before,
                         // append the next placeholder with the current placeholder index.
                         // Add the actual replacement format item into the replacement values.
-                        resultBuilder.Append("{" + placeholderIndex.ToString() + "}");
+                        resultBuilder.Append(IndexAndFormat());
                         placeholderIndex++;
                         replacementParams.Add(replacementResult.Value);
                     }
@@ -142,7 +175,7 @@ namespace FormatWith.Internal
                                 // Instead of appending the replacement value directly as before,
                                 // append the next placeholder with the current placeholder index.
                                 // Add the actual replacement format item into the replacement values.
-                                resultBuilder.Append("{" + placeholderIndex.ToString() + "}");
+                                resultBuilder.Append(IndexAndFormat());
                                 placeholderIndex++;
                                 replacementParams.Add(fallbackReplacementValue);
                                 break;

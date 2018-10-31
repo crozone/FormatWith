@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using Xunit;
 using FormatWith;
+using FormatWithTests.FormatProvider;
 using static FormatWithTests.TestStrings;
 
 namespace FormatWithTests
@@ -56,6 +56,19 @@ namespace FormatWithTests
             Assert.Equal(1, formattableString.ArgumentCount);
             Assert.Equal(Replacement1, formattableString.GetArgument(0));
             Assert.Equal(TestFormat5Solution, formattableString.ToString());
+        }
+
+        [Fact]
+        public void TestFormatString()
+        {
+            FormattableString formattableString = TestFormat6.FormattableWith(new { Replacement1 = Replacement1 });
+            Assert.Equal(TestFormat6Composite, formattableString.Format);
+            Assert.Equal(1, formattableString.ArgumentCount);
+            Assert.Equal(Replacement1, formattableString.GetArgument(0));
+
+            var upperCaseFormatProvider = new UpperCaseFormatProvider();
+            
+            Assert.Equal(TestFormat6Solution, formattableString.ToString(upperCaseFormatProvider));
         }
 
         [Fact]
