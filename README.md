@@ -80,38 +80,26 @@ The first, second, and third overload of FormattableWith() function much the sam
 
 ### Handler overloads
 
-A custom handler can be passed to both FormatWith() and FormattableWith(). The handler is passed the value of each parameter key, and is responsible for providing a `ReplacementResult` in response. The `ReplacementResult` contains the `Value` which will be substituted, as well as a boolean `Success` parameter indicating whether the replacement was successful. If `Success` is false, the `MissingKeyBehaviour` is followed, as per the other overloads of FormatWith.
+A custom handler can be passed to both FormatWith() and FormattableWith(). The handler is passed the value of each parameter key and format (if applicable). It is responsible for providing a `ReplacementResult` in response. The `ReplacementResult` contains the `Value` which will be substituted, as well as a boolean `Success` parameter indicating whether the replacement was successful. If `Success` is false, the `MissingKeyBehaviour` is followed, as per the other overloads of FormatWith.
 
 This can allow for some neat tricks, and even complex behaviours.
 
 Example:
 
     "{abcDEF123:reverse}, {abcDEF123:uppercase}, {abcDEF123:lowercase}.".FormatWith(
-                (parameter) =>
+                (parameter, format) =>
                 {
-                    int splitIndex = parameter.LastIndexOf(':');
-                    if (splitIndex < 0)
+                    switch (format)
                     {
-                        return new ReplacementResult(true, parameter);
+                        case "uppercase":
+                            return new ReplacementResult(true, parameter.ToUpper());
+                        case "lowercase":
+                            return new ReplacementResult(true, parameter.ToLower());
+                        case "reverse":
+                            return new ReplacementResult(true, new string(parameter.Reverse().ToArray()));
+                        default:
+                            return new ReplacementResult(false, parameter);
                     }
-                    else
-                    {
-                        string value = parameter.Substring(0, splitIndex);
-                        string modifier = parameter.Length > splitIndex + 1 ? parameter.Substring(splitIndex + 1) : string.Empty;
-
-                        switch (modifier)
-                        {
-                            case "uppercase":
-                                return new ReplacementResult(true, value.ToUpper());
-                            case "lowercase":
-                                return new ReplacementResult(true, value.ToLower());
-                            case "reverse":
-                                return new ReplacementResult(true, new string(value.Reverse().ToArray()));
-                            default:
-                                return new ReplacementResult(false, null);
-                        }
-                    }
-
                 });
 
 Produces:

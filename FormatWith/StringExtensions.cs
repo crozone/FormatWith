@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using FormatWith.Internal;
-using System.Runtime.CompilerServices;
 using System.Collections;
 
 namespace FormatWith
@@ -147,7 +144,7 @@ namespace FormatWith
         /// <returns>The formatted string</returns>
         public static string FormatWith(
             this string formatString,
-            Func<string, ReplacementResult> handler)
+            Func<string, string, ReplacementResult> handler)
         {
             return FormatWithMethods.FormatWith(formatString, handler);
         }
@@ -165,7 +162,7 @@ namespace FormatWith
         /// <returns>The formatted string</returns>
         public static string FormatWith(
             this string formatString,
-            Func<string, ReplacementResult> handler,
+            Func<string, string, ReplacementResult> handler,
             MissingKeyBehaviour missingKeyBehaviour = MissingKeyBehaviour.ThrowException,
             object fallbackReplacementValue = null,
             char openBraceChar = '{',

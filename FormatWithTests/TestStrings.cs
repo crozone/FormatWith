@@ -24,5 +24,14 @@ namespace FormatWithTests
         public static readonly string TestFormat5 = "abc{Foo.Replacement1}";
         public static readonly string TestFormat5Composite = "abc{0}";
         public static readonly string TestFormat5Solution = $"abc{Replacement1}";
+
+        public static readonly string TestFormat6 = "abc{Replacement1:upper}";
+        public static readonly string TestFormat6Composite = "abc{0:upper}";
+        public static readonly string TestFormat6Solution = $"abc{Replacement1.ToUpper()}";
+        
+        public static readonly string TestFormat7 = "Today is {Today:YYYYMMDD HH:mm}";
+        public static readonly string TestFormat7Composite = "Today is {0:YYYYMMDD HH:mm}";
+        public static readonly DateTime TestFormat7Date = new DateTime(2018, 10, 30, 17, 25, 0);
+        public static readonly string TestFormat7Solution = $"Today is {TestFormat7Date:YYYYMMDD HH:mm}";
     }
 }
