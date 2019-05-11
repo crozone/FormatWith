@@ -19,7 +19,7 @@ An example of what it can do:
     
     // format the format string using the FormatWith() string extension.
     // We can parse in replacement parameters as an anonymous type
-    string output = formatString.FormatWith({name = "John", works = "is good"});
+    string output = formatString.FormatWith(new { name = "John", works = "is good" });
     
     // output now contains the formatted text.
     Console.WriteLine(output);
