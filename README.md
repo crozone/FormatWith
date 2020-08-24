@@ -1,7 +1,7 @@
 # FormatWith
 
-[![NuGet](https://img.shields.io/badge/nuget-2.2.1-green.svg)](https://www.nuget.org/packages/FormatWith/)
-[![license](https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000)]()
+[![NuGet](https://img.shields.io/nuget/v/FormatWith)](https://www.nuget.org/packages/FormatWith/)
+[![license](https://img.shields.io/github/license/crozone/FormatWith)](https://github.com/crozone/FormatWith/blob/master/License.txt)
 
 A set of string extension methods for performing {named} {{parameterized}} string formatting, written for NetStandard 2.0.
 
