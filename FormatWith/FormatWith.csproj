@@ -13,7 +13,7 @@
     <Copyright>Copyright © Ryan Crosby 2017 - 2020</Copyright>
     <PackageTags>named string formatter extension NetStandard 2.0</PackageTags>
     <PackageProjectUrl>https://github.com/crozone/FormatWith</PackageProjectUrl>
-    <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
     <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
