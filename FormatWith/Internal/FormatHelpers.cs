@@ -11,15 +11,16 @@ namespace FormatWith.Internal
     /// </summary>
     internal static class FormatHelpers
     {
-            /// <summary>
-            /// Processes a list of format tokens into a string
-            /// </summary>
-            /// <param name="tokens">List of tokens to turn into a string</param>
-            /// <param name="replacements">An <see cref="IDictionary"/> with keys and values to inject into the formatted result</param>
-            /// <param name="missingKeyBehaviour">The behaviour to use when the format string contains a parameter that is not present in the lookup dictionary</param>
-            /// <param name="fallbackReplacementValue">When the <see cref="MissingKeyBehaviour.ReplaceWithFallback"/> is specified, this string is used as a fallback replacement value when the parameter is present in the lookup dictionary.</param>
-            /// <returns>The processed result of joining the tokens with the replacement dictionary.</returns>
-            public static string ProcessTokens(
+        /// <summary>
+        /// Processes a list of format tokens into a string
+        /// </summary>
+        /// <param name="tokens">List of tokens to turn into a string</param>
+        /// <param name="handler">The function used to perform the replacements on the format tokens</param>
+        /// <param name="missingKeyBehaviour">The behaviour to use when the format string contains a parameter that is not present in the lookup dictionary</param>
+        /// <param name="fallbackReplacementValue">When the <see cref="MissingKeyBehaviour.ReplaceWithFallback"/> is specified, this string is used as a fallback replacement value when the parameter is present in the lookup dictionary.</param>
+        /// <param name="outputLengthHint">Provides a hint to the underlying string builder to help reduce buffer reallocations.</param>
+        /// <returns>The processed result of joining the tokens with the replacement dictionary.</returns>
+        public static string ProcessTokens(
             IEnumerable<FormatToken> tokens,
             Func<string, string, ReplacementResult> handler,
             MissingKeyBehaviour missingKeyBehaviour,
@@ -97,9 +98,10 @@ namespace FormatWith.Internal
         /// Processes a list of format tokens into a string
         /// </summary>
         /// <param name="tokens">List of tokens to turn into a string</param>
-        /// <param name="replacements">An <see cref="IDictionary"/> with keys and values to inject into the formatted result</param>
+        /// <param name="handler">The function used to perform the replacements on the format tokens</param>
         /// <param name="missingKeyBehaviour">The behaviour to use when the format string contains a parameter that is not present in the lookup dictionary</param>
         /// <param name="fallbackReplacementValue">When the <see cref="MissingKeyBehaviour.ReplaceWithFallback"/> is specified, this string is used as a fallback replacement value when the parameter is present in the lookup dictionary.</param>
+        /// <param name="outputLengthHint"></param>
         /// <returns>The processed result of joining the tokens with the replacement dictionary.</returns>
         public static FormattableString ProcessTokensIntoFormattableString(
             IEnumerable<FormatToken> tokens,

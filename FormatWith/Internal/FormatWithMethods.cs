@@ -142,7 +142,7 @@ namespace FormatWith.Internal
         }
 
         /// <summary>
-        /// Gets an <see cref="IEnumerable{string}"/> that will return all format parameters used within the format string.
+        /// Gets an <see cref="IEnumerable{String}">IEnumerable&lt;string&gt;</see> that will return all format parameters used within the format string.
         /// </summary>
         /// <param name="formatString">The format string to be parsed</param>
         /// <param name="openBraceChar">The character used to begin parameters</param>
