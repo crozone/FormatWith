@@ -1,38 +1,38 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <Title>FormatWith</Title>
-    <Product>FormatWith</Product>
-    <Description>String extension methods for performing {named} {{parameterized}} string formatting, written for NetStandard 2.0</Description>
-    <AssemblyName>FormatWith</AssemblyName>
-    <AssemblyTitle>FormatWith</AssemblyTitle>
-    <PackageId>FormatWith</PackageId>
-    <VersionPrefix>3.0.0</VersionPrefix>
-    <Authors>Ryan Crosby</Authors>
-    <Copyright>Copyright © Ryan Crosby 2017 - 2020</Copyright>
-    <PackageTags>named string formatter extension NetStandard 2.0</PackageTags>
-    <PackageProjectUrl>https://github.com/crozone/FormatWith</PackageProjectUrl>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
-    <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
-    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
-    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
-    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
-    <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <RepositoryUrl>https://github.com/crozone/FormatWith</RepositoryUrl>
-    <RepositoryType>git</RepositoryType>
-    <PackageReleaseNotes>Key:format syntax now supported for FormatWith and FormattableWith</PackageReleaseNotes>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>netstandard2.0</TargetFramework>
+		<Title>FormatWith</Title>
+		<Product>FormatWith</Product>
+		<Description>String extension methods for performing {named} {{parameterized}} string formatting, written for NetStandard 2.0</Description>
+		<AssemblyName>FormatWith</AssemblyName>
+		<AssemblyTitle>FormatWith</AssemblyTitle>
+		<PackageId>FormatWith</PackageId>
+		<VersionPrefix>3.0.0</VersionPrefix>
+		<Authors>Ryan Crosby</Authors>
+		<Copyright>Copyright © Ryan Crosby 2017 - 2020</Copyright>
+		<PackageTags>named string formatter extension NetStandard 2.0</PackageTags>
+		<PackageProjectUrl>https://github.com/crozone/FormatWith</PackageProjectUrl>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+		<GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
+		<GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
+		<GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+		<GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+		<GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+		<GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<RepositoryUrl>https://github.com/crozone/FormatWith</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<PackageReleaseNotes>Key:format syntax now supported for FormatWith and FormattableWith</PackageReleaseNotes>
+	</PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>bin\Debug\netstandard2.0\FormatWith.xml</DocumentationFile>
-  </PropertyGroup>
-  
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>bin\Release\netstandard2.0\FormatWith.xml</DocumentationFile>
-  </PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<DocumentationFile>bin\Debug\netstandard2.0\FormatWith.xml</DocumentationFile>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+		<DocumentationFile>bin\Release\netstandard2.0\FormatWith.xml</DocumentationFile>
+	</PropertyGroup>
 
 </Project>
