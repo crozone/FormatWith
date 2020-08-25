@@ -25,6 +25,9 @@
     <RepositoryUrl>https://github.com/crozone/FormatWith</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageReleaseNotes>Key:format syntax now supported for FormatWith and FormattableWith</PackageReleaseNotes>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>FormatWith-Release.snk</AssemblyOriginatorKeyFile>
+    <DelaySign>false</DelaySign>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
