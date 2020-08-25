@@ -8,7 +8,7 @@
 		<AssemblyName>FormatWith</AssemblyName>
 		<AssemblyTitle>FormatWith</AssemblyTitle>
 		<PackageId>FormatWith</PackageId>
-		<VersionPrefix>3.0.0</VersionPrefix>
+		<VersionPrefix>3.0.1</VersionPrefix>
 		<Authors>Ryan Crosby</Authors>
 		<Copyright>Copyright © Ryan Crosby 2017 - 2020</Copyright>
 		<PackageTags>named string formatter extension NetStandard 2.0</PackageTags>
@@ -24,7 +24,10 @@
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<RepositoryUrl>https://github.com/crozone/FormatWith</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
-		<PackageReleaseNotes>Key:format syntax now supported for FormatWith and FormattableWith</PackageReleaseNotes>
+		<PackageReleaseNotes>
+			Key:format syntax now supported for FormatWith and FormattableWith.
+			Add strong signing.
+		</PackageReleaseNotes>
 		<SignAssembly>true</SignAssembly>
 		<AssemblyOriginatorKeyFile>FormatWith-Release.snk</AssemblyOriginatorKeyFile>
 		<DelaySign>false</DelaySign>
