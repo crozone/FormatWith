@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace FormatWith.Internal
@@ -73,9 +74,14 @@ namespace FormatWith.Internal
         {
             if (formatString.Length == 0) return string.Empty;
 
-            // get the parameters from the format string
-            IEnumerable<FormatToken> tokens = FormatHelpers.Tokenize(formatString, openBraceChar, closeBraceChar);
-            return FormatHelpers.ProcessTokens(tokens, handler, missingKeyBehaviour, fallbackReplacementValue, formatString.Length * 2);
+            var resultBuilder = new StringBuilder(formatString.Length * 2);
+            
+            void ForEachToken(FormatToken token) 
+                => FormatHelpers.ProcessToken(token, resultBuilder, handler, missingKeyBehaviour, fallbackReplacementValue);
+
+            Tokenizer.Tokenize(formatString.AsSpan(), ForEachToken, openBraceChar, closeBraceChar);
+
+            return resultBuilder.ToString();
         }
 
         public static FormattableString FormattableWith(
@@ -136,9 +142,20 @@ namespace FormatWith.Internal
             char openBraceChar = '{',
             char closeBraceChar = '}')
         {
-            // get the parameters from the format string
-            IEnumerable<FormatToken> tokens = FormatHelpers.Tokenize(formatString, openBraceChar, closeBraceChar);
-            return FormatHelpers.ProcessTokensIntoFormattableString(tokens, handler, missingKeyBehaviour, fallbackReplacementValue, formatString.Length * 2);
+            
+            // create a StringBuilder to hold the resultant output string
+            // use the input hint as the initial size
+            var resultBuilder = new StringBuilder(formatString.Length * 2);
+            var replacementParams = new List<object>();
+            int placeholderIndex = 0;
+
+            void ForEachToken(FormatToken token)
+                => FormatHelpers.ProcessTokenIntoFormattableString(token, resultBuilder, replacementParams, handler, missingKeyBehaviour, fallbackReplacementValue, ref placeholderIndex);
+
+            Tokenizer.Tokenize(formatString.AsSpan(), ForEachToken, openBraceChar, closeBraceChar);
+            
+            return FormattableStringFactory.Create(resultBuilder.ToString(), replacementParams.ToArray());
+
         }
 
         /// <summary>
@@ -153,9 +170,20 @@ namespace FormatWith.Internal
             char openBraceChar = '{',
             char closeBraceChar = '}')
         {
-            return FormatHelpers.Tokenize(formatString, openBraceChar, closeBraceChar)
-                .Where(t => t.TokenType == TokenType.Parameter)
-                .Select(pt => pt.Value);
+
+            var results = new List<string>();
+            
+            void ForEachToken(FormatToken token)
+            {
+                if (token.TokenType == TokenType.Parameter)
+                {
+                    results.Add(token.Value.ToString());
+                }
+            }
+            
+            Tokenizer.Tokenize(formatString.AsSpan(), ForEachToken, openBraceChar, closeBraceChar);
+
+            return results;
         }
 
         private static ReplacementResult FromReplacementObject(string key, object replacementObject)
