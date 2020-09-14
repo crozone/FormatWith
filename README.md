@@ -2,6 +2,7 @@
 
 [![NuGet](https://img.shields.io/nuget/v/FormatWith)](https://www.nuget.org/packages/FormatWith/)
 [![license](https://img.shields.io/github/license/crozone/FormatWith)](https://github.com/crozone/FormatWith/blob/master/License.txt)
+![Build status](https://github.com/crozone/FormatWith/workflows/CI/badge.svg)
 
 A set of string extension methods for performing {named} {{parameterized}} string formatting, written for NetStandard 2.0.
 
