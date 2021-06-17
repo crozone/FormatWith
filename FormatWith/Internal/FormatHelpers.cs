@@ -27,13 +27,13 @@ namespace FormatWith.Internal
             MissingKeyBehaviour missingKeyBehaviour,
             object fallbackReplacementValue)
         {
-            if (token.TokenType == TokenType.Text)
+            if (token.TokenType == TokenKind.Text)
             {
                 // token is a text token
                 // add the token to the result string builder
                 resultBuilder.Append(token.Raw);
             }
-            else if (token.TokenType == TokenType.Parameter)
+            else if (token.TokenType == TokenKind.Parameter)
             {
                 // token is a parameter token
                 // perform parameter logic now.
@@ -106,7 +106,7 @@ namespace FormatWith.Internal
             object fallbackReplacementValue,
             ref int placeholderIndex)
         {
-            if (token.TokenType == TokenType.Text)
+            if (token.TokenType == TokenKind.Text)
             {
                 // token is a text token.
                 // add the token to the result string builder.
@@ -114,7 +114,7 @@ namespace FormatWith.Internal
                 // any instaces of { or } must be escaped with {{ and }}
                 resultBuilder.AppendWithEscapedBrackets(token.Raw);
             }
-            else if (token.TokenType == TokenType.Parameter)
+            else if (token.TokenType == TokenKind.Parameter)
             {
                 // token is a parameter token
                 // perform parameter logic now.

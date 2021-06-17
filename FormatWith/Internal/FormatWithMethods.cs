@@ -175,7 +175,7 @@ namespace FormatWith.Internal
             
             void ForEachToken(FormatToken token)
             {
-                if (token.TokenType == TokenType.Parameter)
+                if (token.TokenType == TokenKind.Parameter)
                 {
                     results.Add(token.Value.ToString());
                 }

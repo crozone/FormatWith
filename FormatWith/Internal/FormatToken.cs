@@ -6,7 +6,7 @@ namespace FormatWith.Internal
 {
     internal ref struct FormatToken
     {
-        public FormatToken(TokenType tokenType, ReadOnlySpan<char> raw, ReadOnlySpan<char> value) {
+        public FormatToken(TokenKind tokenType, ReadOnlySpan<char> raw, ReadOnlySpan<char> value) {
             TokenType = tokenType;
             Raw = raw;
             Value = value;
@@ -15,7 +15,7 @@ namespace FormatWith.Internal
         /// <summary>
         /// The kind of this token.
         /// </summary>
-        public TokenType TokenType { get; }
+        public TokenKind TokenType { get; }
 
         /// <summary>
         /// The complete value of the token, including any enclosing brackets.
@@ -27,21 +27,21 @@ namespace FormatWith.Internal
         /// </summary>
         public ReadOnlySpan<char> Value { get; }
 
-        public static FormatToken Create(TokenType tokenType, ReadOnlySpan<char> source, int startIndex, int length)
+        public static FormatToken Create(TokenKind tokenType, ReadOnlySpan<char> source, int startIndex, int length)
         {
             ReadOnlySpan<char> raw = source.Slice(startIndex, length);
             ReadOnlySpan<char> value = tokenType switch
             {
-                TokenType.Parameter => source.Slice(startIndex + 1, length - 2),
-                TokenType.Text => source.Slice(startIndex, length),
-                _ => throw new InvalidOperationException($"Unknown {nameof(Internal.TokenType)}: {tokenType}"),
+                TokenKind.Parameter => source.Slice(startIndex + 1, length - 2),
+                TokenKind.Text => source.Slice(startIndex, length),
+                _ => throw new InvalidOperationException($"Unknown {nameof(Internal.TokenKind)}: {tokenType}"),
             };
 
             return new FormatToken(tokenType, raw, value);
         }
     }
 
-    internal enum TokenType
+    internal enum TokenKind
     {
         Parameter,
         Text
