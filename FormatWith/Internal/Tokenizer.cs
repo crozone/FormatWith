@@ -3,10 +3,11 @@ using System.Collections.Generic;
 
 namespace FormatWith.Internal
 {
-    // Can't use Action<FormatToken> as FormatToken is a ref struct
-    // which can't be used as a generic type parameter. 
+    // We cannot use Action<FormatToken> as the callback type, since FormatToken is a ref struct.
+    // Ref structs cannot be used as a generic type parameter.
+    // Instead, we need to define our own delegate for the callback.
     internal delegate void SpanAction(FormatToken token);
-    
+
     internal static class Tokenizer
     {
         /// <summary>
@@ -24,7 +25,7 @@ namespace FormatWith.Internal
 
             int currentTokenStart = 0;
 
-            // start the state machine!
+            // Start the state machine!
 
             bool insideBraces = false;
 
@@ -33,23 +34,22 @@ namespace FormatWith.Internal
             {
                 if (!insideBraces)
                 {
-                    // currently not inside a pair of braces in the format string
+                    // Currently not inside a pair of braces in the format string (in "text").
                     if (formatString[index] == openBraceChar)
                     {
-                        // check if the brace is escaped
+                        // Check if the brace is escaped
                         if (index < formatString.Length - 1 && formatString[index + 1] == openBraceChar)
                         {
                             // ESCAPED OPEN BRACE
 
-                            // we have hit an escaped open brace
-                            // return current normal text, as well as the first brace
-                            // implemented as yield return, this generates a IEnumerator state machine.
+                            // We have hit an escaped open brace.
+                            // Yield current normal text, as well as the first brace
                             action(new FormatToken(TokenType.Text, formatString, currentTokenStart, (index - currentTokenStart) + 1));
 
-                            // skip over braces
+                            // Skip over braces
                             index += 2;
 
-                            // set new current token start and current token length
+                            // Set new current token start and current token length
                             currentTokenStart = index;
 
                             continue;
@@ -58,17 +58,17 @@ namespace FormatWith.Internal
                         {
                             // START OF PARAMETER
 
-                            // not an escaped brace, set state to inside brace
+                            // Not an escaped brace, set state to inside brace
                             insideBraces = true;
 
-                            // we are leaving standard text and entering into a parameter
+                            // We are leaving standard text and entering into a parameter
                             // add the text traversed so far as a text token
                             if (currentTokenStart < index)
                             {
                                 action(new FormatToken(TokenType.Text, formatString, currentTokenStart, (index - currentTokenStart)));
                             }
 
-                            // set the start index of the token to the start of this parameter
+                            // Set the start index of the token to the start of this parameter
                             currentTokenStart = index;
 
                             index++;
@@ -78,97 +78,99 @@ namespace FormatWith.Internal
                     }
                     else if (formatString[index] == closeBraceChar)
                     {
-                        // handle case where closing brace is encountered outside braces
+                        // Handle case where closing brace is encountered outside braces
                         if (index < formatString.Length - 1 && formatString[index + 1] == closeBraceChar)
                         {
-                            // this is an escaped closing brace, this is okay
+                            // This is an escaped closing brace, this is okay
 
-                            // add the current normal text, as well as the first brace, to the
-                            // list of tokens as a text token.
+                            // Add the current normal text, as well as the first brace, to the
+                            // List of tokens as a text token.
                             action(new FormatToken(TokenType.Text, formatString, currentTokenStart, (index - currentTokenStart) + 1));
 
-                            // skip over braces
+                            // Skip over braces
                             index += 2;
 
-                            // set new current token start and current token length
+                            // Set new current token start and current token length
                             currentTokenStart = index;
 
                             continue;
                         }
                         else
                         {
-                            // this is an unescaped closing brace outside of braces.
-                            // throw a format exception
+                            // This is an unescaped closing brace outside of braces.
+                            // Throw a format exception
                             throw new FormatException($"Unexpected closing brace at position {index}");
                         }
                     }
                     else
                     {
-                        // move onto next character
+                        // Move onto next character
                         index++;
                         continue;
                     }
                 }
                 else
                 {
-                    // currently inside a pair of braces in the format string
+                    // Currently inside a pair of braces in the format string (a parameter)
                     if (formatString[index] == openBraceChar)
                     {
-                        // found an opening brace
-                        // check if the brace is escaped
+                        // Found an opening brace.
+                        // Check if the brace is escaped
                         if (index < formatString.Length - 1 && formatString[index + 1] == openBraceChar)
                         {
-                            // there are escaped braces within the key
-                            // this is illegal, throw a format exception
+                            // There are escaped braces within the key.
+                            // This is illegal, throw a format exception
                             throw new FormatException($"Illegal escaped opening braces within a parameter at position {index}");
                         }
                         else
                         {
-                            // not an escaped brace, we have an unexpected opening brace within a pair of braces
+                            // Not an escaped brace, we have an unexpected opening brace within a pair of braces
                             throw new FormatException($"Unexpected opening brace inside a parameter at position {index}");
                         }
                     }
                     else if (formatString[index] == closeBraceChar)
                     {
                         // END OF PARAMETER
-                        // handle case where closing brace is encountered inside braces
-                        // don't attempt to check for escaped braces here - always assume the first brace closes the braces
+
+                        // Handle case where closing brace is encountered inside braces
+                        // Don't attempt to check for escaped braces here, instead always assume the first brace closes the braces,
                         // since we cannot have escaped braces within parameters.
 
                         // Add the parameter information to the parameter list
                         action(new FormatToken(TokenType.Parameter, formatString, currentTokenStart, (index - currentTokenStart) + 1));
 
-                        // set the state to be outside of any braces
+                        // Set the state to be outside of any braces
                         insideBraces = false;
 
-                        // jump over brace
+                        // Skip over brace
                         index++;
 
-                        // update current token start
+                        // Update current token start
                         currentTokenStart = index;
 
-                        // jump to next state
+                        // Move to next state
                         continue;
-                    } // if }
+                    }
                     else
                     {
-                        // character has no special meaning, it is part of the current key
-                        // move onto next character
+                        // Character has no special meaning, and it is part of the current parameter.
+                        // Move onto next character
                         index++;
                         continue;
-                    } // else
-                } // if inside brace
-            } // while index < formatString.Length
+                    }
+                }
+            }
 
-            // after the loop, if all braces were balanced, we should be outside all braces
-            // if we're not, the input string was misformatted.
+            // After the loop, if all braces were balanced, we should be outside all braces.
+            // If we're not, the input string was misformatted.
             if (insideBraces)
             {
+                // Throw an exception to indicate the input string was misformatted.
                 throw new FormatException($"The format string ended before the parameter was closed. Position {index}");
             }
             else
             {
-                // outside braces. Add on any remaining text at the end of the format string
+                // Outside all braces, they were balanced. Add on any remaining text at the end of the format string as "text".
                 if (currentTokenStart < index)
                 {
                     action(new FormatToken(TokenType.Text, formatString, currentTokenStart, index - currentTokenStart));
