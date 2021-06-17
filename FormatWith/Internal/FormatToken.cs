@@ -6,8 +6,8 @@ namespace FormatWith.Internal
 {
     internal ref struct FormatToken
     {
-        public FormatToken(TokenKind tokenType, ReadOnlySpan<char> raw, ReadOnlySpan<char> value) {
-            TokenType = tokenType;
+        public FormatToken(TokenKind tokenKind, ReadOnlySpan<char> raw, ReadOnlySpan<char> value) {
+            TokenKind = tokenKind;
             Raw = raw;
             Value = value;
         }
@@ -15,7 +15,7 @@ namespace FormatWith.Internal
         /// <summary>
         /// The kind of this token.
         /// </summary>
-        public TokenKind TokenType { get; }
+        public TokenKind TokenKind { get; }
 
         /// <summary>
         /// The complete value of the token, including any enclosing brackets.
