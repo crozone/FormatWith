@@ -4,9 +4,9 @@ using System.Text;
 
 namespace FormatWith.Internal
 {
-    internal struct FormatToken
+    internal ref struct FormatToken
     {
-        public FormatToken(TokenType tokenType, string source, int startIndex, int length)
+        public FormatToken(TokenType tokenType, ReadOnlySpan<char> source, int startIndex, int length)
         {
             TokenType = tokenType;
             SourceString = source;
@@ -19,7 +19,7 @@ namespace FormatWith.Internal
         /// <summary>
         /// The source format string that the token exists within
         /// </summary>
-        public string SourceString { get; }
+        public ReadOnlySpan<char> SourceString { get; }
 
         /// <summary>
         /// The index of the start of the whole token, relative to the start of the source format string.
@@ -35,26 +35,20 @@ namespace FormatWith.Internal
         /// Gets the complete value.
         /// This performs a substring operation and allocates a new string object.
         /// </summary>
-        public string Raw {
-            get {
-                return SourceString.Substring(StartIndex, Length);
-            }
-        }
+        public ReadOnlySpan<char> Raw => SourceString.Slice(StartIndex, Length);
 
         /// <summary>
         /// Gets the token inner text.
         /// This performs a substring operation and allocates a new string object.
         /// </summary>
-        public string Value {
+        public ReadOnlySpan<char> Value {
             get {
                 if (TokenType == TokenType.Parameter)
                 {
-                    return SourceString.Substring(StartIndex + 1, Length - 2);
+                    return SourceString.Slice(StartIndex + 1, Length - 2);
                 }
-                else
-                {
-                    return SourceString.Substring(StartIndex, Length);
-                }
+
+                return SourceString.Slice(StartIndex, Length);
             }
         }
     }

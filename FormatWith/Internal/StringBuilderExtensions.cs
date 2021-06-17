@@ -8,7 +8,7 @@ namespace FormatWith.Internal
     {
         public static void AppendWithEscapedBrackets(
                 this StringBuilder stringBuilder,
-                string value,
+                ReadOnlySpan<char> value,
                 int startIndex,
                 int count,
                 char openBraceChar = '{',
@@ -19,20 +19,36 @@ namespace FormatWith.Internal
             {
                 if (value[i] == openBraceChar)
                 {
-                    stringBuilder.Append(value, currentTokenStart, i - currentTokenStart);
+                    stringBuilder.Append(value.Slice(currentTokenStart, i - currentTokenStart));
                     stringBuilder.Append(openBraceChar);
                     currentTokenStart = i;
                 }
                 else if (value[i] == closeBraceChar)
                 {
-                    stringBuilder.Append(value, currentTokenStart, i - currentTokenStart);
+                    stringBuilder.Append(value.Slice(currentTokenStart, i - currentTokenStart));
                     stringBuilder.Append(closeBraceChar);
                     currentTokenStart = i;
                 }
             }
 
             // add the final section
-            stringBuilder.Append(value, currentTokenStart, (startIndex + count) - currentTokenStart);
+            stringBuilder.Append(value.Slice(currentTokenStart, (startIndex + count) - currentTokenStart));
         }
+        
+        
+#if NETSTANDARD2_0
+        /// <summary>
+        /// Appends a Span to a StringBuilder.
+        ///
+        /// This is only needed in the netstandard2 implementation as under netstandard2.1
+        /// there is a native method for this.
+        /// </summary>
+        /// <param name="builder">The builder to which the result should be appended.</param>
+        /// <param name="value">The span to append</param>
+        public static void Append(this StringBuilder builder, ReadOnlySpan<char> value)
+        {
+            builder.Append(value.ToArray());
+        }
+#endif
     }
 }
