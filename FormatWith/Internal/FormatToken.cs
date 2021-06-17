@@ -33,13 +33,11 @@ namespace FormatWith.Internal
 
         /// <summary>
         /// Gets the complete value.
-        /// This performs a substring operation and allocates a new string object.
         /// </summary>
         public ReadOnlySpan<char> Raw => SourceString.Slice(StartIndex, Length);
 
         /// <summary>
         /// Gets the token inner text.
-        /// This performs a substring operation and allocates a new string object.
         /// </summary>
         public ReadOnlySpan<char> Value {
             get {
