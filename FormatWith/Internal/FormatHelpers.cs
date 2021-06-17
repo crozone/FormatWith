@@ -112,7 +112,7 @@ namespace FormatWith.Internal
                 // add the token to the result string builder.
                 // because this text is going into a standard composite format string,
                 // any instaces of { or } must be escaped with {{ and }}
-                resultBuilder.AppendWithEscapedBrackets(token.SourceString, token.StartIndex, token.Length);
+                resultBuilder.AppendWithEscapedBrackets(token.Raw);
             }
             else if (token.TokenType == TokenType.Parameter)
             {
@@ -169,7 +169,7 @@ namespace FormatWith.Internal
                             replacementParams.Add(fallbackReplacementValue);
                             break;
                         case MissingKeyBehaviour.Ignore:
-                            resultBuilder.AppendWithEscapedBrackets(token.SourceString, token.StartIndex, token.Length);
+                            resultBuilder.AppendWithEscapedBrackets(token.Raw);
                             break;
                     }
                 }

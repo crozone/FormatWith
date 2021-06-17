@@ -44,7 +44,7 @@ namespace FormatWith.Internal
 
                             // We have hit an escaped open brace.
                             // Yield current normal text, as well as the first brace
-                            action(new FormatToken(TokenType.Text, formatString, currentTokenStart, (index - currentTokenStart) + 1));
+                            action(FormatToken.Create(TokenType.Text, formatString, currentTokenStart, (index - currentTokenStart) + 1));
 
                             // Skip over braces
                             index += 2;
@@ -65,7 +65,7 @@ namespace FormatWith.Internal
                             // add the text traversed so far as a text token
                             if (currentTokenStart < index)
                             {
-                                action(new FormatToken(TokenType.Text, formatString, currentTokenStart, (index - currentTokenStart)));
+                                action(FormatToken.Create(TokenType.Text, formatString, currentTokenStart, (index - currentTokenStart)));
                             }
 
                             // Set the start index of the token to the start of this parameter
@@ -85,7 +85,7 @@ namespace FormatWith.Internal
 
                             // Add the current normal text, as well as the first brace, to the
                             // List of tokens as a text token.
-                            action(new FormatToken(TokenType.Text, formatString, currentTokenStart, (index - currentTokenStart) + 1));
+                            action(FormatToken.Create(TokenType.Text, formatString, currentTokenStart, (index - currentTokenStart) + 1));
 
                             // Skip over braces
                             index += 2;
@@ -137,7 +137,7 @@ namespace FormatWith.Internal
                         // since we cannot have escaped braces within parameters.
 
                         // Add the parameter information to the parameter list
-                        action(new FormatToken(TokenType.Parameter, formatString, currentTokenStart, (index - currentTokenStart) + 1));
+                        action(FormatToken.Create(TokenType.Parameter, formatString, currentTokenStart, (index - currentTokenStart) + 1));
 
                         // Set the state to be outside of any braces
                         insideBraces = false;
@@ -173,7 +173,7 @@ namespace FormatWith.Internal
                 // Outside all braces, they were balanced. Add on any remaining text at the end of the format string as "text".
                 if (currentTokenStart < index)
                 {
-                    action(new FormatToken(TokenType.Text, formatString, currentTokenStart, index - currentTokenStart));
+                    action(FormatToken.Create(TokenType.Text, formatString, currentTokenStart, index - currentTokenStart));
                 }
             }
         }

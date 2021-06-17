@@ -2,6 +2,7 @@
 
 	<PropertyGroup>
 		<TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
+		<LangVersion>9.0</LangVersion>
 		<Title>FormatWith</Title>
 		<Product>FormatWith</Product>
 		<Description>String extension methods for performing {named} {{parameterized}} string formatting, written for NetStandard 2.0</Description>

@@ -9,13 +9,11 @@ namespace FormatWith.Internal
         public static void AppendWithEscapedBrackets(
                 this StringBuilder stringBuilder,
                 ReadOnlySpan<char> value,
-                int startIndex,
-                int count,
                 char openBraceChar = '{',
                 char closeBraceChar = '}')
         {
-            int currentTokenStart = startIndex;
-            for (int i = startIndex; i < startIndex + count; i++)
+            int currentTokenStart = 0;
+            for (int i = 0; i < value.Length; i++)
             {
                 if (value[i] == openBraceChar)
                 {
@@ -32,7 +30,7 @@ namespace FormatWith.Internal
             }
 
             // add the final section
-            stringBuilder.Append(value.Slice(currentTokenStart, (startIndex + count) - currentTokenStart));
+            stringBuilder.Append(value.Slice(currentTokenStart, currentTokenStart));
         }
         
         

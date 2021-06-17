@@ -6,48 +6,38 @@ namespace FormatWith.Internal
 {
     internal ref struct FormatToken
     {
-        public FormatToken(TokenType tokenType, ReadOnlySpan<char> source, int startIndex, int length)
-        {
+        public FormatToken(TokenType tokenType, ReadOnlySpan<char> raw, ReadOnlySpan<char> value) {
             TokenType = tokenType;
-            SourceString = source;
-            StartIndex = startIndex;
-            Length = length;
+            Raw = raw;
+            Value = value;
         }
 
+        /// <summary>
+        /// The kind of this token.
+        /// </summary>
         public TokenType TokenType { get; }
 
         /// <summary>
-        /// The source format string that the token exists within
+        /// The complete value of the token, including any enclosing brackets.
         /// </summary>
-        public ReadOnlySpan<char> SourceString { get; }
+        public ReadOnlySpan<char> Raw { get; }
 
         /// <summary>
-        /// The index of the start of the whole token, relative to the start of the source format string.
+        /// The token inner value.
         /// </summary>
-        public int StartIndex { get; }
+        public ReadOnlySpan<char> Value { get; }
 
-        /// <summary>
-        /// The length of the whole token.
-        /// </summary>
-        public int Length { get; }
+        public static FormatToken Create(TokenType tokenType, ReadOnlySpan<char> source, int startIndex, int length)
+        {
+            ReadOnlySpan<char> raw = source.Slice(startIndex, length);
+            ReadOnlySpan<char> value = tokenType switch
+            {
+                TokenType.Parameter => source.Slice(startIndex + 1, length - 2),
+                TokenType.Text => source.Slice(startIndex, length),
+                _ => throw new InvalidOperationException($"Unknown {nameof(Internal.TokenType)}: {tokenType}"),
+            };
 
-        /// <summary>
-        /// Gets the complete value.
-        /// </summary>
-        public ReadOnlySpan<char> Raw => SourceString.Slice(StartIndex, Length);
-
-        /// <summary>
-        /// Gets the token inner text.
-        /// </summary>
-        public ReadOnlySpan<char> Value {
-            get {
-                if (TokenType == TokenType.Parameter)
-                {
-                    return SourceString.Slice(StartIndex + 1, Length - 2);
-                }
-
-                return SourceString.Slice(StartIndex, Length);
-            }
+            return new FormatToken(tokenType, raw, value);
         }
     }
 
