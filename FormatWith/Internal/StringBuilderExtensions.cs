@@ -29,8 +29,8 @@ namespace FormatWith.Internal
                 }
             }
 
-            // add the final section
-            stringBuilder.Append(value.Slice(currentTokenStart, currentTokenStart));
+            // Add the final section
+            stringBuilder.Append(value.Slice(currentTokenStart));
         }
         
         
