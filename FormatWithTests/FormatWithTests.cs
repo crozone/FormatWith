@@ -210,7 +210,7 @@ namespace FormatWithTests
                 ["Replacement2"] = Replacement2
             };
 
-            for (int i = 0; i < 1000000; i++)
+            for (int i = 0; i < 1_000_000; i++)
             {
                 TestFormat4.FormatWith(replacementDictionary);
             }
@@ -219,10 +219,34 @@ namespace FormatWithTests
         [Fact]
         public void SpeedTestBiggerAnonymous()
         {
-            for (int i = 0; i < 1000000; i++)
+            for (int i = 0; i < 1_000_000; i++)
             {
                 TestFormat4.FormatWith(new { Replacement1, Replacement2 });
             }
+        }
+
+        [Fact]
+        public void SpeedTestBiggerMultithreaded()
+        {
+            Dictionary<string, string> replacementDictionary = new Dictionary<string, string>()
+            {
+                ["Replacement1"] = Replacement1,
+                ["Replacement2"] = Replacement2
+            };
+
+            Enumerable.Range(1, 1_000_000).AsParallel().ForAll(i => TestFormat4.FormatWith(replacementDictionary));
+        }
+
+        [Fact]
+        public void SpeedTestHugeMultithreaded()
+        {
+            Dictionary<string, string> replacementDictionary = new Dictionary<string, string>()
+            {
+                ["Replacement1"] = Replacement1,
+                ["Replacement2"] = Replacement2
+            };
+
+            Enumerable.Range(1, 10_000_000).AsParallel().ForAll(i => TestFormat4.FormatWith(replacementDictionary));
         }
     }
 }
