@@ -173,7 +173,7 @@ namespace FormatWith.Internal
         public static void FormatWith(
             ReadOnlySpan<char> formatString,
             HandlerAction handlerAction,
-            ResultAction destinationWriterAction,
+            ResultAction resultAction,
             MissingKeyBehaviour missingKeyBehaviour,
             FallbackAction fallbackReplacementAction = null,
             char openBraceChar = '{',
@@ -183,7 +183,7 @@ namespace FormatWith.Internal
 
             // TODO: We can avoid internal delegate/closure allocations once function pointers are implemented:
             // https://github.com/dotnet/csharplang/blob/main/proposals/csharp-9.0/function-pointers.md
-            void ForEachToken(FormatToken token) => FormatHelpers.ProcessToken(token, destinationWriterAction, handlerAction, missingKeyBehaviour, fallbackReplacementAction);
+            void ForEachToken(FormatToken token) => FormatHelpers.ProcessToken(token, handlerAction, resultAction, missingKeyBehaviour, fallbackReplacementAction);
 
             Tokenizer.Tokenize(formatString, ForEachToken, openBraceChar, closeBraceChar);
         }

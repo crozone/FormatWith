@@ -23,8 +23,8 @@ namespace FormatWith.Internal
         /// this action delegate is called to provide the substitute fallback replacement value.</param>
         public static void ProcessToken(
             FormatToken token,
-            ResultAction resultAction,
             HandlerAction handlerAction,
+            ResultAction resultAction,
             MissingKeyBehaviour missingKeyBehaviour,
             FallbackAction fallbackReplacementAction)
         {
