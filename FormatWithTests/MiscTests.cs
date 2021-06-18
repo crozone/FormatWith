@@ -21,7 +21,7 @@ namespace FormatWithTests
         public void TestGetFormatParameters()
         {
             List<string> parameters = TestFormat4.GetFormatParameters().ToList();
-            Assert.Equal(parameters.Count, 2);
+            Assert.Equal(2, parameters.Count);
             Assert.Equal(nameof(Replacement1), parameters[0]);
             Assert.Equal(nameof(Replacement2), parameters[1]);
         }
