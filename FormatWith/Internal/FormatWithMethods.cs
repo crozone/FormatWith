@@ -22,7 +22,7 @@ namespace FormatWith.Internal
         {
             if (formatString.Length == 0) return string.Empty;
 
-            void handlerAction(ReadOnlySpan<char> key, ReadOnlySpan<char> format, ResultAction resultAction)
+            void HandlerAction(ReadOnlySpan<char> key, ReadOnlySpan<char> format, ResultAction resultAction)
             {
                 if (replacements.TryGetValue(key.ToString(), out string value))
                 {
@@ -42,7 +42,7 @@ namespace FormatWith.Internal
                 resultAction(fallbackReplacementValue.ToString().AsSpan());
             }
 
-            return FormatWith(formatString, handlerAction, missingKeyBehaviour, fallbackAction, openBraceChar, closeBraceChar);
+            return FormatWith(formatString, HandlerAction, missingKeyBehaviour, fallbackAction, openBraceChar, closeBraceChar);
         }
 
         public static string FormatWith(
@@ -55,7 +55,7 @@ namespace FormatWith.Internal
         {
             if (formatString.Length == 0) return string.Empty;
 
-            void handlerAction(ReadOnlySpan<char> key, ReadOnlySpan<char> format, ResultAction resultAction)
+            void HandlerAction(ReadOnlySpan<char> key, ReadOnlySpan<char> format, ResultAction resultAction)
             {
                 if (replacements.TryGetValue(key.ToString(), out object value))
                 {
@@ -70,12 +70,12 @@ namespace FormatWith.Internal
                 }
             }
 
-            void fallbackAction(ResultAction resultAction)
+            void FallbackAction(ResultAction resultAction)
             {
                 resultAction(fallbackReplacementValue.ToString().AsSpan());
             }
 
-            return FormatWith(formatString, handlerAction, missingKeyBehaviour, fallbackAction, openBraceChar, closeBraceChar);
+            return FormatWith(formatString, HandlerAction, missingKeyBehaviour, FallbackAction, openBraceChar, closeBraceChar);
         }
 
         public static string FormatWith(
@@ -89,7 +89,7 @@ namespace FormatWith.Internal
             if (replacementObject == null) throw new ArgumentNullException(nameof(replacementObject));
             if (formatString.Length == 0) return string.Empty;
 
-            void handlerAction(ReadOnlySpan<char> key, ReadOnlySpan<char> format, ResultAction resultAction)
+            void HandlerAction(ReadOnlySpan<char> key, ReadOnlySpan<char> format, ResultAction resultAction)
             {
                 if (TryGetPropertyFromObject(key.ToString(), replacementObject, out object value))
                 {
@@ -104,12 +104,12 @@ namespace FormatWith.Internal
                 }
             }
 
-            void fallbackAction(ResultAction resultAction)
+            void FallbackAction(ResultAction resultAction)
             {
                 resultAction(fallbackReplacementValue.ToString().AsSpan());
             }
 
-            return FormatWith(formatString, handlerAction, missingKeyBehaviour, fallbackAction, openBraceChar, closeBraceChar);
+            return FormatWith(formatString, HandlerAction, missingKeyBehaviour, FallbackAction, openBraceChar, closeBraceChar);
         }
 
         public static string FormatWith(
@@ -122,7 +122,7 @@ namespace FormatWith.Internal
         {
             if (formatString.Length == 0) return string.Empty;
 
-            void handlerAction(ReadOnlySpan<char> key, ReadOnlySpan<char> format, ResultAction resultAction)
+            void HandlerAction(ReadOnlySpan<char> key, ReadOnlySpan<char> format, ResultAction resultAction)
             {
                 var replacementResult = handler(key.ToString(), format.ToString());
 
@@ -139,12 +139,12 @@ namespace FormatWith.Internal
                 }
             }
 
-            void fallbackAction(ResultAction resultAction)
+            void FallbackAction(ResultAction resultAction)
             {
                 resultAction(fallbackReplacementValue.ToString().AsSpan());
             }
 
-            return FormatWith(formatString, handlerAction, missingKeyBehaviour, fallbackAction, openBraceChar, closeBraceChar);
+            return FormatWith(formatString, HandlerAction, missingKeyBehaviour, FallbackAction, openBraceChar, closeBraceChar);
         }
 
         //
@@ -163,9 +163,9 @@ namespace FormatWith.Internal
 
             StringBuilder stringBuilder = GetStringBuilder(formatString.Length * 2);
 
-            void destinationWriterAction(ReadOnlySpan<char> next) => stringBuilder.Append(next);
+            void ResultAction(ReadOnlySpan<char> value) => stringBuilder.Append(value);
 
-            FormatWith(formatString, handlerAction, destinationWriterAction, missingKeyBehaviour, fallbackReplacementAction, openBraceChar, closeBraceChar);
+            FormatWith(formatString, handlerAction, ResultAction, missingKeyBehaviour, fallbackReplacementAction, openBraceChar, closeBraceChar);
 
             return stringBuilder.ToString();
         }
