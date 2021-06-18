@@ -269,40 +269,13 @@ namespace FormatWith.Internal
 
         private static ReplacementResult<object> FromReplacementObject(string key, object replacementObject)
         {
-            // need to split this into accessors so we can traverse nested objects
-            var members = key.Split(new[] { "." }, StringSplitOptions.None);
-            if (members.Length == 1)
+            if (TryGetPropertyFromObject(key, replacementObject, out object value))
             {
-                PropertyInfo propertyInfo = replacementObject.GetType().GetProperty(key, propertyBindingFlags);
-
-                if (propertyInfo == null)
-                {
-                    return new ReplacementResult<object>(false, null);
-                }
-                else
-                {
-                    return new ReplacementResult<object>(true, propertyInfo.GetValue(replacementObject));
-                }
+                return new ReplacementResult<object>(true, value);
             }
             else
             {
-                object currentObject = replacementObject;
-
-                foreach (var member in members)
-                {
-                    PropertyInfo propertyInfo = currentObject.GetType().GetProperty(member, propertyBindingFlags);
-
-                    if (propertyInfo == null)
-                    {
-                        return new ReplacementResult<object>(false, null);
-                    }
-                    else
-                    {
-                        currentObject = propertyInfo.GetValue(currentObject);
-                    }
-                }
-
-                return new ReplacementResult<object>(true, currentObject);
+                return new ReplacementResult<object>(false, null);
             }
         }
 
