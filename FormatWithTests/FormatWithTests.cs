@@ -169,21 +169,17 @@ namespace FormatWithTests
         [Fact]
         public void TestSpanInputStringBuilder()
         {
-            HandlerAction handlerAction = static (key, format, state, result) =>
+            HandlerAction handlerAction = static (key, format, result) =>
             {
                 if (key.Equals("Replacement1".AsSpan(), StringComparison.Ordinal))
                 {
-                    result(state, true, Replacement1.AsSpan());
-                }
-                else
-                {
-                    result(state, false, default);
+                    result(Replacement1.AsSpan());
                 }
             };
 
-            FallbackAction fallbackAction = static (state, result) =>
+            FallbackAction fallbackAction = static (result) =>
             {
-                result(state, "FallbackValue".AsSpan());
+                result("FallbackValue".AsSpan());
             };
 
             string replacement = "abc{Replacement1}{DoesntExist}".AsSpan().FormatWith(handlerAction, MissingKeyBehaviour.ReplaceWithFallback, fallbackAction);

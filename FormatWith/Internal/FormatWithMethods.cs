@@ -22,28 +22,24 @@ namespace FormatWith.Internal
         {
             if (formatString.Length == 0) return string.Empty;
 
-            void handlerAction(ReadOnlySpan<char> key, ReadOnlySpan<char> format, FormatState state, HandlerResultAction resultAction)
+            void handlerAction(ReadOnlySpan<char> key, ReadOnlySpan<char> format, ResultAction resultAction)
             {
                 if (replacements.TryGetValue(key.ToString(), out string value))
                 {
                     if (format == null || format.IsEmpty || format.IsWhiteSpace())
                     {
-                        resultAction(state, true, value.AsSpan());
+                        resultAction(value.AsSpan());
                     }
                     else
                     {
-                        resultAction(state, true, string.Format("{0:" + format.ToString() + "}", value).AsSpan());
+                        resultAction(string.Format("{0:" + format.ToString() + "}", value).AsSpan());
                     }
-                }
-                else
-                {
-                    resultAction(state, false, default);
                 }
             }
 
-            void fallbackAction(FormatState state, FallbackResultAction resultAction)
+            void fallbackAction(ResultAction resultAction)
             {
-                resultAction(state, fallbackReplacementValue.ToString().AsSpan());
+                resultAction(fallbackReplacementValue.ToString().AsSpan());
             }
 
             return FormatWith(formatString, handlerAction, missingKeyBehaviour, fallbackAction, openBraceChar, closeBraceChar);
@@ -59,28 +55,24 @@ namespace FormatWith.Internal
         {
             if (formatString.Length == 0) return string.Empty;
 
-            void handlerAction(ReadOnlySpan<char> key, ReadOnlySpan<char> format, FormatState state, HandlerResultAction resultAction)
+            void handlerAction(ReadOnlySpan<char> key, ReadOnlySpan<char> format, ResultAction resultAction)
             {
                 if (replacements.TryGetValue(key.ToString(), out object value))
                 {
                     if (format == null || format.IsEmpty || format.IsWhiteSpace())
                     {
-                        resultAction(state, true, value.ToString().AsSpan());
+                        resultAction(value.ToString().AsSpan());
                     }
                     else
                     {
-                        resultAction(state, true, string.Format("{0:" + format.ToString() + "}", value).AsSpan());
+                        resultAction(string.Format("{0:" + format.ToString() + "}", value).AsSpan());
                     }
-                }
-                else
-                {
-                    resultAction(state, false, default);
                 }
             }
 
-            void fallbackAction(FormatState state, FallbackResultAction resultAction)
+            void fallbackAction(ResultAction resultAction)
             {
-                resultAction(state, fallbackReplacementValue.ToString().AsSpan());
+                resultAction(fallbackReplacementValue.ToString().AsSpan());
             }
 
             return FormatWith(formatString, handlerAction, missingKeyBehaviour, fallbackAction, openBraceChar, closeBraceChar);
@@ -97,28 +89,24 @@ namespace FormatWith.Internal
             if (replacementObject == null) throw new ArgumentNullException(nameof(replacementObject));
             if (formatString.Length == 0) return string.Empty;
 
-            void handlerAction(ReadOnlySpan<char> key, ReadOnlySpan<char> format, FormatState state, HandlerResultAction resultAction)
+            void handlerAction(ReadOnlySpan<char> key, ReadOnlySpan<char> format, ResultAction resultAction)
             {
                 if (TryGetPropertyFromObject(key.ToString(), replacementObject, out object value))
                 {
                     if (format == null || format.IsEmpty || format.IsWhiteSpace())
                     {
-                        resultAction(state, true, value.ToString().AsSpan());
+                        resultAction(value.ToString().AsSpan());
                     }
                     else
                     {
-                        resultAction(state, true, string.Format("{0:" + format.ToString() + "}", value).AsSpan());
+                        resultAction(string.Format("{0:" + format.ToString() + "}", value).AsSpan());
                     }
-                }
-                else
-                {
-                    resultAction(state, false, default);
                 }
             }
 
-            void fallbackAction(FormatState state, FallbackResultAction resultAction)
+            void fallbackAction(ResultAction resultAction)
             {
-                resultAction(state, fallbackReplacementValue.ToString().AsSpan());
+                resultAction(fallbackReplacementValue.ToString().AsSpan());
             }
 
             return FormatWith(formatString, handlerAction, missingKeyBehaviour, fallbackAction, openBraceChar, closeBraceChar);
@@ -134,7 +122,7 @@ namespace FormatWith.Internal
         {
             if (formatString.Length == 0) return string.Empty;
 
-            void handlerAction(ReadOnlySpan<char> key, ReadOnlySpan<char> format, FormatState state, HandlerResultAction resultAction)
+            void handlerAction(ReadOnlySpan<char> key, ReadOnlySpan<char> format, ResultAction resultAction)
             {
                 var replacementResult = handler(key.ToString(), format.ToString());
 
@@ -142,22 +130,18 @@ namespace FormatWith.Internal
                 {
                     if (format == null || format.IsEmpty || format.IsWhiteSpace())
                     {
-                        resultAction(state, true, replacementResult.Value.ToString().AsSpan());
+                        resultAction(replacementResult.Value.ToString().AsSpan());
                     }
                     else
                     {
-                        resultAction(state, true, string.Format("{0:" + format.ToString() + "}", replacementResult.Value).AsSpan());
+                        resultAction(string.Format("{0:" + format.ToString() + "}", replacementResult.Value).AsSpan());
                     }
-                }
-                else
-                {
-                    resultAction(state, false, default);
                 }
             }
 
-            void fallbackAction(FormatState state, FallbackResultAction resultAction)
+            void fallbackAction(ResultAction resultAction)
             {
-                resultAction(state, fallbackReplacementValue.ToString().AsSpan());
+                resultAction(fallbackReplacementValue.ToString().AsSpan());
             }
 
             return FormatWith(formatString, handlerAction, missingKeyBehaviour, fallbackAction, openBraceChar, closeBraceChar);
@@ -189,7 +173,7 @@ namespace FormatWith.Internal
         public static void FormatWith(
             ReadOnlySpan<char> formatString,
             HandlerAction handlerAction,
-            DestinationWriterAction destinationWriterAction,
+            ResultAction destinationWriterAction,
             MissingKeyBehaviour missingKeyBehaviour,
             FallbackAction fallbackReplacementAction = null,
             char openBraceChar = '{',

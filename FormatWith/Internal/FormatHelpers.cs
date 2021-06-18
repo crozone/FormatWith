@@ -23,7 +23,7 @@ namespace FormatWith.Internal
         /// this action delegate is called to provide the substitute fallback replacement value.</param>
         public static void ProcessToken(
             FormatToken token,
-            DestinationWriterAction destinationWriterAction,
+            ResultAction destinationWriterAction,
             HandlerAction handlerAction,
             MissingKeyBehaviour missingKeyBehaviour,
             FallbackAction fallbackReplacementAction)
@@ -47,41 +47,43 @@ namespace FormatWith.Internal
                     tokenFormat = token.Value.Slice(separatorIdx + 1);
                 }
 
-                // Append the replacement for this parameter
-                static void resultAction(FormatState state, bool success, ReadOnlySpan<char> value)
-                {
-                    if (success)
-                    {
-                        state.DestinationWriterAction(value);
-                    }
-                    else
-                    {
-                        // the keywas not handled, handle this using the missing key behaviour specified.
-                        switch (state.MissingKeyBehaviour)
-                        {
-                            case MissingKeyBehaviour.ThrowException:
-                                // the key was not found as a possible replacement, throw exception
-                                throw new KeyNotFoundException($"The parameter \"{state.TokenKey.ToString()}\" was not handled");
-                            case MissingKeyBehaviour.ReplaceWithFallback:
-                                static void fallbackResultAction(FormatState state, ReadOnlySpan<char> value)
-                                {
-                                    state.DestinationWriterAction(value);
-                                };
+                bool processed = false;
 
-                                state.FallbackReplacementAction?.Invoke(state, fallbackResultAction);
-                                break;
-                            case MissingKeyBehaviour.Ignore:
-                                // the replacement value is the input key as a parameter.
-                                // use source string and start/length directly with append rather than
-                                // parameter.ParameterKey to avoid allocating an extra string
-                                state.DestinationWriterAction(state.TokenRaw);
-                                break;
-                        }
-                    }
+                // Append the replacement for this parameter
+                void resultAction(ReadOnlySpan<char> value)
+                {
+                    // TODO: If already processed, throw because it was called multiple times?
+
+                    processed = true;
+                    destinationWriterAction(value);
                 }
 
-                FormatState state = new FormatState(destinationWriterAction, missingKeyBehaviour, fallbackReplacementAction, token.Raw, tokenKey, tokenFormat);
-                handlerAction(tokenKey, tokenFormat, state, resultAction);
+                handlerAction(tokenKey, tokenFormat, resultAction);
+
+                if (!processed)
+                {
+                    // the key was not handled, handle this using the missing key behaviour specified.
+                    switch (missingKeyBehaviour)
+                    {
+                        case MissingKeyBehaviour.ThrowException:
+                            // the key was not found as a possible replacement, throw exception
+                            throw new KeyNotFoundException($"The parameter \"{tokenKey.ToString()}\" was not handled");
+                        case MissingKeyBehaviour.ReplaceWithFallback:
+                            void fallbackResultAction(ReadOnlySpan<char> value)
+                            {
+                                destinationWriterAction(value);
+                            };
+
+                            fallbackReplacementAction?.Invoke(fallbackResultAction);
+                            break;
+                        case MissingKeyBehaviour.Ignore:
+                            // the replacement value is the input key as a parameter.
+                            // use source string and start/length directly with append rather than
+                            // parameter.ParameterKey to avoid allocating an extra string
+                            destinationWriterAction(token.Raw);
+                            break;
+                    }
+                }
             }
         }
 
