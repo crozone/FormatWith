@@ -12,9 +12,9 @@ namespace FormatWith.Internal
 {
     internal static class FormatWithMethods
     {
-        public static string FormatWith(
+        public static string FormatWith<T>(
             ReadOnlySpan<char> formatString,
-            IReadOnlyDictionary<string, string> replacements,
+            IReadOnlyDictionary<string, T> replacements,
             MissingKeyBehaviour missingKeyBehaviour = MissingKeyBehaviour.ThrowException,
             string fallbackReplacementValue = null,
             char openBraceChar = '{',
@@ -24,11 +24,11 @@ namespace FormatWith.Internal
 
             void HandlerAction(ReadOnlySpan<char> key, ReadOnlySpan<char> format, ResultAction resultAction)
             {
-                if (replacements.TryGetValue(key.ToString(), out string value))
+                if (replacements.TryGetValue(key.ToString(), out T value))
                 {
                     if (format == null || format.IsEmpty || format.IsWhiteSpace())
                     {
-                        resultAction(value.AsSpan());
+                        resultAction(value.ToString().AsSpan());
                     }
                     else
                     {
@@ -43,39 +43,6 @@ namespace FormatWith.Internal
             }
 
             return FormatWith(formatString, HandlerAction, missingKeyBehaviour, fallbackAction, openBraceChar, closeBraceChar);
-        }
-
-        public static string FormatWith(
-            ReadOnlySpan<char> formatString,
-            IReadOnlyDictionary<string, object> replacements,
-            MissingKeyBehaviour missingKeyBehaviour = MissingKeyBehaviour.ThrowException,
-            object fallbackReplacementValue = null,
-            char openBraceChar = '{',
-            char closeBraceChar = '}')
-        {
-            if (formatString.Length == 0) return string.Empty;
-
-            void HandlerAction(ReadOnlySpan<char> key, ReadOnlySpan<char> format, ResultAction resultAction)
-            {
-                if (replacements.TryGetValue(key.ToString(), out object value))
-                {
-                    if (format == null || format.IsEmpty || format.IsWhiteSpace())
-                    {
-                        resultAction(value.ToString().AsSpan());
-                    }
-                    else
-                    {
-                        resultAction(string.Format("{0:" + format.ToString() + "}", value).AsSpan());
-                    }
-                }
-            }
-
-            void FallbackAction(ResultAction resultAction)
-            {
-                resultAction(fallbackReplacementValue.ToString().AsSpan());
-            }
-
-            return FormatWith(formatString, HandlerAction, missingKeyBehaviour, FallbackAction, openBraceChar, closeBraceChar);
         }
 
         public static string FormatWith(
@@ -112,9 +79,9 @@ namespace FormatWith.Internal
             return FormatWith(formatString, HandlerAction, missingKeyBehaviour, FallbackAction, openBraceChar, closeBraceChar);
         }
 
-        public static string FormatWith(
+        public static string FormatWith<T>(
             ReadOnlySpan<char> formatString,
-            Func<string, string, ReplacementResult> handler,
+            Func<string, string, ReplacementResult<T>> handler,
             MissingKeyBehaviour missingKeyBehaviour = MissingKeyBehaviour.ThrowException,
             object fallbackReplacementValue = null,
             char openBraceChar = '{',
@@ -219,9 +186,9 @@ namespace FormatWith.Internal
         // FormattableWith overloads
         //
 
-        public static FormattableString FormattableWith(
+        public static FormattableString FormattableWith<T>(
             string formatString,
-            IReadOnlyDictionary<string, string> replacements,
+            IReadOnlyDictionary<string, T> replacements,
             MissingKeyBehaviour missingKeyBehaviour = MissingKeyBehaviour.ThrowException,
             string fallbackReplacementValue = null,
             char openBraceChar = '{',
@@ -229,24 +196,7 @@ namespace FormatWith.Internal
         {
             return FormattableWith(
                 formatString,
-                key => new ReplacementResult(replacements.TryGetValue(key, out string value), value),
-                missingKeyBehaviour,
-                fallbackReplacementValue,
-                openBraceChar,
-                closeBraceChar);
-        }
-
-        public static FormattableString FormattableWith(
-            string formatString,
-            IReadOnlyDictionary<string, object> replacements,
-            MissingKeyBehaviour missingKeyBehaviour = MissingKeyBehaviour.ThrowException,
-            object fallbackReplacementValue = null,
-            char openBraceChar = '{',
-            char closeBraceChar = '}')
-        {
-            return FormattableWith(
-                formatString,
-                key => new ReplacementResult(replacements.TryGetValue(key, out object value), value),
+                key => new ReplacementResult<T>(replacements.TryGetValue(key, out T value), value),
                 missingKeyBehaviour,
                 fallbackReplacementValue,
                 openBraceChar,
@@ -269,9 +219,9 @@ namespace FormatWith.Internal
                 closeBraceChar);
         }
 
-        public static FormattableString FormattableWith(
+        public static FormattableString FormattableWith<T>(
             string formatString,
-            Func<string, ReplacementResult> handler,
+            Func<string, ReplacementResult<T>> handler,
             MissingKeyBehaviour missingKeyBehaviour = MissingKeyBehaviour.ThrowException,
             object fallbackReplacementValue = null,
             char openBraceChar = '{',
@@ -320,7 +270,7 @@ namespace FormatWith.Internal
 
         private static readonly BindingFlags propertyBindingFlags = BindingFlags.Instance | BindingFlags.Public;
 
-        private static ReplacementResult FromReplacementObject(string key, object replacementObject)
+        private static ReplacementResult<object> FromReplacementObject(string key, object replacementObject)
         {
             // need to split this into accessors so we can traverse nested objects
             var members = key.Split(new[] { "." }, StringSplitOptions.None);
@@ -330,11 +280,11 @@ namespace FormatWith.Internal
 
                 if (propertyInfo == null)
                 {
-                    return new ReplacementResult(false, null);
+                    return new ReplacementResult<object>(false, null);
                 }
                 else
                 {
-                    return new ReplacementResult(true, propertyInfo.GetValue(replacementObject));
+                    return new ReplacementResult<object>(true, propertyInfo.GetValue(replacementObject));
                 }
             }
             else
@@ -347,7 +297,7 @@ namespace FormatWith.Internal
 
                     if (propertyInfo == null)
                     {
-                        return new ReplacementResult(false, null);
+                        return new ReplacementResult<object>(false, null);
                     }
                     else
                     {
@@ -355,7 +305,7 @@ namespace FormatWith.Internal
                     }
                 }
 
-                return new ReplacementResult(true, currentObject);
+                return new ReplacementResult<object>(true, currentObject);
             }
         }
 

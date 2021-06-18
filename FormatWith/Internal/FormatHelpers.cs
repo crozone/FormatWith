@@ -96,11 +96,11 @@ namespace FormatWith.Internal
         /// <param name="fallbackReplacementValue">When the <see cref="MissingKeyBehaviour.ReplaceWithFallback"/> is specified, this string is used as a fallback replacement value when the parameter is present in the lookup dictionary.</param>
         /// <param name="placeholderIndex">The index of the current placeholder in the composite format string</param>
         /// <returns>The processed result of joining the tokens with the replacement dictionary.</returns>
-        public static void ProcessTokenIntoFormattableString(
+        public static void ProcessTokenIntoFormattableString<T>(
             FormatToken token,
             StringBuilder resultBuilder,
             List<object> replacementParams,
-            Func<string, ReplacementResult> handler,
+            Func<string, ReplacementResult<T>> handler,
             MissingKeyBehaviour missingKeyBehaviour,
             object fallbackReplacementValue,
             ref int placeholderIndex)
@@ -128,7 +128,7 @@ namespace FormatWith.Internal
                 }
 
                 // append the replacement for this parameter
-                ReplacementResult replacementResult = handler(tokenKey);
+                ReplacementResult<T> replacementResult = handler(tokenKey);
 
                 string IndexAndFormat(int index)
                 {

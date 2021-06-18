@@ -7,14 +7,14 @@ namespace FormatWith
     /// <summary>
     /// Represents the result of a substitution for a parameter within a format string.
     /// </summary>
-    public struct ReplacementResult
+    public struct ReplacementResult<TValue>
     {
         /// <summary>
         /// Represents the result of a substitution for a parameter within a format string.
         /// </summary>
         /// <param name="success">Represents whether or not the substitution was successful.</param>
         /// <param name="value">The new value for the substituted format parameter.</param>
-        public ReplacementResult(bool success, object value)
+        public ReplacementResult(bool success, TValue value)
         {
             Success = success;
             Value = value;
@@ -31,6 +31,6 @@ namespace FormatWith
         /// The new value for the substituted format parameter.
         /// If Success is false, this should be set to null.
         /// </summary>
-        public object Value { get; }
+        public TValue Value { get; }
     }
 }

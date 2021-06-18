@@ -137,7 +137,7 @@ namespace FormatWithTests
         public void TestCustomHandler1()
         {
             string replacement = "Hey, {make this uppercase!} Thanks.".FormatWith(
-                (parameter, format) => new ReplacementResult(true, parameter.ToUpper())
+                (parameter, format) => new ReplacementResult<string>(true, parameter.ToUpper())
                 );
 
             Assert.Equal("Hey, MAKE THIS UPPERCASE! Thanks.", replacement);
@@ -151,10 +151,10 @@ namespace FormatWithTests
                 {
                     return format switch
                     {
-                        "uppercase" => new ReplacementResult(true, parameter.ToUpper()),
-                        "lowercase" => new ReplacementResult(true, parameter.ToLower()),
-                        "reverse" => new ReplacementResult(true, new string(parameter.Reverse().ToArray())),
-                        _ => new ReplacementResult(false, parameter),
+                        "uppercase" => new ReplacementResult<string>(true, parameter.ToUpper()),
+                        "lowercase" => new ReplacementResult<string>(true, parameter.ToLower()),
+                        "reverse" => new ReplacementResult<string>(true, new string(parameter.Reverse().ToArray())),
+                        _ => new ReplacementResult<string>(false, parameter),
                     };
                 },
                 MissingKeyBehaviour.ReplaceWithFallback,

@@ -59,9 +59,9 @@ namespace FormatWith
         /// <param name="formatString">The format string, containing keys like {foo}</param>
         /// <param name="replacements">An <see cref="IReadOnlyDictionary"/> with keys and values to inject into the string</param>
         /// <returns>The formatted string</returns>
-        public static string FormatWith(
+        public static string FormatWith<T>(
             this string formatString,
-            IReadOnlyDictionary<string, string> replacements)
+            IReadOnlyDictionary<string, T> replacements)
         {
             return FormatWithMethods.FormatWith(formatString.AsSpan(), replacements);
         }
@@ -76,9 +76,9 @@ namespace FormatWith
         /// <param name="openBraceChar">The character used to begin parameters</param>
         /// <param name="closeBraceChar">The character used to end parameters</param>
         /// <returns>The formatted string</returns>
-        public static string FormatWith(
+        public static string FormatWith<T>(
             this string formatString,
-            IReadOnlyDictionary<string, string> replacements,
+            IReadOnlyDictionary<string, T> replacements,
             MissingKeyBehaviour missingKeyBehaviour = MissingKeyBehaviour.ThrowException,
             string fallbackReplacementValue = null,
             char openBraceChar = '{',
@@ -94,55 +94,15 @@ namespace FormatWith
         }
 
         /// <summary>
-        /// Formats a string with the values of the dictionary.
-        /// The string representation of each object value in the dictionary is used as the format parameter.
-        /// </summary>
-        /// <param name="formatString">The format string, containing keys like {foo}</param>
-        /// <param name="replacements">An <see cref="IReadOnlyDictionary"/> with keys and values to inject into the string</param>
-        /// <returns>The formatted string</returns>
-        public static string FormatWith(this string formatString, IReadOnlyDictionary<string, object> replacements)
-        {
-            return FormatWithMethods.FormatWith(formatString.AsSpan(), replacements);
-        }
-
-        /// <summary>
-        /// Formats a string with the values of the dictionary.
-        /// The string representation of each object value in the dictionary is used as the format parameter.
-        /// </summary>
-        /// <param name="formatString">The format string, containing keys like {foo}</param>
-        /// <param name="replacements">An <see cref="IReadOnlyDictionary"/> with keys and values to inject into the string</param>
-        /// <param name="missingKeyBehaviour">The behaviour to use when the format string contains a parameter that is not present in the lookup dictionary</param>
-        /// <param name="fallbackReplacementValue">When the <see cref="MissingKeyBehaviour.ReplaceWithFallback"/> is specified, this string is used as a fallback replacement value when the parameter is present in the lookup dictionary.</param>
-        /// <param name="openBraceChar">The character used to begin parameters</param>
-        /// <param name="closeBraceChar">The character used to end parameters</param>
-        /// <returns>The formatted string</returns>
-        public static string FormatWith(
-            this string formatString,
-            IReadOnlyDictionary<string, object> replacements,
-            MissingKeyBehaviour missingKeyBehaviour = MissingKeyBehaviour.ThrowException,
-            object fallbackReplacementValue = null,
-            char openBraceChar = '{',
-            char closeBraceChar = '}')
-        {
-            return FormatWithMethods.FormatWith(
-                formatString.AsSpan(),
-                replacements,
-                missingKeyBehaviour,
-                fallbackReplacementValue,
-                openBraceChar,
-                closeBraceChar);
-        }
-
-        /// <summary>
         /// Formats a string, using a handler function to provide the value
         /// of each parameter.
         /// </summary>
         /// <param name="formatString">The format string, containing keys like {foo}</param>
         /// <param name="handler">A handler function that transforms each parameter into a <see cref="ReplacementResult"/></param>
         /// <returns>The formatted string</returns>
-        public static string FormatWith(
+        public static string FormatWith<T>(
             this string formatString,
-            Func<string, string, ReplacementResult> handler)
+            Func<string, string, ReplacementResult<T>> handler)
         {
             return FormatWithMethods.FormatWith(formatString.AsSpan(), handler);
         }
@@ -158,9 +118,9 @@ namespace FormatWith
         /// <param name="openBraceChar">The character used to begin parameters</param>
         /// <param name="closeBraceChar">The character used to end parameters</param>
         /// <returns>The formatted string</returns>
-        public static string FormatWith(
+        public static string FormatWith<T>(
             this string formatString,
-            Func<string, string, ReplacementResult> handler,
+            Func<string, string, ReplacementResult<T>> handler,
             MissingKeyBehaviour missingKeyBehaviour = MissingKeyBehaviour.ThrowException,
             object fallbackReplacementValue = null,
             char openBraceChar = '{',
@@ -243,7 +203,7 @@ namespace FormatWith
         /// <param name="formatString">The format string, containing keys like {foo}</param>
         /// <param name="replacements">An <see cref="IReadOnlyDictionary"/> with keys and values to inject into the string</param>
         /// <returns>The resultant <see cref="FormattableString"/></returns>
-        public static FormattableString FormattableWith(this string formatString, IReadOnlyDictionary<string, string> replacements)
+        public static FormattableString FormattableWith<T>(this string formatString, IReadOnlyDictionary<string, T> replacements)
         {
             return FormatWithMethods.FormattableWith(formatString, replacements);
         }
@@ -258,9 +218,9 @@ namespace FormatWith
         /// <param name="openBraceChar">The character used to begin parameters</param>
         /// <param name="closeBraceChar">The character used to end parameters</param>
         /// <returns>The resultant <see cref="FormattableString"/></returns>
-        public static FormattableString FormattableWith(
+        public static FormattableString FormattableWith<T>(
             this string formatString,
-            IReadOnlyDictionary<string, string> replacements,
+            IReadOnlyDictionary<string, T> replacements,
             MissingKeyBehaviour missingKeyBehaviour = MissingKeyBehaviour.ThrowException,
             string fallbackReplacementValue = null,
             char openBraceChar = '{',
@@ -319,9 +279,9 @@ namespace FormatWith
         /// <param name="formatString">The format string, containing keys like {foo}</param>
         /// <param name="handler">A handler function that transforms each parameter into a <see cref="ReplacementResult"/></param>
         /// <returns>The resultant <see cref="FormattableString"/></returns>
-        public static FormattableString FormattableWith(
+        public static FormattableString FormattableWith<T>(
             this string formatString,
-            Func<string, ReplacementResult> handler)
+            Func<string, ReplacementResult<T>> handler)
         {
             return FormatWithMethods.FormattableWith(formatString, handler);
         }
@@ -336,9 +296,9 @@ namespace FormatWith
         /// <param name="openBraceChar">The character used to begin parameters</param>
         /// <param name="closeBraceChar">The character used to end parameters</param>
         /// <returns>The resultant <see cref="FormattableString"/></returns>
-        public static FormattableString FormattableWith(
+        public static FormattableString FormattableWith<T>(
             this string formatString,
-            Func<string, ReplacementResult> handler,
+            Func<string, ReplacementResult<T>> handler,
             MissingKeyBehaviour missingKeyBehaviour = MissingKeyBehaviour.ThrowException,
             object fallbackReplacementValue = null,
             char openBraceChar = '{',
