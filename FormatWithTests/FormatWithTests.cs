@@ -167,6 +167,30 @@ namespace FormatWithTests
         }
 
         [Fact]
+        public void TestSpanInputStringBuilder()
+        {
+            HandlerAction handlerAction = static (key, format, state, result) =>
+            {
+                if (key.Equals("Replacement1".AsSpan(), StringComparison.Ordinal))
+                {
+                    result(state, true, Replacement1.AsSpan());
+                }
+                else
+                {
+                    result(state, false, default);
+                }
+            };
+
+            FallbackAction fallbackAction = static (state, result) =>
+            {
+                result(state, "FallbackValue".AsSpan());
+            };
+
+            string replacement = "abc{Replacement1}{DoesntExist}".AsSpan().FormatWith(handlerAction, MissingKeyBehaviour.ReplaceWithFallback, fallbackAction);
+            Assert.Equal("abcReplacement1FallbackValue", replacement);
+        }
+
+        [Fact]
         public void SpeedTest()
         {
             Dictionary<string, string> replacementDictionary = new Dictionary<string, string>()
