@@ -4,7 +4,7 @@ using System.Text;
 
 namespace FormatWith.Internal
 {
-    internal ref struct FormatToken
+    internal readonly ref struct FormatToken
     {
         public FormatToken(TokenKind tokenKind, ReadOnlySpan<char> raw, ReadOnlySpan<char> value) {
             TokenKind = tokenKind;
