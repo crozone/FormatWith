@@ -16,14 +16,14 @@ namespace FormatWith.Internal
         /// Processes a token into its resulting string.
         /// </summary>
         /// <param name="token">The token to process</param>
-        /// <param name="destinationWriterAction">The action delegate that will be called with each Span piece of the output string.</param>
+        /// <param name="resultAction">The action delegate that will be called with each Span piece of the resultant output string.</param>
         /// <param name="handlerAction">The action delegate used to perform the replacements on the format tokens</param>
         /// <param name="missingKeyBehaviour">The behaviour to use when the format string contains a parameter that is not present in the lookup dictionary</param>
         /// <param name="fallbackReplacementAction">When the handler action fails to return a result, and <see cref="MissingKeyBehaviour.ReplaceWithFallback"/> is specified,
         /// this action delegate is called to provide the substitute fallback replacement value.</param>
         public static void ProcessToken(
             FormatToken token,
-            ResultAction destinationWriterAction,
+            ResultAction resultAction,
             HandlerAction handlerAction,
             MissingKeyBehaviour missingKeyBehaviour,
             FallbackAction fallbackReplacementAction)
@@ -32,7 +32,7 @@ namespace FormatWith.Internal
             {
                 // Token is a text token
                 // Write the token result
-                destinationWriterAction(token.Raw);
+                resultAction(token.Raw);
             }
             else if (token.TokenKind == TokenKind.Parameter)
             {
@@ -50,13 +50,13 @@ namespace FormatWith.Internal
                 bool processed = false;
 
                 // Append the replacement for this parameter
-                void resultAction(ReadOnlySpan<char> value)
+                void HandlerResultAction(ReadOnlySpan<char> value)
                 {
                     processed = true;
-                    destinationWriterAction(value);
+                    resultAction(value);
                 }
 
-                handlerAction(tokenKey, tokenFormat, resultAction);
+                handlerAction(tokenKey, tokenFormat, HandlerResultAction);
 
                 if (!processed)
                 {
@@ -69,7 +69,7 @@ namespace FormatWith.Internal
                         case MissingKeyBehaviour.ReplaceWithFallback:
                             void fallbackResultAction(ReadOnlySpan<char> value)
                             {
-                                destinationWriterAction(value);
+                                resultAction(value);
                             };
 
                             fallbackReplacementAction?.Invoke(fallbackResultAction);
@@ -78,7 +78,7 @@ namespace FormatWith.Internal
                             // the replacement value is the input key as a parameter.
                             // use source string and start/length directly with append rather than
                             // parameter.ParameterKey to avoid allocating an extra string
-                            destinationWriterAction(token.Raw);
+                            resultAction(token.Raw);
                             break;
                     }
                 }
