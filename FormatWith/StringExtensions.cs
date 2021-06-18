@@ -44,7 +44,6 @@ namespace FormatWith
             char openBraceChar = '{',
             char closeBraceChar = '}')
         {
-            // wrap the type object in a wrapper Dictionary class that exposes the properties as dictionary keys via reflection
             return FormatWithMethods.FormatWith(
                 formatString.AsSpan(),
                 replacementObject,
@@ -58,13 +57,12 @@ namespace FormatWith
         /// Formats a string with the values of the dictionary.
         /// </summary>
         /// <param name="formatString">The format string, containing keys like {foo}</param>
-        /// <param name="replacements">An <see cref="IDictionary"/> with keys and values to inject into the string</param>
+        /// <param name="replacements">An <see cref="IReadOnlyDictionary"/> with keys and values to inject into the string</param>
         /// <returns>The formatted string</returns>
         public static string FormatWith(
             this string formatString,
-            IDictionary<string, string> replacements)
+            IReadOnlyDictionary<string, string> replacements)
         {
-            // wrap the IDictionary<string, string> in a wrapper Dictionary class that casts the values to objects as needed
             return FormatWithMethods.FormatWith(formatString.AsSpan(), replacements);
         }
 
@@ -72,7 +70,7 @@ namespace FormatWith
         /// Formats a string with the values of the dictionary.
         /// </summary>
         /// <param name="formatString">The format string, containing keys like {foo}</param>
-        /// <param name="replacements">An <see cref="IDictionary"/> with keys and values to inject into the string</param>
+        /// <param name="replacements">An <see cref="IReadOnlyDictionary"/> with keys and values to inject into the string</param>
         /// <param name="missingKeyBehaviour">The behaviour to use when the format string contains a parameter that is not present in the lookup dictionary</param>
         /// <param name="fallbackReplacementValue">When the <see cref="MissingKeyBehaviour.ReplaceWithFallback"/> is specified, this string is used as a fallback replacement value when the parameter is present in the lookup dictionary.</param>
         /// <param name="openBraceChar">The character used to begin parameters</param>
@@ -80,13 +78,12 @@ namespace FormatWith
         /// <returns>The formatted string</returns>
         public static string FormatWith(
             this string formatString,
-            IDictionary<string, string> replacements,
+            IReadOnlyDictionary<string, string> replacements,
             MissingKeyBehaviour missingKeyBehaviour = MissingKeyBehaviour.ThrowException,
             string fallbackReplacementValue = null,
             char openBraceChar = '{',
             char closeBraceChar = '}')
         {
-            // wrap the IDictionary<string, string> in a wrapper Dictionary class that casts the values to objects as needed
             return FormatWithMethods.FormatWith(
                 formatString.AsSpan(),
                 replacements,
@@ -101,9 +98,9 @@ namespace FormatWith
         /// The string representation of each object value in the dictionary is used as the format parameter.
         /// </summary>
         /// <param name="formatString">The format string, containing keys like {foo}</param>
-        /// <param name="replacements">An <see cref="IDictionary"/> with keys and values to inject into the string</param>
+        /// <param name="replacements">An <see cref="IReadOnlyDictionary"/> with keys and values to inject into the string</param>
         /// <returns>The formatted string</returns>
-        public static string FormatWith(this string formatString, IDictionary<string, object> replacements)
+        public static string FormatWith(this string formatString, IReadOnlyDictionary<string, object> replacements)
         {
             return FormatWithMethods.FormatWith(formatString.AsSpan(), replacements);
         }
@@ -113,7 +110,7 @@ namespace FormatWith
         /// The string representation of each object value in the dictionary is used as the format parameter.
         /// </summary>
         /// <param name="formatString">The format string, containing keys like {foo}</param>
-        /// <param name="replacements">An <see cref="IDictionary"/> with keys and values to inject into the string</param>
+        /// <param name="replacements">An <see cref="IReadOnlyDictionary"/> with keys and values to inject into the string</param>
         /// <param name="missingKeyBehaviour">The behaviour to use when the format string contains a parameter that is not present in the lookup dictionary</param>
         /// <param name="fallbackReplacementValue">When the <see cref="MissingKeyBehaviour.ReplaceWithFallback"/> is specified, this string is used as a fallback replacement value when the parameter is present in the lookup dictionary.</param>
         /// <param name="openBraceChar">The character used to begin parameters</param>
@@ -121,7 +118,7 @@ namespace FormatWith
         /// <returns>The formatted string</returns>
         public static string FormatWith(
             this string formatString,
-            IDictionary<string, object> replacements,
+            IReadOnlyDictionary<string, object> replacements,
             MissingKeyBehaviour missingKeyBehaviour = MissingKeyBehaviour.ThrowException,
             object fallbackReplacementValue = null,
             char openBraceChar = '{',
@@ -244,11 +241,10 @@ namespace FormatWith
         /// Produces a <see cref="FormattableString"/> representing the input format string.
         /// </summary>
         /// <param name="formatString">The format string, containing keys like {foo}</param>
-        /// <param name="replacements">An <see cref="IDictionary"/> with keys and values to inject into the string</param>
+        /// <param name="replacements">An <see cref="IReadOnlyDictionary"/> with keys and values to inject into the string</param>
         /// <returns>The resultant <see cref="FormattableString"/></returns>
-        public static FormattableString FormattableWith(this string formatString, IDictionary<string, string> replacements)
+        public static FormattableString FormattableWith(this string formatString, IReadOnlyDictionary<string, string> replacements)
         {
-            // wrap the IDictionary<string, string> in a wrapper Dictionary class that casts the values to objects as needed
             return FormatWithMethods.FormattableWith(formatString, replacements);
         }
 
@@ -256,7 +252,7 @@ namespace FormatWith
         /// Produces a <see cref="FormattableString"/> representing the input format string.
         /// </summary>
         /// <param name="formatString">The format string, containing keys like {foo}</param>
-        /// <param name="replacements">An <see cref="IDictionary"/> with keys and values to inject into the string</param>
+        /// <param name="replacements">An <see cref="IReadOnlyDictionary"/> with keys and values to inject into the string</param>
         /// <param name="missingKeyBehaviour">The behaviour to use when the format string contains a parameter that is not present in the lookup dictionary</param>
         /// <param name="fallbackReplacementValue">When the <see cref="MissingKeyBehaviour.ReplaceWithFallback"/> is specified, this string is used as a fallback replacement value when the parameter is present in the lookup dictionary.</param>
         /// <param name="openBraceChar">The character used to begin parameters</param>
@@ -264,13 +260,12 @@ namespace FormatWith
         /// <returns>The resultant <see cref="FormattableString"/></returns>
         public static FormattableString FormattableWith(
             this string formatString,
-            IDictionary<string, string> replacements,
+            IReadOnlyDictionary<string, string> replacements,
             MissingKeyBehaviour missingKeyBehaviour = MissingKeyBehaviour.ThrowException,
             string fallbackReplacementValue = null,
             char openBraceChar = '{',
             char closeBraceChar = '}')
         {
-            // wrap the IDictionary<string, string> in a wrapper Dictionary class that casts the values to objects as needed
             return FormatWithMethods.FormattableWith(
                 formatString,
                 replacements,
@@ -284,9 +279,9 @@ namespace FormatWith
         /// Produces a <see cref="FormattableString"/> representing the input format string.
         /// </summary>
         /// <param name="formatString">The format string, containing keys like {foo}</param>
-        /// <param name="replacements">An <see cref="IDictionary"/> with keys and values to inject into the string</param>
+        /// <param name="replacements">An <see cref="IReadOnlyDictionary"/> with keys and values to inject into the string</param>
         /// <returns>The resultant <see cref="FormattableString"/></returns>
-        public static FormattableString FormattableWith(this string formatString, IDictionary<string, object> replacements)
+        public static FormattableString FormattableWith(this string formatString, IReadOnlyDictionary<string, object> replacements)
         {
             return FormatWithMethods.FormattableWith(formatString, replacements);
         }
@@ -295,7 +290,7 @@ namespace FormatWith
         /// Produces a <see cref="FormattableString"/> representing the input format string.
         /// </summary>
         /// <param name="formatString">The format string, containing keys like {foo}</param>
-        /// <param name="replacements">An <see cref="IDictionary"/> with keys and values to inject into the string</param>
+        /// <param name="replacements">An <see cref="IReadOnlyDictionary"/> with keys and values to inject into the string</param>
         /// <param name="missingKeyBehaviour">The behaviour to use when the format string contains a parameter that is not present in the lookup dictionary</param>
         /// <param name="fallbackReplacementValue">When the <see cref="MissingKeyBehaviour.ReplaceWithFallback"/> is specified, this string is used as a fallback replacement value when the parameter is present in the lookup dictionary.</param>
         /// <param name="openBraceChar">The character used to begin parameters</param>
@@ -303,7 +298,7 @@ namespace FormatWith
         /// <returns>The resultant <see cref="FormattableString"/></returns>
         public static FormattableString FormattableWith(
             this string formatString,
-            IDictionary<string, object> replacements,
+            IReadOnlyDictionary<string, object> replacements,
             MissingKeyBehaviour missingKeyBehaviour = MissingKeyBehaviour.ThrowException,
             object fallbackReplacementValue = null,
             char openBraceChar = '{',

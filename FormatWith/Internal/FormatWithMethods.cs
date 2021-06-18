@@ -14,7 +14,7 @@ namespace FormatWith.Internal
     {
         public static string FormatWith(
             ReadOnlySpan<char> formatString,
-            IDictionary<string, string> replacements,
+            IReadOnlyDictionary<string, string> replacements,
             MissingKeyBehaviour missingKeyBehaviour = MissingKeyBehaviour.ThrowException,
             string fallbackReplacementValue = null,
             char openBraceChar = '{',
@@ -47,7 +47,7 @@ namespace FormatWith.Internal
 
         public static string FormatWith(
             ReadOnlySpan<char> formatString,
-            IDictionary<string, object> replacements,
+            IReadOnlyDictionary<string, object> replacements,
             MissingKeyBehaviour missingKeyBehaviour = MissingKeyBehaviour.ThrowException,
             object fallbackReplacementValue = null,
             char openBraceChar = '{',
@@ -221,7 +221,7 @@ namespace FormatWith.Internal
 
         public static FormattableString FormattableWith(
             string formatString,
-            IDictionary<string, string> replacements,
+            IReadOnlyDictionary<string, string> replacements,
             MissingKeyBehaviour missingKeyBehaviour = MissingKeyBehaviour.ThrowException,
             string fallbackReplacementValue = null,
             char openBraceChar = '{',
@@ -238,7 +238,7 @@ namespace FormatWith.Internal
 
         public static FormattableString FormattableWith(
             string formatString,
-            IDictionary<string, object> replacements,
+            IReadOnlyDictionary<string, object> replacements,
             MissingKeyBehaviour missingKeyBehaviour = MissingKeyBehaviour.ThrowException,
             object fallbackReplacementValue = null,
             char openBraceChar = '{',
