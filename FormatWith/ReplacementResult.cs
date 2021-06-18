@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace FormatWith
+﻿namespace FormatWith
 {
     /// <summary>
     /// Represents the result of a substitution for a parameter within a format string.

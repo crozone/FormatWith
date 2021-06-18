@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using FormatWith.Internal;
-using System.Collections;
-using static FormatWith.Internal.FormatWithMethods;
 
 namespace FormatWith
 {
