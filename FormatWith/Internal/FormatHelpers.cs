@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using static FormatWith.Internal.FormatWithMethods;
 
 namespace FormatWith.Internal
 {
@@ -14,75 +15,73 @@ namespace FormatWith.Internal
         /// <summary>
         /// Processes a token into its resulting string.
         /// </summary>
-        /// <param name="token">Current token to process</param>
-        /// <param name="resultBuilder">The StringBuilder which will contain the result</param>
-        /// <param name="handler">The function used to perform the replacements on the format tokens</param>
+        /// <param name="token">The token to process</param>
+        /// <param name="destinationWriterAction">The action delegate that will be called with each Span piece of the output string.</param>
+        /// <param name="handlerAction">The action delegate used to perform the replacements on the format tokens</param>
         /// <param name="missingKeyBehaviour">The behaviour to use when the format string contains a parameter that is not present in the lookup dictionary</param>
-        /// <param name="fallbackReplacementValue">When the <see cref="MissingKeyBehaviour.ReplaceWithFallback"/> is specified, this string is used as a fallback replacement value when the parameter is present in the lookup dictionary.</param>
-        /// <returns>The processed result of joining the tokens with the replacement dictionary.</returns>
+        /// <param name="fallbackReplacementAction">When the handler action fails to return a result, and <see cref="MissingKeyBehaviour.ReplaceWithFallback"/> is specified,
+        /// this action delegate is called to provide the substitute fallback replacement value.</param>
         public static void ProcessToken(
             FormatToken token,
-            StringBuilder resultBuilder,
-            Func<string, string, ReplacementResult> handler,
+            DestinationWriterAction destinationWriterAction,
+            HandlerAction handlerAction,
             MissingKeyBehaviour missingKeyBehaviour,
-            object fallbackReplacementValue)
+            FallbackAction fallbackReplacementAction)
         {
             if (token.TokenKind == TokenKind.Text)
             {
-                // token is a text token
-                // add the token to the result string builder
-                resultBuilder.Append(token.Raw);
+                // Token is a text token
+                // Write the token result
+                destinationWriterAction(token.Raw);
             }
             else if (token.TokenKind == TokenKind.Parameter)
             {
-                // token is a parameter token
-                // perform parameter logic now.
-                // TODO: See about removing these ToString calls on tokenKey and format
-                string tokenKey = token.Value.ToString();
-                string format = null;
-                var separatorIdx = tokenKey.IndexOf(':');
+                // Token is a parameter token
+                // Perform parameter logic now.
+                ReadOnlySpan<char> tokenKey = token.Value;
+                ReadOnlySpan<char> tokenFormat = null;
+                int separatorIdx = tokenKey.IndexOf(':');
                 if (separatorIdx > -1)
                 {
-                    tokenKey = token.Value.Slice(0, separatorIdx).ToString();
-                    format = token.Value.Slice(separatorIdx + 1).ToString();
+                    tokenKey = token.Value.Slice(0, separatorIdx);
+                    tokenFormat = token.Value.Slice(separatorIdx + 1);
                 }
 
-                // append the replacement for this parameter
-                ReplacementResult replacementResult = handler(tokenKey, format);
-
-                if (replacementResult.Success)
+                // Append the replacement for this parameter
+                static void resultAction(FormatState state, bool success, ReadOnlySpan<char> value)
                 {
-                    // the key exists, add the replacement value
-                    // this does nothing if replacement value is null
-                    if (string.IsNullOrWhiteSpace(format))
+                    if (success)
                     {
-                        resultBuilder.Append(replacementResult.Value);
+                        state.DestinationWriterAction(value);
                     }
                     else
                     {
-                        resultBuilder.AppendFormat("{0:" + format + "}", replacementResult.Value);
+                        // the keywas not handled, handle this using the missing key behaviour specified.
+                        switch (state.MissingKeyBehaviour)
+                        {
+                            case MissingKeyBehaviour.ThrowException:
+                                // the key was not found as a possible replacement, throw exception
+                                throw new KeyNotFoundException($"The parameter \"{state.TokenKey.ToString()}\" was not handled");
+                            case MissingKeyBehaviour.ReplaceWithFallback:
+                                static void fallbackResultAction(FormatState state, ReadOnlySpan<char> value)
+                                {
+                                    state.DestinationWriterAction(value);
+                                };
+
+                                state.FallbackReplacementAction?.Invoke(state, fallbackResultAction);
+                                break;
+                            case MissingKeyBehaviour.Ignore:
+                                // the replacement value is the input key as a parameter.
+                                // use source string and start/length directly with append rather than
+                                // parameter.ParameterKey to avoid allocating an extra string
+                                state.DestinationWriterAction(state.TokenRaw);
+                                break;
+                        }
                     }
                 }
-                else
-                {
-                    // the key does not exist, handle this using the missing key behaviour specified.
-                    switch (missingKeyBehaviour)
-                    {
-                        case MissingKeyBehaviour.ThrowException:
-                            // the key was not found as a possible replacement, throw exception
-                            throw new KeyNotFoundException(
-                                $"The parameter \"{token.Value.ToString()}\" was not present in the lookup dictionary");
-                        case MissingKeyBehaviour.ReplaceWithFallback:
-                            resultBuilder.Append(fallbackReplacementValue);
-                            break;
-                        case MissingKeyBehaviour.Ignore:
-                            // the replacement value is the input key as a parameter.
-                            // use source string and start/length directly with append rather than
-                            // parameter.ParameterKey to avoid allocating an extra string
-                            resultBuilder.Append(token.Raw);
-                            break;
-                    }
-                }
+
+                FormatState state = new FormatState(destinationWriterAction, missingKeyBehaviour, fallbackReplacementAction, token.Raw, tokenKey, tokenFormat);
+                handlerAction(tokenKey, tokenFormat, state, resultAction);
             }
         }
 

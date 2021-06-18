@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using FormatWith.Internal;
 using System.Collections;
+using static FormatWith.Internal.FormatWithMethods;
 
 namespace FormatWith
 {
@@ -22,7 +23,7 @@ namespace FormatWith
             object replacementObject)
         {
             // wrap the type object in a wrapper Dictionary class that exposes the properties as dictionary keys via reflection
-            return FormatWithMethods.FormatWith(formatString, replacementObject);
+            return FormatWithMethods.FormatWith(formatString.AsSpan(), replacementObject);
         }
 
         /// <summary>
@@ -45,7 +46,7 @@ namespace FormatWith
         {
             // wrap the type object in a wrapper Dictionary class that exposes the properties as dictionary keys via reflection
             return FormatWithMethods.FormatWith(
-                formatString,
+                formatString.AsSpan(),
                 replacementObject,
                 missingKeyBehaviour,
                 fallbackReplacementValue,
@@ -64,7 +65,7 @@ namespace FormatWith
             IDictionary<string, string> replacements)
         {
             // wrap the IDictionary<string, string> in a wrapper Dictionary class that casts the values to objects as needed
-            return FormatWithMethods.FormatWith(formatString, replacements);
+            return FormatWithMethods.FormatWith(formatString.AsSpan(), replacements);
         }
 
         /// <summary>
@@ -87,7 +88,7 @@ namespace FormatWith
         {
             // wrap the IDictionary<string, string> in a wrapper Dictionary class that casts the values to objects as needed
             return FormatWithMethods.FormatWith(
-                formatString,
+                formatString.AsSpan(),
                 replacements,
                 missingKeyBehaviour,
                 fallbackReplacementValue,
@@ -104,7 +105,7 @@ namespace FormatWith
         /// <returns>The formatted string</returns>
         public static string FormatWith(this string formatString, IDictionary<string, object> replacements)
         {
-            return FormatWithMethods.FormatWith(formatString, replacements);
+            return FormatWithMethods.FormatWith(formatString.AsSpan(), replacements);
         }
 
         /// <summary>
@@ -127,7 +128,7 @@ namespace FormatWith
             char closeBraceChar = '}')
         {
             return FormatWithMethods.FormatWith(
-                formatString,
+                formatString.AsSpan(),
                 replacements,
                 missingKeyBehaviour,
                 fallbackReplacementValue,
@@ -146,7 +147,7 @@ namespace FormatWith
             this string formatString,
             Func<string, string, ReplacementResult> handler)
         {
-            return FormatWithMethods.FormatWith(formatString, handler);
+            return FormatWithMethods.FormatWith(formatString.AsSpan(), handler);
         }
 
         /// <summary>
@@ -169,13 +170,33 @@ namespace FormatWith
             char closeBraceChar = '}')
         {
             return FormatWithMethods.FormatWith(
-                formatString,
+                formatString.AsSpan(),
                 handler,
                 missingKeyBehaviour,
                 fallbackReplacementValue,
                 openBraceChar,
                 closeBraceChar);
         }
+
+        // TODO: The new Span<T> based extension method.
+        // TODO: XML Docstrings
+        public static string FormatWith(
+            this ReadOnlySpan<char> formatString,
+            HandlerAction handlerAction,
+            MissingKeyBehaviour missingKeyBehaviour,
+            FallbackAction fallbackReplacementAction = null,
+            char openBraceChar = '{',
+            char closeBraceChar = '}')
+        {
+            return FormatWithMethods.FormatWith(
+                formatString,
+                handlerAction,
+                missingKeyBehaviour,
+                fallbackReplacementAction,
+                openBraceChar,
+                closeBraceChar);
+        }
+
 
         #endregion
 
