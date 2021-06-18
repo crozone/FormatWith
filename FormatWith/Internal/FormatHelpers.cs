@@ -52,8 +52,6 @@ namespace FormatWith.Internal
                 // Append the replacement for this parameter
                 void resultAction(ReadOnlySpan<char> value)
                 {
-                    // TODO: If already processed, throw because it was called multiple times?
-
                     processed = true;
                     destinationWriterAction(value);
                 }
