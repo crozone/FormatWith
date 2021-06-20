@@ -44,17 +44,11 @@ namespace FormatWith.Internal
                     tokenFormat = token.Value.Slice(separatorIdx + 1);
                 }
 
-                bool processed = false;
+                // Call the handler action, which will callback the result action with any string data to be written.
+                bool processed = handlerAction(tokenKey, tokenFormat, resultAction);
 
-                // Append the replacement for this parameter
-                void HandlerResultAction(ReadOnlySpan<char> value)
-                {
-                    processed = true;
-                    resultAction(value);
-                }
-
-                handlerAction(tokenKey, tokenFormat, HandlerResultAction);
-
+                // If the handler returns true, it indicates it was successful in handling the token,
+                // otherwise we will perform the missing key behaviour.
                 if (!processed)
                 {
                     // the key was not handled, handle this using the missing key behaviour specified.

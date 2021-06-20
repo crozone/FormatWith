@@ -19,19 +19,23 @@ namespace FormatWith.Internal
         {
             if (formatString.Length == 0) return string.Empty;
 
-            void HandlerAction(ReadOnlySpan<char> key, ReadOnlySpan<char> format, ResultAction resultAction)
+            bool HandlerAction(ReadOnlySpan<char> key, ReadOnlySpan<char> format, ResultAction resultAction)
             {
                 if (replacements.TryGetValue(key.ToString(), out T value))
                 {
                     if (format == null || format.IsEmpty || format.IsWhiteSpace())
                     {
                         resultAction(value.ToString().AsSpan());
+                        return true;
                     }
                     else
                     {
                         resultAction(string.Format("{0:" + format.ToString() + "}", value).AsSpan());
+                        return true;
                     }
                 }
+
+                return false;
             }
 
             void fallbackAction(ResultAction resultAction)
@@ -53,19 +57,22 @@ namespace FormatWith.Internal
             if (replacementObject == null) throw new ArgumentNullException(nameof(replacementObject));
             if (formatString.Length == 0) return string.Empty;
 
-            void HandlerAction(ReadOnlySpan<char> key, ReadOnlySpan<char> format, ResultAction resultAction)
+            bool HandlerAction(ReadOnlySpan<char> key, ReadOnlySpan<char> format, ResultAction resultAction)
             {
                 if (TryGetPropertyFromObject(key.ToString(), replacementObject, out object value))
                 {
                     if (format == null || format.IsEmpty || format.IsWhiteSpace())
                     {
                         resultAction(value.ToString().AsSpan());
+                        return true;
                     }
                     else
                     {
                         resultAction(string.Format("{0:" + format.ToString() + "}", value).AsSpan());
+                        return true;
                     }
                 }
+                return false;
             }
 
             void FallbackAction(ResultAction resultAction)
@@ -86,7 +93,7 @@ namespace FormatWith.Internal
         {
             if (formatString.Length == 0) return string.Empty;
 
-            void HandlerAction(ReadOnlySpan<char> key, ReadOnlySpan<char> format, ResultAction resultAction)
+            bool HandlerAction(ReadOnlySpan<char> key, ReadOnlySpan<char> format, ResultAction resultAction)
             {
                 var replacementResult = handler(key.ToString(), format.ToString());
 
@@ -95,12 +102,16 @@ namespace FormatWith.Internal
                     if (format == null || format.IsEmpty || format.IsWhiteSpace())
                     {
                         resultAction(replacementResult.Value.ToString().AsSpan());
+                        return true;
                     }
                     else
                     {
                         resultAction(string.Format("{0:" + format.ToString() + "}", replacementResult.Value).AsSpan());
+                        return true;
                     }
                 }
+
+                return false;
             }
 
             void FallbackAction(ResultAction resultAction)

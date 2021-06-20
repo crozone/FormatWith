@@ -198,7 +198,10 @@ namespace FormatWithTests
                 if (key.Equals("Replacement1".AsSpan(), StringComparison.Ordinal))
                 {
                     result(Replacement1.AsSpan());
+                    return true;
                 }
+
+                return false;
             };
 
             FallbackAction fallbackAction = static (result) =>
