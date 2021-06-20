@@ -4,6 +4,7 @@ using FormatWith;
 using System.Collections.Generic;
 using System.Linq;
 using static FormatWithTests.TestStrings;
+using System.Text;
 
 namespace FormatWithTests
 {
@@ -164,6 +165,29 @@ namespace FormatWithTests
                 );
 
             Assert.Equal("321FEDcba, ABCDEF123, abcdef123.", replacement);
+        }
+
+
+        [Fact]
+        public void TestHugeInput()
+        {
+            StringBuilder inputBuilder = new StringBuilder();
+            StringBuilder expectedBuilder = new StringBuilder();
+            Dictionary<string, string> replacementDictionary = new Dictionary<string, string>();
+
+            for (int i = 0; i < 100_000; i++) {
+                string parameter = "key_" + i;
+                string value = "val_" + i;
+
+                replacementDictionary[parameter] = value;
+
+                inputBuilder.Append($"{{{parameter}}} blah \r\n");
+                expectedBuilder.Append($"{value} blah \r\n");
+            }
+
+            string replacement = inputBuilder.ToString().FormatWith(replacementDictionary);
+
+            Assert.Equal(expectedBuilder.ToString(), replacement);
         }
 
         [Fact]
