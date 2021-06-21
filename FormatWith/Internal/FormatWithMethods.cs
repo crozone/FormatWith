@@ -171,7 +171,7 @@ namespace FormatWith.Internal
         /// Returns a StringBuilder of at least the given capacity.
         /// Caches the StringBuilder in a weakly referenced ThreadLocal for efficiency.
         /// </summary>
-        /// <param name="capacity"></param>
+        /// <param name="capacity">The minimum capacity of the returned StringBuilder</param>
         /// <returns></returns>
         private static StringBuilder GetStringBuilder(int capacity)
         {
