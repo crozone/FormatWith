@@ -58,12 +58,7 @@ namespace FormatWith.Internal
                             // the key was not found as a possible replacement, throw exception
                             throw new KeyNotFoundException($"The parameter \"{tokenKey.ToString()}\" was not handled");
                         case MissingKeyBehaviour.ReplaceWithFallback:
-                            void fallbackResultAction(ReadOnlySpan<char> value)
-                            {
-                                resultAction(value);
-                            };
-
-                            fallbackReplacementAction?.Invoke(fallbackResultAction);
+                            fallbackReplacementAction?.Invoke(resultAction);
                             break;
                         case MissingKeyBehaviour.Ignore:
                             // the replacement value is the input key as a parameter.
