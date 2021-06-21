@@ -156,8 +156,35 @@ namespace FormatWith.Internal
         {
             if (formatString.Length == 0) return;
 
-            // TODO: We can avoid internal delegate/closure allocations once function pointers are implemented:
+            // A note on delegates:
+            //
+            // We currently have three delegate allocations per FormatWith call, the handlerAction, the resultAction, and the Tokenizer callback.
+            // This only happens once per FormatWith call but it is less than ideal if we're attempting to be as low allocation as possible.
+            //
+            // NOTE: Need to investigate if any of these are cached by the compiler.
+            //
+            // 1. A lambda expression which doesn't capture any variables is cached statically
+            // 2. A lambda expression which only captures "this" could be captured on a per-instance basis, but isn't
+            // 3. A lambda expression which captures a local variable can't be cached
+            //
+            // TODO: These are some potential workarounds to eliminate these allocations:
+            //
+            // 1. resultAction could be eliminated in the internal case where we have a StringBuilder. We could pass the StringBuilder reference in and call Append() on it directly.
+            //
+            // 2. ForEachToken could be eliminated by moving all possible variations of the callback into the Tokenizer code directly, and then passing in an enum
+            // and all state variables, keeping everything on the stack.
+            //
+            // 3. handlerAction could be eliminated by moving the internal variations into ProcessToken along with an enum and all state variables.
+            //
+            // None of these are ideal but will be necessary unless the compiler/JIT gets a lot smarter about inlining and eliminates these delegates in internal cases.
+            //
+            // Function pointers, once implemented, may provide a solution to delegate allocation (albeit with unsafe code):
             // https://github.com/dotnet/csharplang/blob/main/proposals/csharp-9.0/function-pointers.md
+            //
+            // See also:
+            // https://devblogs.microsoft.com/premier-developer/dissecting-the-local-functions-in-c-7/
+            //
+
             void ForEachToken(FormatToken token) => FormatHelpers.ProcessToken(token, handlerAction, resultAction, missingKeyBehaviour, fallbackReplacementAction);
 
             Tokenizer.Tokenize(formatString, ForEachToken, openBraceChar, closeBraceChar);
