@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
-using System.Threading;
 
 namespace FormatWith.Internal
 {
@@ -136,11 +135,8 @@ namespace FormatWith.Internal
         {
             if (formatString.Length == 0) return string.Empty;
 
-            StringBuilder stringBuilder = GetStringBuilder(formatString.Length * 2);
-
-            void ResultAction(ReadOnlySpan<char> value) => stringBuilder.Append(value);
-
-            FormatWith(formatString, handlerAction, ResultAction, missingKeyBehaviour, fallbackReplacementAction, openBraceChar, closeBraceChar);
+            (StringBuilder stringBuilder, ResultAction appenderAction) = StringBuilderCache.GetStringBuilder(formatString.Length * 2);
+            FormatWith(formatString, handlerAction, appenderAction, missingKeyBehaviour, fallbackReplacementAction, openBraceChar, closeBraceChar);
 
             return stringBuilder.ToString();
         }
@@ -169,7 +165,7 @@ namespace FormatWith.Internal
             //
             // TODO: These are some potential workarounds to eliminate these allocations:
             //
-            // 1. resultAction could be eliminated in the internal case where we have a StringBuilder. We could pass the StringBuilder reference in and call Append() on it directly.
+            // 1. SOLVED. We cache the appender delegate next to the StringBuilder, so the appender delegate doesn't need to be recreated each call to FormatWith
             //
             // 2. ForEachToken could be eliminated by moving all possible variations of the callback into the Tokenizer code directly, and then passing in an enum
             // and all state variables, keeping everything on the stack.
@@ -188,33 +184,6 @@ namespace FormatWith.Internal
             void ForEachToken(FormatToken token) => FormatHelpers.ProcessToken(token, handlerAction, resultAction, missingKeyBehaviour, fallbackReplacementAction);
 
             Tokenizer.Tokenize(formatString, ForEachToken, openBraceChar, closeBraceChar);
-        }
-
-
-        private static readonly ThreadLocal<WeakReference<StringBuilder>> threadLocalStringBuilder =
-            new ThreadLocal<WeakReference<StringBuilder>>(() => new WeakReference<StringBuilder>(new StringBuilder(), false));
-
-        /// <summary>
-        /// Returns a StringBuilder of at least the given capacity.
-        /// Caches the StringBuilder in a weakly referenced ThreadLocal for efficiency.
-        /// </summary>
-        /// <param name="capacity">The minimum capacity of the returned StringBuilder</param>
-        /// <returns></returns>
-        private static StringBuilder GetStringBuilder(int capacity)
-        {
-            var weakRef = threadLocalStringBuilder.Value;
-            if (weakRef.TryGetTarget(out StringBuilder stringBuilder))
-            {
-                stringBuilder.Clear();
-                stringBuilder.EnsureCapacity(capacity);
-            }
-            else
-            {
-                stringBuilder = new StringBuilder(capacity);
-                weakRef.SetTarget(stringBuilder);
-            }
-
-            return stringBuilder;
         }
 
         //
