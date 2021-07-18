@@ -42,12 +42,37 @@ namespace FormatWithTests.Shared
         public static readonly DateTime Format7Date = new DateTime(2018, 10, 30, 17, 25, 0);
         public static readonly string Format7Solution = $"Today is {Format7Date:YYYYMMDD HH:mm}";
 
-        public static readonly string FormatBigStringMostlyText;
+        public static readonly string FormatHugeStringManyParametersInput;
+        public static readonly string FormatHugeStringManyParametersResult;
+        public static readonly Dictionary<string, string> FormatHugeStringManyParametersReplacementDictionary;
+
+        public static readonly string FormatBigStringMostlyTextInput;
         public static readonly string FormatBigStringMostlyTextResult;
 
         static TestStrings()
         {
-            (FormatBigStringMostlyText, FormatBigStringMostlyTextResult) = GetBigStringMostlyText();
+            (FormatHugeStringManyParametersInput, FormatHugeStringManyParametersResult, FormatHugeStringManyParametersReplacementDictionary) = GetHugeStringManyParameters();
+            (FormatBigStringMostlyTextInput, FormatBigStringMostlyTextResult) = GetBigStringMostlyText();
+        }
+
+        private static (string, string, Dictionary<string, string>) GetHugeStringManyParameters()
+        {
+            StringBuilder inputBuilder = new StringBuilder();
+            StringBuilder resultBuilder = new StringBuilder();
+            Dictionary<string, string> replacementDictionary = new Dictionary<string, string>();
+
+            for (int i = 0; i < 100_000; i++)
+            {
+                string parameter = "key_" + i;
+                string value = "val_" + i;
+
+                replacementDictionary[parameter] = value;
+
+                inputBuilder.Append($"{{{parameter}}} blah \r\n");
+                resultBuilder.Append($"{value} blah \r\n");
+            }
+
+            return (inputBuilder.ToString(), resultBuilder.ToString(), replacementDictionary);
         }
 
         private static (string, string) GetBigStringMostlyText()

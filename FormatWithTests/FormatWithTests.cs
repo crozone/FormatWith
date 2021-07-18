@@ -172,30 +172,14 @@ namespace FormatWithTests
         [Fact]
         public void TestHugeInput()
         {
-            StringBuilder inputBuilder = new StringBuilder();
-            StringBuilder expectedBuilder = new StringBuilder();
-            Dictionary<string, string> replacementDictionary = new Dictionary<string, string>();
-
-            for (int i = 0; i < 100_000; i++) {
-                string parameter = "key_" + i;
-                string value = "val_" + i;
-
-                replacementDictionary[parameter] = value;
-
-                inputBuilder.Append($"{{{parameter}}} blah \r\n");
-                expectedBuilder.Append($"{value} blah \r\n");
-            }
-
-            string replacement = inputBuilder.ToString().FormatWith(replacementDictionary);
-
-            Assert.Equal(expectedBuilder.ToString(), replacement);
+            string replacement = FormatHugeStringManyParametersInput.FormatWith(FormatHugeStringManyParametersReplacementDictionary);
+            Assert.Equal(FormatHugeStringManyParametersResult, replacement);
         }
 
         [Fact]
         public void TestFormatBigStringMostlyText()
         {
-            string replacement = FormatBigStringMostlyText.FormatWith(ReplacementDictionary);
-
+            string replacement = FormatBigStringMostlyTextInput.FormatWith(ReplacementDictionary);
             Assert.Equal(FormatBigStringMostlyTextResult, replacement);
         }
 
