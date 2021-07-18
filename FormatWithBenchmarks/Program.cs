@@ -29,6 +29,10 @@ namespace FormatWithBenchmarks
         public void SpeedTestHugeMostlyText() => FormatBigStringMostlyTextInput.FormatWith(ReplacementDictionary);
 
         [Benchmark]
+        public void SpeedTestFormatHugeStringManyParameters() =>
+            FormatHugeStringManyParametersInput.FormatWith(FormatHugeStringManyParametersReplacementDictionary);
+
+        [Benchmark]
         public void SpeedTestBiggerAnonymous() => Format4.FormatWith(ReplacementObject);
 
         [Benchmark]
