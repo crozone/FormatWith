@@ -36,13 +36,30 @@ namespace FormatWith.Internal
             int index = 0;
             while (index < formatString.Length)
             {
+                // .IndexOfAny(char, char) uses SIMD intrinsics internally for large performance speedups on large data inputs,
+                // which is beneficial for large strings.
+                // The performance improvement on small strings of unaligned data is small/none.
+                int nextBracketOffset = formatString.Slice(index).IndexOfAny(openBraceChar, closeBraceChar);
+                if (nextBracketOffset >= 0)
+                {
+                    index += nextBracketOffset;
+                }
+                else
+                {
+                    index = formatString.Length;
+                    break;
+                }
+
+                char currentCharacter = formatString[index];
+                char nextCharacter = index < formatString.Length - 1 ? formatString[index + 1] : '\0';
+
                 if (!insideBraces)
                 {
                     // Currently not inside a pair of braces in the format string (in "text").
-                    if (formatString[index] == openBraceChar)
+                    if (currentCharacter == openBraceChar)
                     {
                         // Check if the brace is escaped
-                        if (index < formatString.Length - 1 && formatString[index + 1] == openBraceChar)
+                        if (nextCharacter == openBraceChar)
                         {
                             // ESCAPED OPEN BRACE
 
@@ -55,8 +72,6 @@ namespace FormatWith.Internal
 
                             // Set new current token start and current token length
                             currentTokenStart = index;
-
-                            continue;
                         }
                         else
                         {
@@ -76,14 +91,12 @@ namespace FormatWith.Internal
                             currentTokenStart = index;
 
                             index++;
-
-                            continue;
                         }
                     }
-                    else if (formatString[index] == closeBraceChar)
+                    else if (currentCharacter == closeBraceChar)
                     {
                         // Handle case where closing brace is encountered outside braces
-                        if (index < formatString.Length - 1 && formatString[index + 1] == closeBraceChar)
+                        if (nextCharacter == closeBraceChar)
                         {
                             // This is an escaped closing brace, this is okay
 
@@ -96,8 +109,6 @@ namespace FormatWith.Internal
 
                             // Set new current token start and current token length
                             currentTokenStart = index;
-
-                            continue;
                         }
                         else
                         {
@@ -108,19 +119,17 @@ namespace FormatWith.Internal
                     }
                     else
                     {
-                        // Move onto next character
-                        index++;
-                        continue;
+                        throw new FormatException($"Unexpected character {currentCharacter}, expected open brace \'{openBraceChar}\' or closed brace \'{closeBraceChar}\'.");
                     }
                 }
                 else
                 {
                     // Currently inside a pair of braces in the format string (a parameter)
-                    if (formatString[index] == openBraceChar)
+                    if (currentCharacter == openBraceChar)
                     {
                         // Found an opening brace.
                         // Check if the brace is escaped
-                        if (index < formatString.Length - 1 && formatString[index + 1] == openBraceChar)
+                        if (nextCharacter == openBraceChar)
                         {
                             // There are escaped braces within the key.
                             // This is illegal, throw a format exception
@@ -132,7 +141,7 @@ namespace FormatWith.Internal
                             throw new FormatException($"Unexpected opening brace inside a parameter at position {index}");
                         }
                     }
-                    else if (formatString[index] == closeBraceChar)
+                    else if (currentCharacter == closeBraceChar)
                     {
                         // END OF PARAMETER
 
@@ -151,16 +160,10 @@ namespace FormatWith.Internal
 
                         // Update current token start
                         currentTokenStart = index;
-
-                        // Move to next state
-                        continue;
                     }
                     else
                     {
-                        // Character has no special meaning, and it is part of the current parameter.
-                        // Move onto next character
-                        index++;
-                        continue;
+                        throw new FormatException($"Unexpected character {currentCharacter}, expected open brace \'{openBraceChar}\' or closed brace \'{closeBraceChar}\'.");
                     }
                 }
             }
