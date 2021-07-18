@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using Xunit;
 using FormatWith;
 using FormatWithTests.FormatProvider;
-using static FormatWithTests.TestStrings;
+
+using static FormatWithTests.Shared.TestStrings;
 
 namespace FormatWithTests
 {
@@ -12,63 +13,63 @@ namespace FormatWithTests
         [Fact]
         public void TestEmpty()
         {
-            FormattableString formattableString = TestFormatEmpty.FormattableWith(new { Replacement1 = Replacement1, Replacement2 = Replacement2 });
-            Assert.Equal(TestFormatEmpty, formattableString.Format);
+            FormattableString formattableString = FormatEmpty.FormattableWith(new { Replacement1 = Replacement1, Replacement2 = Replacement2 });
+            Assert.Equal(FormatEmpty, formattableString.Format);
             Assert.Equal(0, formattableString.ArgumentCount);
-            Assert.Equal(TestFormatEmpty, formattableString.ToString());
+            Assert.Equal(FormatEmpty, formattableString.ToString());
         }
 
         [Fact]
         public void TestNoParams()
         {
-            FormattableString formattableString = TestFormatNoParams.FormattableWith(new { Replacement1 = Replacement1, Replacement2 = Replacement2 });
-            Assert.Equal(TestFormatNoParams, formattableString.Format);
+            FormattableString formattableString = FormatNoParams.FormattableWith(new { Replacement1 = Replacement1, Replacement2 = Replacement2 });
+            Assert.Equal(FormatNoParams, formattableString.Format);
             Assert.Equal(0, formattableString.ArgumentCount);
-            Assert.Equal(TestFormatNoParams, formattableString.ToString());
+            Assert.Equal(FormatNoParams, formattableString.ToString());
         }
 
         [Fact]
         public void TestReplacement3()
         {
-            FormattableString formattableString = TestFormat3.FormattableWith(new { Replacement1 = Replacement1 });
-            Assert.Equal(TestFormat3Composite, formattableString.Format);
+            FormattableString formattableString = Format3.FormattableWith(new { Replacement1 = Replacement1 });
+            Assert.Equal(Format3Composite, formattableString.Format);
             Assert.Equal(1, formattableString.ArgumentCount);
             Assert.Equal(Replacement1, formattableString.GetArgument(0));
-            Assert.Equal(TestFormat3Solution, formattableString.ToString());
+            Assert.Equal(Format3Solution, formattableString.ToString());
         }
 
         [Fact]
         public void TestReplacement4()
         {
-            FormattableString formattableString = TestFormat4.FormattableWith(new { Replacement1 = Replacement1, Replacement2 = Replacement2 });
-            Assert.Equal(TestFormat4Composite, formattableString.Format);
+            FormattableString formattableString = Format4.FormattableWith(new { Replacement1 = Replacement1, Replacement2 = Replacement2 });
+            Assert.Equal(Format4Composite, formattableString.Format);
             Assert.Equal(2, formattableString.ArgumentCount);
             Assert.Equal(Replacement1, formattableString.GetArgument(0));
             Assert.Equal(Replacement2, formattableString.GetArgument(1));
-            Assert.Equal(TestFormat4Solution, formattableString.ToString());
+            Assert.Equal(Format4Solution, formattableString.ToString());
         }
 
         [Fact]
         public void TestNestedProperties()
         {
-            FormattableString formattableString = TestFormat5.FormattableWith(new { Foo = new { Replacement1 = Replacement1 } });
-            Assert.Equal(TestFormat5Composite, formattableString.Format);
+            FormattableString formattableString = Format5.FormattableWith(new { Foo = new { Replacement1 = Replacement1 } });
+            Assert.Equal(Format5Composite, formattableString.Format);
             Assert.Equal(1, formattableString.ArgumentCount);
             Assert.Equal(Replacement1, formattableString.GetArgument(0));
-            Assert.Equal(TestFormat5Solution, formattableString.ToString());
+            Assert.Equal(Format5Solution, formattableString.ToString());
         }
 
         [Fact]
         public void TestFormatString()
         {
-            FormattableString formattableString = TestFormat6.FormattableWith(new { Replacement1 = Replacement1 });
-            Assert.Equal(TestFormat6Composite, formattableString.Format);
+            FormattableString formattableString = Format6.FormattableWith(new { Replacement1 = Replacement1 });
+            Assert.Equal(Format6Composite, formattableString.Format);
             Assert.Equal(1, formattableString.ArgumentCount);
             Assert.Equal(Replacement1, formattableString.GetArgument(0));
 
             var upperCaseFormatProvider = new UpperCaseFormatProvider();
             
-            Assert.Equal(TestFormat6Solution, formattableString.ToString(upperCaseFormatProvider));
+            Assert.Equal(Format6Solution, formattableString.ToString(upperCaseFormatProvider));
         }
 
         [Fact]
@@ -109,7 +110,7 @@ namespace FormatWithTests
 
             for (int i = 0; i < 1000000; i++)
             {
-                FormattableString formattableString = TestFormat3.FormattableWith(replacementDictionary);
+                FormattableString formattableString = Format3.FormattableWith(replacementDictionary);
             }
         }
 
@@ -124,7 +125,7 @@ namespace FormatWithTests
 
             for (int i = 0; i < 1000000; i++)
             {
-                FormattableString formattableString = TestFormat4.FormattableWith(replacementDictionary);
+                FormattableString formattableString = Format4.FormattableWith(replacementDictionary);
             }
         }
 
@@ -133,7 +134,7 @@ namespace FormatWithTests
         {
             for (int i = 0; i < 1000000; i++)
             {
-                FormattableString formattableString = TestFormat4.FormattableWith(new { Replacement1 = Replacement1, Replacement2 = Replacement2 });
+                FormattableString formattableString = Format4.FormattableWith(new { Replacement1 = Replacement1, Replacement2 = Replacement2 });
             }
         }
     }

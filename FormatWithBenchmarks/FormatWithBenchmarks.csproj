@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\FormatWithTests.Shared\FormatWithTests.Shared.csproj" />
     <ProjectReference Include="..\FormatWith\FormatWith.csproj" />
   </ItemGroup>
 

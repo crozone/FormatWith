@@ -3,8 +3,9 @@ using Xunit;
 using FormatWith;
 using System.Collections.Generic;
 using System.Linq;
-using static FormatWithTests.TestStrings;
 using System.Text;
+
+using static FormatWithTests.Shared.TestStrings;
 
 namespace FormatWithTests
 {
@@ -13,36 +14,36 @@ namespace FormatWithTests
         [Fact]
         public void TestEmpty()
         {
-            string replacement = TestFormatEmpty.FormatWith(new { Replacement1, Replacement2 });
-            Assert.Equal(TestFormatEmpty, replacement);
+            string replacement = FormatEmpty.FormatWith(ReplacementObject);
+            Assert.Equal(FormatEmpty, replacement);
         }
 
         [Fact]
         public void TestNoParams()
         {
-            string replacement = TestFormatNoParams.FormatWith(new { Replacement1, Replacement2 });
-            Assert.Equal(TestFormatNoParams, replacement);
+            string replacement = FormatNoParams.FormatWith(ReplacementObject);
+            Assert.Equal(FormatNoParams, replacement);
         }
 
         [Fact]
         public void TestReplacement3()
         {
-            string replacement = TestFormat4.FormatWith(new { Replacement1, Replacement2 });
-            Assert.Equal(TestFormat4Solution, replacement);
+            string replacement = Format4.FormatWith(ReplacementObject);
+            Assert.Equal(Format4Solution, replacement);
         }
 
         [Fact]
         public void TestParameterFormat()
         {
-            string replacement = TestFormat7.FormatWith(new { Today = TestFormat7Date });
-            Assert.Equal(TestFormat7Solution, replacement);
+            string replacement = Format7.FormatWith(new { Today = Format7Date });
+            Assert.Equal(Format7Solution, replacement);
         }
 
         [Fact]
         public void TestNestedPropertiesReplacements()
         {
-            string replacement = TestFormat5.FormatWith(new { Foo = new { Replacement1 } });
-            Assert.Equal(TestFormat5Solution, replacement);
+            string replacement = Format5.FormatWith(new { Foo = new { Replacement1 } });
+            Assert.Equal(Format5Solution, replacement);
         }
 
         [Fact]
@@ -50,7 +51,7 @@ namespace FormatWithTests
         {
             try
             {
-                string replacement = "abc{Replacement1}{ {Replacement2}".FormatWith(new { Replacement1, Replacement2 });
+                string replacement = "abc{Replacement1}{ {Replacement2}".FormatWith(ReplacementObject);
             }
             catch (FormatException e)
             {
@@ -66,7 +67,7 @@ namespace FormatWithTests
         {
             try
             {
-                string replacement = "abc{Replacement1}{{Replacement2}".FormatWith(new { Replacement1, Replacement2 });
+                string replacement = "abc{Replacement1}{{Replacement2}".FormatWith(ReplacementObject);
             }
             catch (FormatException e)
             {
@@ -81,7 +82,7 @@ namespace FormatWithTests
         {
             try
             {
-                string replacement = "abc{Replacement1}{Replacement2".FormatWith(new { Replacement1, Replacement2 });
+                string replacement = "abc{Replacement1}{Replacement2".FormatWith(ReplacementObject);
             }
             catch (FormatException e)
             {
@@ -96,7 +97,7 @@ namespace FormatWithTests
         {
             try
             {
-                string replacement = "abc{Replacement1}{DoesntExist}".FormatWith(new { Replacement1, Replacement2 });
+                string replacement = "abc{Replacement1}{DoesntExist}".FormatWith(ReplacementObject);
             }
             catch (Exception ex)
             {
@@ -109,28 +110,28 @@ namespace FormatWithTests
         [Fact]
         public void TestDefaultReplacementParameter()
         {
-            string replacement = "abc{Replacement1}{DoesntExist}".FormatWith(new { Replacement1, Replacement2 }, MissingKeyBehaviour.ReplaceWithFallback, "FallbackValue");
+            string replacement = "abc{Replacement1}{DoesntExist}".FormatWith(ReplacementObject, MissingKeyBehaviour.ReplaceWithFallback, "FallbackValue");
             Assert.Equal("abcReplacement1FallbackValue", replacement);
         }
 
         [Fact]
         public void TestIgnoreMissingParameter()
         {
-            string replacement = "abc{Replacement1}{DoesntExist}".FormatWith(new { Replacement1, Replacement2 }, MissingKeyBehaviour.Ignore);
+            string replacement = "abc{Replacement1}{DoesntExist}".FormatWith(ReplacementObject, MissingKeyBehaviour.Ignore);
             Assert.Equal("abcReplacement1{DoesntExist}", replacement);
         }
 
         [Fact]
         public void TestCustomBraces()
         {
-            string replacement = "abc<Replacement1><DoesntExist>".FormatWith(new { Replacement1, Replacement2 }, MissingKeyBehaviour.Ignore, null, '<', '>');
+            string replacement = "abc<Replacement1><DoesntExist>".FormatWith(ReplacementObject, MissingKeyBehaviour.Ignore, null, '<', '>');
             Assert.Equal("abcReplacement1<DoesntExist>", replacement);
         }
 
         [Fact]
         public void TestAsymmetricCustomBraces()
         {
-            string replacement = "abc{Replacement1>{DoesntExist>".FormatWith(new { Replacement1, Replacement2 }, MissingKeyBehaviour.Ignore, null, '{', '>');
+            string replacement = "abc{Replacement1>{DoesntExist>".FormatWith(ReplacementObject, MissingKeyBehaviour.Ignore, null, '{', '>');
             Assert.Equal("abcReplacement1{DoesntExist>", replacement);
         }
 
@@ -191,6 +192,14 @@ namespace FormatWithTests
         }
 
         [Fact]
+        public void TestFormatBigStringMostlyText()
+        {
+            string replacement = FormatBigStringMostlyText.FormatWith(ReplacementDictionary);
+
+            Assert.Equal(FormatBigStringMostlyTextResult, replacement);
+        }
+
+        [Fact]
         public void TestSpanInputStringBuilder()
         {
             HandlerAction handlerAction = static (key, format, result) =>
@@ -216,15 +225,9 @@ namespace FormatWithTests
         [Fact]
         public void SpeedTest()
         {
-            Dictionary<string, string> replacementDictionary = new Dictionary<string, string>()
-            {
-                ["Replacement1"] = Replacement1,
-                ["Replacement2"] = Replacement2
-            };
-
             for (int i = 0; i < 1_000_000; i++)
             {
-                TestFormat3.FormatWith(replacementDictionary);
+                Format3.FormatWith(ReplacementDictionary);
             }
         }
 
@@ -233,20 +236,14 @@ namespace FormatWithTests
         {
             for (int i = 0; i < 1_000_000; i++)
             {
-                TestFormat4.FormatWith(new { Replacement1, Replacement2 });
+                Format4.FormatWith(ReplacementObject);
             }
         }
 
         [Fact]
         public void TestMultithreaded()
         {
-            Dictionary<string, string> replacementDictionary = new Dictionary<string, string>()
-            {
-                ["Replacement1"] = Replacement1,
-                ["Replacement2"] = Replacement2
-            };
-
-            Enumerable.Range(1, 1_000_000).AsParallel().ForAll(i => TestFormat4.FormatWith(replacementDictionary));
+            Enumerable.Range(1, 1_000_000).AsParallel().ForAll(i => Format4.FormatWith(ReplacementDictionary));
         }
     }
 }
