@@ -26,17 +26,31 @@ namespace FormatWithTests
         }
 
         [Fact]
-        public void TestReplacement3()
+        public void TestReplacementFormat4Object()
         {
             string replacement = Format4.FormatWith(ReplacementObject);
             Assert.Equal(Format4Solution, replacement);
         }
 
         [Fact]
+        public void TestReplacementFormat4Dictionary()
+        {
+            string replacement = Format4.FormatWith(ReplacementDictionary);
+            Assert.Equal(Format4Solution, replacement);
+        }
+
+        [Fact]
+        public void TestReplacementFormatWithPadding()
+        {
+            string replacement = FormatWithPadding.FormatWith(ReplacementDictionary);
+            Assert.Equal(FormatWithPaddingSolution, replacement);
+        }
+
+        [Fact]
         public void TestParameterFormat()
         {
-            string replacement = Format7.FormatWith(new { Today = Format7Date });
-            Assert.Equal(Format7Solution, replacement);
+            string replacement = FormatDateWithFormat.FormatWith(new { Today = FormatDateWithFormatDateValue });
+            Assert.Equal(FormatDateWithFormatSolution, replacement);
         }
 
         [Fact]

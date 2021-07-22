@@ -30,7 +30,8 @@ namespace FormatWith.Internal
             ReadOnlySpan<char> raw = source.Slice(startIndex, length);
             ReadOnlySpan<char> value = tokenType switch
             {
-                TokenKind.Parameter => source.Slice(startIndex + 1, length - 2),
+                // TODO: Make this Trim() configurable
+                TokenKind.Parameter => source.Slice(startIndex + 1, length - 2).Trim(),
                 TokenKind.Text => source.Slice(startIndex, length),
                 _ => throw new InvalidOperationException($"Unknown {nameof(Internal.TokenKind)}: {tokenType}"),
             };

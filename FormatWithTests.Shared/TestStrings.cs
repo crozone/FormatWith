@@ -37,10 +37,14 @@ namespace FormatWithTests.Shared
         public static readonly string Format6Composite = "abc{0:upper}";
         public static readonly string Format6Solution = $"abc{Replacement1.ToUpper()}";
 
-        public static readonly string Format7 = "Today is {Today:YYYYMMDD HH:mm}";
-        public static readonly string Format7Composite = "Today is {0:YYYYMMDD HH:mm}";
-        public static readonly DateTime Format7Date = new DateTime(2018, 10, 30, 17, 25, 0);
-        public static readonly string Format7Solution = $"Today is {Format7Date:YYYYMMDD HH:mm}";
+        public static readonly string FormatWithPadding = "abc{   Replacement1      }";
+        public static readonly string FormatWithPaddingComposite = "abc{   0      }";
+        public static readonly string FormatWithPaddingSolution = $"abc{   Replacement1      }";
+
+        public static readonly string FormatDateWithFormat = "Today is {Today:YYYYMMDD HH:mm}";
+        public static readonly string FormatDateWithFormatComposite = "Today is {0:YYYYMMDD HH:mm}";
+        public static readonly DateTime FormatDateWithFormatDateValue = new DateTime(2018, 10, 30, 17, 25, 0);
+        public static readonly string FormatDateWithFormatSolution = $"Today is {FormatDateWithFormatDateValue:YYYYMMDD HH:mm}";
 
         public static readonly string FormatHugeStringManyParametersInput;
         public static readonly string FormatHugeStringManyParametersResult;
