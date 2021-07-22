@@ -64,30 +64,30 @@ namespace FormatWith.Internal
                             // ESCAPED OPEN BRACE
 
                             // We have hit an escaped open brace.
-                            // Yield current normal text, as well as the first brace
-                            processTokenAction(FormatToken.Create(TokenKind.Text, formatString, currentTokenStart, (index - currentTokenStart) + 1));
+                            // Process the current token as text, as well as adding on a single open brace to the end.
+                            processTokenAction(FormatToken.Create(TokenKind.Text, formatString.Slice(currentTokenStart, index - currentTokenStart + 1)));
 
-                            // Skip over braces
+                            // Advance index over braces
                             index += 2;
 
-                            // Set new current token start and current token length
+                            // Update token start
                             currentTokenStart = index;
                         }
                         else
                         {
                             // START OF PARAMETER
 
-                            // Not an escaped brace, set state to inside brace
+                            // Not an escaped brace, set state to inside brace.
                             insideBraces = true;
 
-                            // We are leaving standard text and entering into a parameter
-                            // add the text traversed so far as a text token
+                            // We are leaving standard text and entering into a parameter.
+                            // Process the text traversed so far as a text token.
                             if (currentTokenStart < index)
                             {
-                                processTokenAction(FormatToken.Create(TokenKind.Text, formatString, currentTokenStart, (index - currentTokenStart)));
+                                processTokenAction(FormatToken.Create(TokenKind.Text, formatString.Slice(currentTokenStart, index - currentTokenStart)));
                             }
 
-                            // Set the start index of the token to the start of this parameter
+                            // Update token start
                             currentTokenStart = index;
 
                             index++;
@@ -100,14 +100,13 @@ namespace FormatWith.Internal
                         {
                             // This is an escaped closing brace, this is okay
 
-                            // Add the current normal text, as well as the first brace, to the
-                            // List of tokens as a text token.
-                            processTokenAction(FormatToken.Create(TokenKind.Text, formatString, currentTokenStart, (index - currentTokenStart) + 1));
+                            // Process the current token as text, as well as adding on a single closed brace to the end.
+                            processTokenAction(FormatToken.Create(TokenKind.Text, formatString.Slice(currentTokenStart, index - currentTokenStart + 1)));
 
-                            // Skip over braces
+                            // Advance index over braces
                             index += 2;
 
-                            // Set new current token start and current token length
+                            // Update token start
                             currentTokenStart = index;
                         }
                         else
@@ -149,13 +148,13 @@ namespace FormatWith.Internal
                         // Don't attempt to check for escaped braces here, instead always assume the first brace closes the braces,
                         // since we cannot have escaped braces within parameters.
 
-                        // Add the parameter information to the parameter list
-                        processTokenAction(FormatToken.Create(TokenKind.Parameter, formatString, currentTokenStart, (index - currentTokenStart) + 1));
+                        // Process the current token as a parameter, which included the opening and closing bracket.
+                        processTokenAction(FormatToken.Create(TokenKind.Parameter, formatString.Slice(currentTokenStart, index - currentTokenStart + 1)));
 
                         // Set the state to be outside of any braces
                         insideBraces = false;
 
-                        // Skip over brace
+                        // Advance index over brace
                         index++;
 
                         // Update current token start
@@ -177,10 +176,10 @@ namespace FormatWith.Internal
             }
             else
             {
-                // Outside all braces, they were balanced. Add on any remaining text at the end of the format string as "text".
+                // Outside all braces, and they were balanced. Process any remaining text at the end of the format string as a text token.
                 if (currentTokenStart < index)
                 {
-                    processTokenAction(FormatToken.Create(TokenKind.Text, formatString, currentTokenStart, index - currentTokenStart));
+                    processTokenAction(FormatToken.Create(TokenKind.Text, formatString.Slice(currentTokenStart, index - currentTokenStart)));
                 }
             }
         }

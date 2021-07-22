@@ -25,14 +25,14 @@ namespace FormatWith.Internal
         /// </summary>
         public ReadOnlySpan<char> Value { get; }
 
-        public static FormatToken Create(TokenKind tokenType, ReadOnlySpan<char> source, int startIndex, int length)
+        public static FormatToken Create(TokenKind tokenType, ReadOnlySpan<char> token)
         {
-            ReadOnlySpan<char> raw = source.Slice(startIndex, length);
+            ReadOnlySpan<char> raw = token;
             ReadOnlySpan<char> value = tokenType switch
             {
                 // TODO: Make this Trim() configurable
-                TokenKind.Parameter => source.Slice(startIndex + 1, length - 2).Trim(),
-                TokenKind.Text => source.Slice(startIndex, length),
+                TokenKind.Parameter => token.Slice(1, token.Length - 2).Trim(),
+                TokenKind.Text => token,
                 _ => throw new InvalidOperationException($"Unknown {nameof(Internal.TokenKind)}: {tokenType}"),
             };
 
